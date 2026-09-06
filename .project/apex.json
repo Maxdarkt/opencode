@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 2,
+  "taskTracking": {
+    "mode": "tracked",
+    "planPath": "PLAN-GENERAL.md",
+    "mtProject": "DA"
+  }
+}
