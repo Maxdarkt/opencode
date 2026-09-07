@@ -4,11 +4,9 @@ Mis à jour le 2026-09-07. Projet MT DA ; branche source staging, sans Build pro
 
 ## Travail courant
 
-Aucun sprint actif après la clôture du Sprint 1. Le Sprint 2 ne sera cadré et activé qu'après validation de la baseline commune.
+Aucun sprint actif après la clôture du Sprint 1. La baseline commune est validée ; la prochaine action est le cadrage explicite du Sprint 2.
 
-| Carte active | Statut | But | Worktree |
-|---|---|---|---|
-| [DA40-010](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/tasks/DA40-010-assembler-baseline-commune/scope.md) | review, hors sprint | Baseline assemblée ; Pass B parent et commit local à effectuer | `features/50-integration` |
+Aucune carte active.
 
 ## Historique
 
@@ -18,9 +16,10 @@ Aucun sprint actif après la clôture du Sprint 1. Le Sprint 2 ne sera cadré et
 - DA40-005 reçue hors sprint : protocole Markdown/MT, modèles, réconciliation, reprise et routage modèle validés ; [trace](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/da40-005.md).
 - DA40-008 reçue hors sprint : `sprint-orchestrator` utilise checkpoints compacts, contexte ciblé, routage modèle attesté et guide portable de bootstrap projet ; [trace](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/da40-008.md).
 - DA40-009 reçue hors sprint : racine canonique, modèles, registre de projections, checkpoint et routine de reprise adoptés ; [trace](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/da40-009.md).
+- DA40-010 reçue hors sprint : baseline commune assemblée et validée dans `features/50-integration`, commit local `343099992` ; [trace](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/da40-010.md).
 
 ## Suite
-Recevoir DA40-010, puis préparer le Sprint 2 à partir de la baseline intégrée, de l'[architecture](/Users/leanbot/Documents/40_Daidalon/features/40-tooling/docs/product/architecture.md) et du bilan Sprint 1. Sprints 2/3 restent intentions jusqu'à cadrage et activation explicites. [Routine permanente](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/workflow/suivi-sprints.md).
+Cadrer le Sprint 2 à partir de la baseline validée `343099992`, de l'[architecture](/Users/leanbot/Documents/40_Daidalon/features/50-integration/docs/product/architecture.md) et du bilan Sprint 1. Sprints 2/3 restent intentions jusqu'à cadrage et activation explicites. [Routine permanente](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/workflow/suivi-sprints.md).
 
 ## Besoin produit à cadrer
 
