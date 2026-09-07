@@ -3038,6 +3038,126 @@ export type MoveSessionDestination = {
   directory: string
 }
 
+export type TaskMetricsRequest =
+  | {
+      type: "task"
+      taskID: string
+    }
+  | {
+      type: "sprint"
+      sprintID: string
+      taskIDs: Array<string>
+    }
+
+export type ModelRef = {
+  id: string
+  providerID: string
+  variant?: string
+}
+
+export type TaskMetricsModels =
+  | {
+      state: "measured"
+      value: Array<ModelRef>
+      provenance: Array<string>
+    }
+  | {
+      state: "estimated"
+      value: Array<ModelRef>
+      provenance: Array<string>
+    }
+  | {
+      state: "partial"
+      value?: Array<ModelRef>
+      provenance: Array<string>
+    }
+  | {
+      state: "unknown"
+      provenance: Array<string>
+    }
+
+export type TaskMetricsTokenValue = {
+  input: number
+  output: number
+  reasoning: number
+  cache: {
+    read: number
+    write: number
+  }
+}
+
+export type TaskMetricsTokens =
+  | {
+      state: "measured"
+      value: TaskMetricsTokenValue
+      provenance: Array<string>
+    }
+  | {
+      state: "estimated"
+      value: TaskMetricsTokenValue
+      provenance: Array<string>
+    }
+  | {
+      state: "partial"
+      value?: TaskMetricsTokenValue
+      provenance: Array<string>
+    }
+  | {
+      state: "unknown"
+      provenance: Array<string>
+    }
+
+export type TaskMetricsNumeric =
+  | {
+      state: "measured"
+      value: number
+      provenance: Array<string>
+    }
+  | {
+      state: "estimated"
+      value: number
+      provenance: Array<string>
+    }
+  | {
+      state: "partial"
+      value?: number
+      provenance: Array<string>
+    }
+  | {
+      state: "unknown"
+      provenance: Array<string>
+    }
+
+export type TaskMetricsTask = {
+  taskID: string
+  sessionID?: string
+  models: TaskMetricsModels
+  tokens: TaskMetricsTokens
+  cost: TaskMetricsNumeric
+  latency: TaskMetricsNumeric
+}
+
+export type TaskMetricsSprint = {
+  sprintID: string
+  taskIDs: Array<string>
+  duplicateTaskIDs: Array<string>
+  tasks: Array<TaskMetricsTask>
+  models: TaskMetricsModels
+  tokens: TaskMetricsTokens
+  cost: TaskMetricsNumeric
+  latency: TaskMetricsNumeric
+}
+
+export type TaskMetricsResponse =
+  | {
+      type: "task"
+      metrics: TaskMetricsTask
+    }
+  | {
+      type: "sprint"
+      metrics: TaskMetricsSprint
+    }
+
 export type LocalContextInfo = {
   requested_directory: string
   canonical_directory: string | null
@@ -3091,12 +3211,6 @@ export type LocalContextInfo = {
       }>
     } | null
   } | null | null
-}
-
-export type ModelRef = {
-  id: string
-  providerID: string
-  variant?: string
 }
 
 export type LocationRef = {
@@ -7280,6 +7394,31 @@ export type ExperimentalControlPlaneMoveSessionResponses = {
 
 export type ExperimentalControlPlaneMoveSessionResponse =
   ExperimentalControlPlaneMoveSessionResponses[keyof ExperimentalControlPlaneMoveSessionResponses]
+
+export type GlobalMetricsData = {
+  body?: TaskMetricsRequest
+  path?: never
+  query?: never
+  url: "/global/metrics"
+}
+
+export type GlobalMetricsErrors = {
+  /**
+   * Bad request
+   */
+  400: BadRequestError
+}
+
+export type GlobalMetricsError = GlobalMetricsErrors[keyof GlobalMetricsErrors]
+
+export type GlobalMetricsResponses = {
+  /**
+   * TaskMetrics.Response
+   */
+  200: TaskMetricsResponse
+}
+
+export type GlobalMetricsResponse = GlobalMetricsResponses[keyof GlobalMetricsResponses]
 
 export type GlobalContextData = {
   body?: never

@@ -88,6 +88,8 @@ import type {
   GlobalEventResponses,
   GlobalHealthErrors,
   GlobalHealthResponses,
+  GlobalMetricsErrors,
+  GlobalMetricsResponses,
   GlobalUpgradeErrors,
   GlobalUpgradeResponses,
   InstanceDisposeErrors,
@@ -234,6 +236,7 @@ import type {
   SyncStartResponses,
   SyncStealErrors,
   SyncStealResponses,
+  TaskMetricsRequest,
   TextPartInput,
   ToolIdsErrors,
   ToolIdsResponses,
@@ -1318,6 +1321,30 @@ export class Config extends HeyApiClient {
 }
 
 export class Global extends HeyApiClient {
+  /**
+   * Read task or sprint metrics
+   *
+   * Read local task metrics from persisted session observations. Sprint membership is supplied by the caller; unknown values are not converted to zero.
+   */
+  public metrics<ThrowOnError extends boolean = false>(
+    parameters?: {
+      taskMetricsRequest?: TaskMetricsRequest
+    },
+    options?: Options<never, ThrowOnError>,
+  ) {
+    const params = buildClientParams([parameters], [{ args: [{ key: "taskMetricsRequest", map: "body" }] }])
+    return (options?.client ?? this.client).post<GlobalMetricsResponses, GlobalMetricsErrors, ThrowOnError>({
+      url: "/global/metrics",
+      ...options,
+      ...params,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+        ...params.headers,
+      },
+    })
+  }
+
   /**
    * Inspect local directory context
    *

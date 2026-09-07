@@ -2,6 +2,7 @@ import { LocalContext } from "@opencode-ai/core/local-context"
 import { Database } from "@opencode-ai/core/database/database"
 import { TaskBindingTable } from "@opencode-ai/core/task-binding/sql"
 import { TaskExecutionEffectTable, TaskExecutionOwnershipTable } from "@opencode-ai/core/task-execution/sql"
+import { TaskMetrics } from "@opencode-ai/core/task-metrics"
 import { Session } from "@/session/session"
 import { SessionID } from "@/session/schema"
 import { Config } from "@/config/config"
@@ -71,6 +72,7 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
     const sessions = yield* Session.Service
     const config = yield* Config.Service
     const installation = yield* Installation.Service
+    const metrics = yield* TaskMetrics.Service
     const bridge = yield* EffectBridge.make()
 
     const health = Effect.fn("GlobalHttpApi.health")(function* () {
@@ -94,6 +96,15 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
     const dispose = Effect.fn("GlobalHttpApi.dispose")(function* () {
       yield* disposeAllInstancesAndEmitGlobalDisposed()
       return true
+    })
+
+    const metricsRead = Effect.fn("GlobalHttpApi.metrics")(function* (ctx: { payload: TaskMetrics.Request }) {
+      if (ctx.payload.type === "task")
+        return { type: "task" as const, metrics: yield* metrics.task({ taskID: ctx.payload.taskID }) }
+      return {
+        type: "sprint" as const,
+        metrics: yield* metrics.sprint({ sprintID: ctx.payload.sprintID, taskIDs: [...ctx.payload.taskIDs] }),
+      }
     })
 
     const upgrade = Effect.fn("GlobalHttpApi.upgrade")(function* (ctx: { payload: typeof GlobalUpgradeInput.Type }) {
@@ -213,6 +224,7 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
       .handle("configGet", configGet)
       .handle("configUpdate", configUpdate)
       .handle("dispose", dispose)
+      .handle("metrics", metricsRead)
       .handle("upgrade", upgrade)
   }),
 )

@@ -1,5 +1,6 @@
 import { LocalContext } from "@opencode-ai/core/local-context"
 import { Database } from "@opencode-ai/core/database/database"
+import { Service } from "@opencode-ai/core/task-metrics"
 import { Session } from "@/session/session"
 import { NodeHttpServer } from "@effect/platform-node"
 import { describe, expect } from "bun:test"
@@ -43,6 +44,7 @@ const apiLayer = HttpRouter.serve(
   Layer.provide(Layer.mock(Auth.Service)({})),
   Layer.provide(Layer.mock(Config.Service)({})),
   Layer.provide(Layer.mock(LocalContext.Service)({})),
+  Layer.provide(Layer.mock(Service)({})),
   Layer.provide(Layer.mock(Session.Service)({})),
   Layer.provide(Layer.mock(Installation.Service)({})),
   Layer.provide(
