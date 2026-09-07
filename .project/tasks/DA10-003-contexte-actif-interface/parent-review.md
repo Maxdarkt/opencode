@@ -24,4 +24,4 @@ Les preuves sont dans `evidence/parent-smoke-viewports.json`, `evidence/parent-s
 
 ## Décision
 
-DA10-003 est recevable en `review`. DA40-011 peut intégrer la chaîne exacte de commits jusqu'à ce HEAD après transition MT.
+DA10-003 est acceptée après review et peut passer `done`. DA40-011 peut intégrer la chaîne exacte de commits jusqu'au commit parent de smoke `9c9dcb717`, puis le commit documentaire de clôture qui contient ce verdict.

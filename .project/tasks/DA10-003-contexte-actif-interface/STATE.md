@@ -1,9 +1,9 @@
 # STATE — DA10-003
 
-- Génération : `11` — correction B2.2 commitée, re-smoke parent attendu, `2026-09-07T15:40:00+02:00`.
+- Génération : `12` — revue et re-smoke parent acceptés, `2026-09-07T15:48:00+02:00`.
 - Projet / sprint / tâche / tracking : `DA` / `da-release-0.1-sprint-2` (`ddc01132-b26a-446a-85a0-04d2d37a0a01`) / `DA10-003` / `tracked`.
 - Statut MT observé : `in_progress`; transition parent `todo → in_progress` réalisée par `6cd6cf44-8a3e-4c07-8122-707eea6b57dd`, relue par `c0916998-44fe-433e-af54-478559f4cdc6`.
-- Phase APEX : `REVIEW` — correction bornée B2.2 terminée; attente du re-smoke visuel parent. MT reste `in_progress` jusque-là.
+- Phase APEX : `VERIFY` terminé — correction B2.2 et re-smoke parent acceptés; clôture MT `done` autorisée.
 - Worktree / branche / base / HEAD avant le commit documentaire de clôture : `features/s2-10-context-ui` / `active-context-ui` / `9ba850b68b49bd20e2e40d24ceba39dd5fb19af2` / `5247b61c456fa29a9b0f33ba6817c5355d024e12`.
 - Git : DA20 source `a70bf26adc4ece7645e3654452c0f034f78d05ac` → cherry-pick `8a06e7b0d97e1cbfa347c6a979a48643ba01cee4`; DA30 source `1de05c0239357fb5796935460b89bfd9deec939b` → cherry-pick `b914e645aee0643ee430fbf18d4f8d943315e030`. Arbres vérifiés identiques aux sources; divergence base…HEAD `0 derrière / 2 devant`.
 - Dirty préservé, hors code DA10 : `PLAN-GENERAL.md`, `docs/product/releases/0.1.md`, `sprint.md`, `docs/product/sprints/sprint-2.md` et les artefacts APEX/journal non suivis. Projections Sprint exclues de tout futur commit DA10.
@@ -22,5 +22,6 @@
 - Checks B2.2 : typechecks App et OpenCode PASS; `submit.test.ts`, sélecteur et garde PASS (13 tests / 46 assertions); HTTP PASS (7 tests / 27 assertions); `git diff --check` PASS. Le harness toast est complété et le test historique s’exécute désormais.
 - Git B2.2 : commit de code local distinct `5247b61c456fa29a9b0f33ba6817c5355d024e12` (`fix(app): restore blocked prompt draft`), sans push, merge, promotion ni changement des projections Sprint.
 - Git B2.1 : code reçu dans `317e8f8bb6ba367d5e2add4c2b754d32c22666dd` (`fix(app): guard active task writes`). Son amendement `213cccd97c4a40a080bf3a91e74232216c8e29a6` ne change que STATE/handoff; le pathset produit est identique. Aucun push, merge, promotion ni changement des projections Sprint.
-- Prochaine action : parent — re-smoke visuel puis passage MT en `review` si conforme.
+- Revue parent : PASS dans `parent-review.md`; viewports 1440×900 et 1024×768, états concordant/resuming/divergent et refus sans perte du brouillon vérifiés. Aucun appel modèle; zéro message écrit pendant les refus.
+- Prochaine action : parent — passer MT de `review` à `done`, relire, archiver le chat puis déclencher DA40-011 avec le HEAD accepté `9c9dcb717` suivi du présent commit documentaire.
 - Reprise : relire ce STATE, `plan.md` et le bloc actif; vérifier projet/sprint/tâche/session/worktree/branche/HEAD avant toute action.
