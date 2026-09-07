@@ -2,8 +2,16 @@ import { For, Show } from "solid-js"
 import { useLanguage } from "@/context/language"
 import { getActiveTaskState } from "./active-task-context-state"
 import type { ContextState } from "./project-context-state"
+import { TaskPilotView } from "./task-pilot-view"
+import type { TaskPilotExistingIdentity } from "./task-pilot-state"
 
-export function ProjectContextView(props: { state: ContextState; api: string; directory: string; sessionID?: string }) {
+export function ProjectContextView(props: {
+  state: ContextState
+  api: string
+  directory: string
+  sessionID?: string
+  onOpenTask?: (identity: TaskPilotExistingIdentity) => void
+}) {
   const language = useLanguage()
   const unknown = () => language.t("project.context.unknown")
   const rows = () => {
@@ -75,16 +83,19 @@ export function ProjectContextView(props: { state: ContextState; api: string; di
               <div role="alert">{language.t("project.context.task.writeBlocked")}</div>
             </Show>
             <Show when={data().task}>
-              <dl class="grid grid-cols-[minmax(100px,auto)_minmax(0,1fr)] gap-x-3 gap-y-1 p-2">
-                <For each={taskRows()}>
-                  {(row) => (
-                    <>
-                      <dt>{row[0]}</dt>
-                      <dd class="break-all select-text">{row[1]}</dd>
-                    </>
-                  )}
-                </For>
-              </dl>
+              <>
+                <TaskPilotView task={data().task ?? undefined} onOpen={props.onOpenTask} />
+                <dl class="grid grid-cols-[minmax(100px,auto)_minmax(0,1fr)] gap-x-3 gap-y-1 p-2">
+                  <For each={taskRows()}>
+                    {(row) => (
+                      <>
+                        <dt>{row[0]}</dt>
+                        <dd class="break-all select-text">{row[1]}</dd>
+                      </>
+                    )}
+                  </For>
+                </dl>
+              </>
             </Show>
             <details>
               <summary class="cursor-pointer">{language.t("project.context.details")}</summary>
