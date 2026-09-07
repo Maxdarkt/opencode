@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js"
 import { useLanguage } from "@/context/language"
-import { getActiveTaskState, type ActiveTaskContext } from "./active-task-context-state"
+import { getActiveTaskState } from "./active-task-context-state"
 import type { ContextState } from "./project-context-state"
 
 export function ProjectContextView(props: { state: ContextState; api: string; directory: string; sessionID?: string }) {
@@ -32,11 +32,11 @@ export function ProjectContextView(props: { state: ContextState; api: string; di
     ]
   }
   const active = () => {
-    const data = props.state.data as ActiveTaskContext | undefined
+    const data = props.state.data
     return data ? getActiveTaskState(data, props.sessionID) : undefined
   }
   const taskRows = () => {
-    const data = props.state.data as ActiveTaskContext | undefined
+    const data = props.state.data
     const task = data?.task
     if (!task) return []
     return [
@@ -74,7 +74,7 @@ export function ProjectContextView(props: { state: ContextState; api: string; di
             <Show when={active() !== "concordant"}>
               <div role="alert">{language.t("project.context.task.writeBlocked")}</div>
             </Show>
-            <Show when={(data() as ActiveTaskContext).task}>
+            <Show when={data().task}>
               <dl class="grid grid-cols-[minmax(100px,auto)_minmax(0,1fr)] gap-x-3 gap-y-1 p-2">
                 <For each={taskRows()}>
                   {(row) => (

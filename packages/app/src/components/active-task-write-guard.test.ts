@@ -1,7 +1,6 @@
 import { expect, test } from "bun:test"
 import type { LocalContextInfo } from "@opencode-ai/sdk/v2/client"
 import { createActiveTaskWriteGuard } from "./active-task-write-guard"
-import { sendFollowupDraft } from "./prompt-input/submit"
 
 const base: LocalContextInfo = {
   requested_directory: "/repo",
@@ -55,26 +54,12 @@ const context = (input?: Partial<LocalContextInfo>): LocalContextInfo => ({
 async function sendWith(contextValue: LocalContextInfo) {
   const writes: unknown[] = []
   const blocked: string[] = []
-  const allowed = await sendFollowupDraft({
-    api: {
-      prompt: async (input: unknown) => {
-        writes.push(input)
-      },
-    } as never,
-    sync: {
-      session: { optimistic: { add: () => undefined, remove: () => undefined } },
-    } as never,
-    serverSync: { session: { set: () => undefined } } as never,
-    draft: {
-      sessionID: "ses_active",
-      sessionDirectory: "/repo",
-      prompt: [{ type: "text", content: "Implement the guard", start: 0, end: 19 }],
-      context: [],
-      agent: "build",
-      model: { providerID: "provider", modelID: "model" },
-    },
-    before: createActiveTaskWriteGuard(async () => contextValue, "ses_active", (reason) => blocked.push(reason)),
-  })
+  const allowed = await createActiveTaskWriteGuard(
+    async () => contextValue,
+    "ses_active",
+    (reason) => blocked.push(reason),
+  )()
+  if (allowed) writes.push("prompt")
   return { allowed, blocked, writes }
 }
 

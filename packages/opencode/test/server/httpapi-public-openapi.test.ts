@@ -36,6 +36,12 @@ type OpenApiSpec = {
   readonly components: { readonly schemas: Record<string, OpenApiSchema> }
 }
 
+type NormalizeArrayMutability<T> = T extends readonly (infer Item)[]
+  ? ReadonlyArray<NormalizeArrayMutability<Item>>
+  : T extends object
+    ? { [Key in keyof T]: NormalizeArrayMutability<T[Key]> }
+    : T
+
 const methods = ["get", "post", "put", "delete", "patch"] as const
 
 const allowedV2BuiltInEndpointErrors: string[] = []
@@ -375,10 +381,12 @@ test("preserves required nullability in the local context OpenAPI and SDK", () =
     expect(git?.required).toContain(field)
     expect(git?.properties?.[field]?.anyOf).toContainEqual({ type: "null" })
   }
-  // Both assignments are checked by opencode's typecheck (SDK tests are outside its tsconfig).
-  // This rejects lost null unions as well as required properties made optional by codegen.
-  const toSdk = (value: LocalContext.Info): LocalContextInfo => value
-  const toSchema = (value: LocalContextInfo): LocalContext.Info => value
+  // Codegen emits mutable arrays while Effect Schema exposes readonly arrays. Normalize only that
+  // distinction; the two assignments still reject lost keys, optionality, and null unions.
+  const toSdk = (value: NormalizeArrayMutability<LocalContext.Info>): NormalizeArrayMutability<LocalContextInfo> =>
+    value
+  const toSchema = (value: NormalizeArrayMutability<LocalContextInfo>): NormalizeArrayMutability<LocalContext.Info> =>
+    value
   const absent: LocalContext.Info = {
     requested_directory: "/absent",
     canonical_directory: null,

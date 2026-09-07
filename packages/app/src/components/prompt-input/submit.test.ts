@@ -600,7 +600,7 @@ describe("prompt submit worktree selection", () => {
       setPopover: () => undefined,
     })
 
-    await submit.handleSubmit({ preventDefault: () => undefined } as unknown as Event)
+    await submit.handleSubmit(new Event("submit"))
     await Bun.sleep(0)
 
     expect(sentPrompts).toEqual([])

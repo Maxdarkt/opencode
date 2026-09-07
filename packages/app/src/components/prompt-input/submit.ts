@@ -485,7 +485,7 @@ export function createPromptSubmit(input: PromptSubmitInput) {
     }
 
     const guardActiveTaskWrite = createActiveTaskWriteGuard(
-      () => readProjectContext(sdk(), { directory: sessionDirectory, session_id: session!.id }),
+      () => readProjectContext(sdk(), { directory: sessionDirectory, session_id: session.id }),
       session.id,
       notifyWriteBlocked,
     )

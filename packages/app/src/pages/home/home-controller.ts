@@ -10,6 +10,23 @@ import { createEffect, createMemo, onCleanup } from "solid-js"
 import { useLanguage } from "@/context/language"
 import { showToast } from "@/utils/toast"
 import { createProjectOpening } from "./project-opening"
+import { pathKey } from "@/utils/path-key"
+
+type HomeProject = { worktree: string; sandboxes?: string[] }
+
+export function projectForHomeDirectory<T extends HomeProject>(projects: T[], directory?: string) {
+  if (!directory) return undefined
+  const key = pathKey(directory)
+  return projects.find(
+    (project) => pathKey(project.worktree) === key || project.sandboxes?.some((sandbox) => pathKey(sandbox) === key),
+  )
+}
+
+export function homeNewSessionDirectory(project: HomeProject | undefined, selectedDirectory?: string) {
+  if (!project) return undefined
+  if (!selectedDirectory) return project.worktree
+  return projectForHomeDirectory([project], selectedDirectory) ? selectedDirectory : project.worktree
+}
 
 export function createHomeController() {
   const sync = useServerSync()
@@ -33,7 +50,7 @@ export function createHomeController() {
     () => focusedServerCtx()?.projects.recentlyClosed() ?? layout.projects.recentlyClosed(),
   )
   const homedir = createMemo(() => focusedSync().data.path.home ?? "")
-  const selectedProject = createMemo(() => projects().find((project) => project.worktree === selection().directory))
+  const selectedProject = createMemo(() => projectForHomeDirectory(projects(), selection().directory))
   const newSessionProject = createMemo(
     () =>
       selectedProject() ??
@@ -122,8 +139,9 @@ export function createHomeController() {
       openNewSession: () => {
         const conn = focusedServer()
         const project = newSessionProject()
-        if (!conn || !project) return
-        openProjectNewSession(conn, project.worktree)
+        const directory = homeNewSessionDirectory(project, selection().directory)
+        if (!conn || !directory) return
+        openProjectNewSession(conn, directory)
       },
       openProjectNewSession,
     },

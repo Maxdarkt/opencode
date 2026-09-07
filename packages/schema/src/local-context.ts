@@ -22,8 +22,8 @@ const TaskContext = Schema.Struct({
       worktree: Schema.String,
       ownerID: Schema.String,
       generation: Schema.Finite,
-      effects: Schema.mutable(
-        Schema.Array(Schema.Struct({ effectID: Schema.String, state: Schema.Literals(["pending", "confirmed"]) })),
+      effects: Schema.Array(
+        Schema.Struct({ effectID: Schema.String, state: Schema.Literals(["pending", "confirmed"]) }),
       ),
     }),
   ),

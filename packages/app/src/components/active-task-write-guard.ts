@@ -1,4 +1,9 @@
-import { canWriteActiveTask, getActiveTaskState, type ActiveTaskContext, type ActiveTaskState } from "./active-task-context-state"
+import {
+  canWriteActiveTask,
+  getActiveTaskState,
+  type ActiveTaskContext,
+  type ActiveTaskState,
+} from "./active-task-context-state"
 
 export type ActiveTaskWriteBlockReason = ActiveTaskState | "unavailable"
 
