@@ -3,7 +3,7 @@ import { useLanguage } from "@/context/language"
 import { getActiveTaskState } from "./active-task-context-state"
 import type { ContextState } from "./project-context-state"
 import { TaskPilotView } from "./task-pilot-view"
-import type { TaskPilotExistingIdentity } from "./task-pilot-state"
+import type { TaskPilotContext, TaskPilotExistingIdentity } from "./task-pilot-state"
 
 export function ProjectContextView(props: {
   state: ContextState
@@ -42,6 +42,13 @@ export function ProjectContextView(props: {
   const active = () => {
     const data = props.state.data
     return data ? getActiveTaskState(data, props.sessionID) : undefined
+  }
+  const pilotContext = (): TaskPilotContext | undefined => {
+    const value = active()
+    if (value === "concordant") return "concordant"
+    if (value === "incomplete") return "incomplete"
+    if (value === "divergent") return "divergent"
+    if (value === "resuming") return "resuming"
   }
   const taskRows = () => {
     const data = props.state.data
@@ -84,7 +91,11 @@ export function ProjectContextView(props: {
             </Show>
             <Show when={data().task}>
               <>
-                <TaskPilotView task={data().task ?? undefined} onOpen={props.onOpenTask} />
+                <TaskPilotView
+                  task={data().task ?? undefined}
+                  observation={pilotContext() ? { context: pilotContext()! } : undefined}
+                  onOpen={props.onOpenTask}
+                />
                 <dl class="grid grid-cols-[minmax(100px,auto)_minmax(0,1fr)] gap-x-3 gap-y-1 p-2">
                   <For each={taskRows()}>
                     {(row) => (

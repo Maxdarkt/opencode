@@ -23,6 +23,7 @@ test("evaluates every admitted DA30-006 status and phase pair", () => {
 
 test("fails closed without an observation and for invalid status and phase pairs", () => {
   expect(evaluateTaskPilot()).toEqual({ kind: "blocked", reason: "context_incomplete" })
+  expect(evaluateTaskPilot({ context: "concordant" })).toEqual({ kind: "blocked", reason: "context_incomplete" })
 
   for (const input of [
     concordant({ mtStatus: "todo", apexPhase: "plan" }),

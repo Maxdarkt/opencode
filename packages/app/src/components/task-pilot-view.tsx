@@ -50,6 +50,8 @@ export function TaskPilotView(props: {
         <dd>{props.observation?.mtStatus ?? language.t("project.context.task.pilot.unobserved")}</dd>
         <dt>{language.t("project.context.task.pilot.apexPhase")}</dt>
         <dd>{props.observation?.apexPhase ?? language.t("project.context.task.pilot.unobserved")}</dd>
+        <dt>{language.t("project.context.task.pilot.executionContext")}</dt>
+        <dd>{props.observation?.context ?? language.t("project.context.task.pilot.unobserved")}</dd>
         <dt>{language.t("project.context.task.pilot.dependencies")}</dt>
         <dd class="break-all select-text">
           {hasTaskPilotIdentity(identity())

@@ -5,7 +5,7 @@ export type TaskPilotMtStatus = "todo" | "in_progress" | "review" | "done" | "bl
 export type TaskPilotContext = "concordant" | "incomplete" | "divergent" | "resuming"
 
 export type TaskPilotObservation = {
-  mtStatus: TaskPilotMtStatus
+  mtStatus?: TaskPilotMtStatus
   apexPhase?: TaskPilotApexPhase
   context: TaskPilotContext
 }
@@ -45,6 +45,7 @@ export function evaluateTaskPilot(observation?: TaskPilotObservation): TaskPilot
   if (!observation || observation.context === "incomplete") return { kind: "blocked", reason: "context_incomplete" }
   if (observation.context === "divergent") return { kind: "blocked", reason: "context_divergent" }
   if (observation.context === "resuming") return { kind: "blocked", reason: "execution_resuming" }
+  if (!observation.mtStatus) return { kind: "blocked", reason: "context_incomplete" }
   if (observation.mtStatus === "blocked") return { kind: "blocked", reason: "mt_blocked" }
 
   const action =

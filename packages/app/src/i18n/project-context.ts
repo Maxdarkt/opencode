@@ -30,6 +30,7 @@ export const projectContextEnglish = {
   "project.context.task.pilot": "Task pilot",
   "project.context.task.pilot.mtStatus": "MT status",
   "project.context.task.pilot.apexPhase": "APEX phase",
+  "project.context.task.pilot.executionContext": "Execution context",
   "project.context.task.pilot.dependencies": "Existing identity",
   "project.context.task.pilot.identityUnavailable": "Task session or worktree is unavailable",
   "project.context.task.pilot.unobserved": "Not observed",
