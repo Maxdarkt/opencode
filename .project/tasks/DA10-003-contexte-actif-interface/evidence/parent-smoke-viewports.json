@@ -1,0 +1,25 @@
+{
+  "createdAt": "2026-09-07T13:30:37.161Z",
+  "results": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "url": "http://127.0.0.1:4411/server/aHR0cDovLzEyNy4wLjAuMTo0MTEx/session/ses_f83fce56bffe4vnRfQVavaiGPl",
+      "missing": [],
+      "pass": true,
+      "screenshot": "parent-smoke-1440x900.png"
+    },
+    {
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "url": "http://127.0.0.1:4411/server/aHR0cDovLzEyNy4wLjAuMTo0MTEx/session/ses_f83fce56bffe4vnRfQVavaiGPl",
+      "missing": [],
+      "pass": true,
+      "screenshot": "parent-smoke-1024x768.png"
+    }
+  ]
+}
