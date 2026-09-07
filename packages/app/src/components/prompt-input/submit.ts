@@ -273,7 +273,7 @@ export function createPromptSubmit(input: PromptSubmitInput) {
       .catch(() => {})
   }
 
-  const restoreCommentItems = (
+  const restoreContextItems = (
     target: ReturnType<ReturnType<typeof usePrompt>["capture"]>,
     items: (ContextItem & { key: string })[],
   ) => {
@@ -462,6 +462,7 @@ export function createPromptSubmit(input: PromptSubmitInput) {
       const restored = submission.restore()
       if (!restored) return false
       restored.target.set(restored.prompt, input.promptLength(restored.prompt))
+      restoreContextItems(restored.target, restored.context)
       if (!submission.current(prompt.capture())) return true
       input.setMode(mode)
       input.setPopover(null)
@@ -556,7 +557,6 @@ export function createPromptSubmit(input: PromptSubmitInput) {
       }
     }
 
-    const commentItems = context.filter((item) => item.type === "file" && !!item.comment?.trim())
     const messageID = Identifier.ascending("message")
 
     const removeOptimisticMessage = () => {
@@ -567,8 +567,16 @@ export function createPromptSubmit(input: PromptSubmitInput) {
       })
     }
 
-    for (const item of commentItems) submission.target().context.remove(item.key)
     clearInput()
+
+    const restoreFailedSubmission = () => {
+      pending.delete(pendingKey(session.id))
+      if (sessionDirectory === projectDirectory) {
+        sync().set("session_status", session.id, { type: "idle" })
+      }
+      removeOptimisticMessage()
+      restoreInput()
+    }
 
     const waitForWorktree = async () => {
       const worktree = WorktreeState.get(sdk().scope, sessionDirectory)
@@ -579,13 +587,7 @@ export function createPromptSubmit(input: PromptSubmitInput) {
       }
 
       const controller = new AbortController()
-      const cleanup = () => {
-        if (sessionDirectory === projectDirectory) {
-          sync().set("session_status", session.id, { type: "idle" })
-        }
-        removeOptimisticMessage()
-        if (restoreInput()) restoreCommentItems(submission.target(), commentItems)
-      }
+      const cleanup = () => restoreFailedSubmission()
 
       pending.set(pendingKey(session.id), { abort: controller, cleanup })
 
@@ -636,18 +638,18 @@ export function createPromptSubmit(input: PromptSubmitInput) {
       messageID,
       optimisticBusy: sessionDirectory === projectDirectory,
       before: async () => (await waitForWorktree()) && guardActiveTaskWrite(),
-    }).catch((err) => {
-      pending.delete(pendingKey(session.id))
-      if (sessionDirectory === projectDirectory) {
-        sync().set("session_status", session.id, { type: "idle" })
-      }
-      showToast({
-        title: language.t("prompt.toast.promptSendFailed.title"),
-        description: errorMessage(err),
-      })
-      removeOptimisticMessage()
-      if (restoreInput()) restoreCommentItems(submission.target(), commentItems)
     })
+      .then((sent) => {
+        if (sent) return
+        restoreFailedSubmission()
+      })
+      .catch((err) => {
+        showToast({
+          title: language.t("prompt.toast.promptSendFailed.title"),
+          description: errorMessage(err),
+        })
+        restoreFailedSubmission()
+      })
   }
 
   return {

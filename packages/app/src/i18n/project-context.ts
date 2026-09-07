@@ -32,7 +32,7 @@ export const projectContextEnglish = {
   "project.context.task.state.incomplete": "Active task context is incomplete",
   "project.context.task.state.divergent": "Active task context diverges",
   "project.context.task.state.resuming": "Active task context requires recovery",
-  "project.context.task.writeBlocked": "Write actions stay disabled until the active task context matches.",
+  "project.context.task.writeBlocked": "Write actions are blocked until the active task context matches.",
   "project.context.task.writeBlocked.title": "Action blocked by active task context",
   "project.context.task.writeBlocked.incomplete": "The active task context is incomplete.",
   "project.context.task.writeBlocked.divergent": "The active task context diverges from this session.",

@@ -1,10 +1,10 @@
 # STATE — DA10-003
 
-- Génération : `9` — handoff B2.1 prêt pour smoke parent, `2026-09-07T15:15:00+02:00`.
+- Génération : `10` — correction B2.2 après smoke parent, `2026-09-07T15:35:00+02:00`.
 - Projet / sprint / tâche / tracking : `DA` / `da-release-0.1-sprint-2` (`ddc01132-b26a-446a-85a0-04d2d37a0a01`) / `DA10-003` / `tracked`.
 - Statut MT observé : `in_progress`; transition parent `todo → in_progress` réalisée par `6cd6cf44-8a3e-4c07-8122-707eea6b57dd`, relue par `c0916998-44fe-433e-af54-478559f4cdc6`.
-- Phase APEX : `REVIEW` — correction bornée B2.1 terminée; attente du smoke visuel parent. MT reste `in_progress` jusque-là.
-- Worktree / branche / base / HEAD avant le commit documentaire de clôture : `features/s2-10-context-ui` / `active-context-ui` / `9ba850b68b49bd20e2e40d24ceba39dd5fb19af2` / `213cccd97c4a40a080bf3a91e74232216c8e29a6`.
+- Phase APEX : `VERIFY` — correction bornée B2.2 terminée; attente du re-smoke visuel parent. MT reste `in_progress` jusque-là.
+- Worktree / branche / base / HEAD avant commit B2.2 : `features/s2-10-context-ui` / `active-context-ui` / `9ba850b68b49bd20e2e40d24ceba39dd5fb19af2` / `6f7cace52`.
 - Git : DA20 source `a70bf26adc4ece7645e3654452c0f034f78d05ac` → cherry-pick `8a06e7b0d97e1cbfa347c6a979a48643ba01cee4`; DA30 source `1de05c0239357fb5796935460b89bfd9deec939b` → cherry-pick `b914e645aee0643ee430fbf18d4f8d943315e030`. Arbres vérifiés identiques aux sources; divergence base…HEAD `0 derrière / 2 devant`.
 - Dirty préservé, hors code DA10 : `PLAN-GENERAL.md`, `docs/product/releases/0.1.md`, `sprint.md`, `docs/product/sprints/sprint-2.md` et les artefacts APEX/journal non suivis. Projections Sprint exclues de tout futur commit DA10.
 - Chat : session enfant DA10-003 `01a07b7b-99ed-72b3-a663-515fb5a4ad86`; délégation parent source `01a076a4-b458-72a3-8e2b-bf975091a840`.
@@ -17,6 +17,9 @@
 - Read set : `analyze.md`, `plan.md`, contrats DA20/DA30, `packages/schema/src/local-context.ts`, handler/route global HTTP et composants `project-context`.
 - Correction B2.1 : `createActiveTaskWriteGuard` relit `global.context` avant une écriture et refuse fail-closed. Il est branché sur prompt, commande personnalisée, shell et reprise de follow-up. Les refus `incomplete`, `divergent`, `resuming` et l’indisponibilité de lecture exposent un toast accessible explicite; aucune requête d’écriture ne part.
 - Checks B2.1 : typechecks App et OpenCode PASS; tests de sélecteur et de garde/envoi PASS (4 tests / 20 assertions); HTTP PASS (7 tests / 27 assertions); `git diff --check` PASS. Le test historique `prompt-input/submit.test.ts` est bloqué avant exécution par son harness : export `toaster` absent de `packages/ui/src/components/toast.tsx`; hors périmètre de la correction.
+- Smoke parent B2.1 : contexte concordant affiché PASS; fixture effet `pending` → `resuming` PASS; clic Envoyer → toast et zéro message DB PASS. Observation : le brouillon était effacé après le refus fail-closed.
+- Correction B2.2 : le chemin normal traite le retour `false` de `sendFollowupDraft` comme une soumission non réalisée et restaure texte et tous les contextes capturés. Le message UI devient « Write actions are blocked until… », cohérent avec le blocage à l’envoi.
+- Checks B2.2 : typechecks App et OpenCode PASS; `submit.test.ts`, sélecteur et garde PASS (13 tests / 46 assertions); HTTP PASS (7 tests / 27 assertions); `git diff --check` PASS. Le harness toast est complété et le test historique s’exécute désormais.
 - Git B2.1 : code reçu dans `317e8f8bb6ba367d5e2add4c2b754d32c22666dd` (`fix(app): guard active task writes`). Son amendement `213cccd97c4a40a080bf3a91e74232216c8e29a6` ne change que STATE/handoff; le pathset produit est identique. Aucun push, merge, promotion ni changement des projections Sprint.
-- Prochaine action : parent — smoke visuel, puis passage MT en `review` si conforme.
+- Prochaine action : créer le commit correctif B2.2, puis parent — re-smoke visuel et passage MT en `review` si conforme.
 - Reprise : relire ce STATE, `plan.md` et le bloc actif; vérifier projet/sprint/tâche/session/worktree/branche/HEAD avant toute action.
