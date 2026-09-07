@@ -1,8 +1,8 @@
 # Smoke technique — DA10-003
 
 - HTTP : `bun test ./test/server/httpapi-control-plane.test.ts ./test/server/httpapi-global.test.ts ./test/server/httpapi-local-context.test.ts` — 7 PASS.
-- UI : `bun test --conditions=solid --preload ./happydom.ts ./src/components/active-task-context-state.test.ts` — 2 PASS / 8 assertions.
-- Les états incomplet, divergent et reprise refusent l’écriture; seul le contexte concordant l’autorise.
+- UI : `bun test --conditions=solid --preload ./happydom.ts ./src/components/active-task-context-state.test.ts ./src/components/active-task-write-guard.test.ts` — 4 PASS / 20 assertions.
+- Les états incomplet, divergent et reprise refusent le chemin effectif `sendFollowupDraft`; seul le contexte concordant atteint l’écriture. Shell, commande personnalisée et reprise de follow-up emploient la même garde.
 
 ## Smoke visuel parent
 

@@ -38,7 +38,6 @@ const context = (input?: Partial<ActiveTaskContext>): ActiveTaskContext => ({
       location: { directory: "/repo" },
       checkout: { repository: "/repo", worktree: "/repo", branch: "active-context-ui", head: "abc123" },
       version: 1,
-      time: { created: 0, updated: 0 },
     },
     execution: {
       mtTaskID: "DA10-003",

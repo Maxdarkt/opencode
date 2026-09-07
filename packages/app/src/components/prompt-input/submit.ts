@@ -23,6 +23,8 @@ import { createPromptSubmissionState } from "./submission-state"
 import { normalizeSessionInfo } from "@/utils/session"
 import { Event } from "@opencode-ai/schema/event"
 import { blobDataUrl } from "@/utils/draft-store"
+import { createActiveTaskWriteGuard, type ActiveTaskWriteBlockReason } from "../active-task-write-guard"
+import { readProjectContext } from "../project-context-request"
 
 type PendingPrompt = {
   abort: AbortController
@@ -48,7 +50,7 @@ type FollowupSendInput = {
   draft: FollowupDraft
   messageID?: string
   optimisticBusy?: boolean
-  before?: () => Promise<boolean> | boolean
+  before: () => Promise<boolean> | boolean
 }
 
 const draftText = (prompt: Prompt) => prompt.map((part) => ("content" in part ? part.content : "")).join("")
@@ -69,7 +71,7 @@ export async function sendFollowupDraft(input: FollowupSendInput) {
   }
 
   const wait = async () => {
-    const ok = await input.before?.()
+    const ok = await input.before()
     if (ok === false) return false
     return true
   }
@@ -109,6 +111,8 @@ export async function sendFollowupDraft(input: FollowupSendInput) {
       throw err
     }
   }
+
+  if (!(await wait())) return false
 
   const messageID = input.messageID ?? Identifier.ascending("message")
   const encodedImages = await Promise.all(
@@ -157,14 +161,6 @@ export async function sendFollowupDraft(input: FollowupSendInput) {
   })
 
   try {
-    if (!(await wait())) {
-      batch(() => {
-        setIdle()
-        remove()
-      })
-      return false
-    }
-
     await input.api.prompt({
       sessionID: input.draft.sessionID,
       id: messageID,
@@ -479,6 +475,20 @@ export function createPromptSubmit(input: PromptSubmitInput) {
       return true
     }
 
+    const notifyWriteBlocked = (reason: ActiveTaskWriteBlockReason) => {
+      showToast({
+        variant: "error",
+        title: language.t("project.context.task.writeBlocked.title"),
+        description: language.t(`project.context.task.writeBlocked.${reason}`),
+      })
+    }
+
+    const guardActiveTaskWrite = createActiveTaskWriteGuard(
+      () => readProjectContext(sdk(), { directory: sessionDirectory, session_id: session!.id }),
+      session.id,
+      notifyWriteBlocked,
+    )
+
     if (!isNewSession && mode === "normal" && input.shouldQueue?.()) {
       input.onQueue?.(draft)
       clearContext(submission.target())
@@ -489,6 +499,7 @@ export function createPromptSubmit(input: PromptSubmitInput) {
     input.onSubmit?.()
 
     if (mode === "shell") {
+      if (!(await guardActiveTaskWrite())) return
       clearInput()
       const eventID = Event.ID.create()
       sdk()
@@ -514,6 +525,7 @@ export function createPromptSubmit(input: PromptSubmitInput) {
       const commandName = cmdName.slice(1)
       const customCommand = sync().data.command.find((c) => c.name === commandName)
       if (customCommand) {
+        if (!(await guardActiveTaskWrite())) return
         clearInput()
         const messageID = Identifier.ascending("message")
         serverSync().session.set("session_status", session.id, { type: "busy" })
@@ -623,7 +635,7 @@ export function createPromptSubmit(input: PromptSubmitInput) {
       draft,
       messageID,
       optimisticBusy: sessionDirectory === projectDirectory,
-      before: waitForWorktree,
+      before: async () => (await waitForWorktree()) && guardActiveTaskWrite(),
     }).catch((err) => {
       pending.delete(pendingKey(session.id))
       if (sessionDirectory === projectDirectory) {
