@@ -9,6 +9,7 @@ import {
   pickerSearchEntries,
   pickerFileSearchQuery,
   pickerMode,
+  pickerDirectoryReady,
   preloadTreeDirectories,
   selectedTreePath,
   treeEntries,
@@ -307,4 +308,14 @@ test("returns absolute directories and relative files", () => {
   expect(selectedTreePath("/home/luke/repo", "src/index.ts", "file")).toBe("src/index.ts")
   expect(selectedTreePath("/home/luke/repo/src", "index.ts", "file", "/home/luke/repo")).toBe("src/index.ts")
   expect(selectedTreePath("/home/luke/repo", "src/", "file")).toBeUndefined()
+})
+
+test("requires navigation of edited paths before directory confirmation", () => {
+  expect(pickerDirectoryReady("/repo", "/repo", "/home/user")).toBeTrue()
+  expect(pickerDirectoryReady("~", "/home/user", "/home/user")).toBeTrue()
+  expect(pickerDirectoryReady("/missing", "/repo", "/home/user")).toBeFalse()
+  expect(pickerDirectoryReady("", "/repo", "/home/user")).toBeFalse()
+  expect(pickerDirectoryReady("/repo/child", "/repo", "/home/user")).toBeFalse()
+  expect(pickerDirectoryReady("/repo", "", "/home/user")).toBeFalse()
+  expect(pickerMode("directory").result("/repo", "/repo/child", false)).toBeUndefined()
 })

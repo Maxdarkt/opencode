@@ -1,0 +1,8 @@
+[36mHttpApi exerciser[0m
+[2mdb=/var/folders/pz/2l1p3_8n7m30pt509cjjcq8w0000gn/T/opencode-httpapi-exercise-37839.db[0m
+[2mglobal=/var/folders/pz/2l1p3_8n7m30pt509cjjcq8w0000gn/T/opencode-httpapi-global-37839[0m
+[2mmode=auth selected=1 scenarioTimeout=30s effectRoutes=189 missing=0 extra=0[0m
+
+[32mPASS[0m GET    /global/context                                  global.context
+
+[2msummary pass=1 fail=0 skip=0 missing=0 extra=0[0m

@@ -1,0 +1,244 @@
+{
+  "schemaVersion": 2,
+  "generation": 26,
+  "authority": {
+    "business": "mt-tasks",
+    "phasesAndEvidence": "apex-task-folders",
+    "coordination": "runtime-cache-only"
+  },
+  "sprint": {
+    "id": "a3fac11a-49ed-455f-9d7c-dcd213467b6a",
+    "mtProject": "DA",
+    "parentThreadId": "01a076a4-b458-72a3-8e2b-bf975091a840",
+    "mandate": "Sprint 1 completed : 7 cartes / 26 SP acceptés puis archivés ; 0 inachevée. Aucun sprint actif."
+  },
+  "limits": {
+    "maxActiveChildren": 3,
+    "monitoringMinSeconds": 60
+  },
+  "tasks": [
+    {
+      "id": "DA40-003",
+      "role": "child",
+      "workKind": "code",
+      "mtStatus": "archived",
+      "apex": {
+        "taskPath": ".project/tasks/DA40-003-socle-local-reproductible",
+        "statePath": ".project/tasks/DA40-003-socle-local-reproductible/STATE.md",
+        "stateGeneration": 4,
+        "phase": "verify",
+        "evidenceObservedAt": "2026-09-06T13:17:58.000000+00:00"
+      },
+      "git": {
+        "worktreePath": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling",
+        "branch": "40-tooling",
+        "dedicated": true,
+        "head": "1b327889841111256dfbc88f9cb063f848cc661b",
+        "observedAt": "2026-09-06T13:17:58.000000+00:00"
+      },
+      "coordination": {
+        "dependencies": [],
+        "discoveries": [
+          "Chat alloué dans le projet conteneur ; workdir explicite obligatoire du worktree dédié, préflight lecture seule avant lancement."
+        ],
+        "modelClass": "astra",
+        "threadId": "01a076cc-de9e-7682-9d68-77ba9d0b57d7"
+      }
+    },
+    {
+      "id": "DA30-003",
+      "role": "child",
+      "workKind": "non-code",
+      "mtStatus": "archived",
+      "apex": {
+        "taskPath": ".project/tasks/DA30-003-qualification-parcours-runtime",
+        "statePath": ".project/tasks/DA30-003-qualification-parcours-runtime/STATE.md",
+        "stateGeneration": 4,
+        "phase": "verify",
+        "evidenceObservedAt": "2026-09-06T13:28:13.000000+00:00"
+      },
+      "git": {
+        "worktreePath": "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime",
+        "branch": "30-agent-runtime",
+        "dedicated": true,
+        "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+        "observedAt": "2026-09-06T13:03:19.652113+00:00"
+      },
+      "coordination": {
+        "dependencies": [
+          "DA40-003"
+        ],
+        "discoveries": [
+          "Chat alloué dans le projet conteneur ; workdir explicite obligatoire du worktree dédié, préflight lecture seule avant lancement."
+        ],
+        "modelClass": "astra",
+        "threadId": "01a076cc-ef32-77a1-b908-d2b147982618"
+      }
+    },
+    {
+      "id": "DA20-002",
+      "role": "child",
+      "workKind": "code",
+      "mtStatus": "archived",
+      "apex": {
+        "taskPath": ".project/tasks/DA20-002-contexte-local-verifiable",
+        "statePath": ".project/tasks/DA20-002-contexte-local-verifiable/STATE.md",
+        "stateGeneration": 4,
+        "phase": "verify",
+        "evidenceObservedAt": "2026-09-06T14:01:16.000000+00:00"
+      },
+      "git": {
+        "worktreePath": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+        "branch": "20-workspace-git",
+        "dedicated": true,
+        "head": "2d973aeaf6a289ba1f343663a758d7c70b1bcc11",
+        "observedAt": "2026-09-06T14:01:16.000000+00:00"
+      },
+      "coordination": {
+        "dependencies": [
+          "DA40-003",
+          "DA30-003"
+        ],
+        "discoveries": [
+          "Chat alloué dans le projet conteneur ; workdir explicite obligatoire du worktree dédié, préflight lecture seule avant lancement."
+        ],
+        "modelClass": "astra",
+        "threadId": "01a076cd-06bc-73f2-9c81-637d148a4d47"
+      }
+    },
+    {
+      "id": "DA10-002",
+      "role": "child",
+      "workKind": "code",
+      "mtStatus": "archived",
+      "apex": {
+        "taskPath": ".project/tasks/DA10-002-ouverture-projet-explicite",
+        "statePath": ".project/tasks/DA10-002-ouverture-projet-explicite/STATE.md",
+        "stateGeneration": 6,
+        "phase": "verify",
+        "evidenceObservedAt": "2026-09-06T15:28:29.000000+00:00"
+      },
+      "git": {
+        "worktreePath": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui",
+        "branch": "10-product-ui",
+        "dedicated": true,
+        "head": "e22d723895e3a8537f9bf21d5d6e4561ff630de1",
+        "observedAt": "2026-09-06T15:28:29.000000+00:00"
+      },
+      "coordination": {
+        "dependencies": [
+          "DA40-003",
+          "DA20-002"
+        ],
+        "discoveries": [
+          "Chat alloué dans le projet conteneur ; workdir explicite obligatoire du worktree dédié, préflight lecture seule avant lancement."
+        ],
+        "modelClass": "astra",
+        "threadId": "01a076cd-3843-7ea1-88ac-f3d48982d356"
+      }
+    },
+    {
+      "id": "DA40-004",
+      "role": "orchestrator",
+      "workKind": "non-code",
+      "mtStatus": "archived",
+      "apex": {
+        "taskPath": ".project/tasks/DA40-004-orchestration-sprint-1",
+        "statePath": ".project/tasks/DA40-004-orchestration-sprint-1/STATE.md",
+        "stateGeneration": 5,
+        "phase": "verify",
+        "evidenceObservedAt": "2026-09-06T13:04:27.248161+00:00"
+      },
+      "git": {
+        "worktreePath": "/Users/leanbot/Documents/40_Daidalon/Daidalon",
+        "branch": "staging",
+        "dedicated": false,
+        "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+        "observedAt": "2026-09-06T13:03:19.652113+00:00"
+      },
+      "coordination": {
+        "dependencies": [],
+        "discoveries": [
+          "Chat alloué dans le projet conteneur ; workdir explicite obligatoire du worktree dédié, préflight lecture seule avant lancement.",
+          "Handoff exclusif reçu ; Analyze démarré ; mandat socle préparé non transmis faute des outils de coordination des chats.",
+          "DA40-004 close, sprint completed, sept cartes archivées, rotation appliquée.",
+          "Heartbeat orchestration-sprint-1-daidalon supprimé après clôture et rotation."
+        ],
+        "modelClass": "astra",
+        "threadId": "01a076a4-b458-72a3-8e2b-bf975091a840"
+      }
+    },
+    {
+      "id": "DA40-007",
+      "role": "child",
+      "workKind": "non-code",
+      "mtStatus": "archived",
+      "apex": {
+        "taskPath": ".project/tasks/DA40-007-audit-architecture-application",
+        "statePath": ".project/tasks/DA40-007-audit-architecture-application/STATE.md",
+        "stateGeneration": 3,
+        "phase": "verify",
+        "evidenceObservedAt": "2026-09-06T15:38:20.000000+00:00"
+      },
+      "git": {
+        "worktreePath": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling",
+        "branch": "40-tooling",
+        "dedicated": true,
+        "head": "50019f223",
+        "observedAt": "2026-09-06T15:38:20.000000+00:00"
+      },
+      "coordination": {
+        "dependencies": [
+          "DA20-001",
+          "DA30-003",
+          "DA40-003"
+        ],
+        "discoveries": [
+          "Extension Sprint 1 demandée par utilisateur ; prend le verrou écrivain 40-tooling avant DA40-006.",
+          "Création explicitement routée vers gpt-5.6-luna/high ; rôle enfant corrigé dans le chat existant après tentative de redélégation.",
+          "Modèle effectif gpt-5.6-luna/high confirmé par le chat enfant avant poursuite de Analyze.",
+          "Réception parent PASS ; commit local exact 50019f223 ; MT done."
+        ],
+        "modelClass": "luna",
+        "threadId": "01a07761-85bf-7493-9313-768704243263"
+      }
+    },
+    {
+      "id": "DA40-006",
+      "role": "child",
+      "workKind": "code",
+      "mtStatus": "archived",
+      "apex": {
+        "taskPath": ".project/tasks/DA40-006-facade-make-ports-worktrees",
+        "statePath": ".project/tasks/DA40-006-facade-make-ports-worktrees/STATE.md",
+        "stateGeneration": 4,
+        "phase": "verify",
+        "evidenceObservedAt": "2026-09-06T15:38:20.000000+00:00"
+      },
+      "git": {
+        "worktreePath": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling",
+        "branch": "40-tooling",
+        "dedicated": true,
+        "head": "b7111b6e9",
+        "observedAt": "2026-09-06T15:38:20.000000+00:00"
+      },
+      "coordination": {
+        "dependencies": [
+          "DA40-003",
+          "DA40-007"
+        ],
+        "discoveries": [
+          "Même worktree que DA40-007 : lancement séquentiel obligatoire.",
+          "Chat créé explicitement avec gpt-5.6-terra/medium ; MT in_progress ; vérification effective requise avant Build.",
+          "Modèle effectif confirmé dans rollout session : gpt-5.6-terra, reasoning_effort medium ; arrêt pré-Build levé dans le même chat.",
+          "Revue parent : course dans make dev car les deux sous-commandes préflightaient les deux ports ; correction bornée envoyée, MT review→in_progress.",
+          "Deux corrections parent acceptées ; smoke réel backend/UI et nettoyage PASS ; commit b7111b6e9 ; MT done ; chat archivé."
+        ],
+        "modelClass": "terra",
+        "threadId": "01a07771-4fbf-7883-b1a4-58d596c5d317"
+      }
+    }
+  ],
+  "observedAt": "2026-09-06T16:51:00.000000+00:00",
+  "expiresAt": "2027-09-06T16:51:00.000000+00:00"
+}

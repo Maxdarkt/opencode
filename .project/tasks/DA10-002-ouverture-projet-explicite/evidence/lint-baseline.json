@@ -1,0 +1,92 @@
+[
+  {
+    "file": "packages/app/src/components/directory-picker-domain.ts",
+    "line": 40,
+    "source_line": "return selectedTreePath(root, path, \"file\", base)",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.ts",
+    "line": 58,
+    "source_line": "return selected || (root ? nativePickerPath(root) : undefined)",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.ts",
+    "line": 110,
+    "source_line": "if (target === root) return \"\"",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.ts",
+    "line": 113,
+    "source_line": "return targetPath.slice(prefix.length)",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.ts",
+    "line": 236,
+    "source_line": "if (!base) return path",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.ts",
+    "line": 238,
+    "source_line": "return pickerRelativePath(base, absolute)",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.ts",
+    "line": 240,
+    "source_line": "return directory ? nativePickerPath(absoluteTreePath(root, path)) : undefined",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.ts",
+    "line": 333,
+    "source_line": "if (!base) return",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.test.ts",
+    "line": 136,
+    "source_line": "const sdk = {",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.test.ts",
+    "line": 158,
+    "source_line": "const sdk = {",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.test.ts",
+    "line": 177,
+    "source_line": "const sdk = {",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.test.ts",
+    "line": 199,
+    "source_line": "const sdk = {",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/directory-picker-domain.test.ts",
+    "line": 220,
+    "source_line": "const sdk = {",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/dialog-select-directory-v2.tsx",
+    "line": 75,
+    "source_line": "return sdk.client.path",
+    "line_exists_in_HEAD": true
+  },
+  {
+    "file": "packages/app/src/components/dialog-select-directory-v2.tsx",
+    "line": 242,
+    "source_line": "if (pathArea?.contains(event.target as Node)) return",
+    "line_exists_in_HEAD": true
+  }
+]

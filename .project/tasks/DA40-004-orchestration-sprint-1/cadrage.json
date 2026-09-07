@@ -1,0 +1,207 @@
+[
+  {
+    "key": "socle",
+    "domain": "40",
+    "branch": "40-tooling",
+    "slug": "socle-local-reproductible",
+    "title": "Établir un environnement local reproductible et les checks de référence",
+    "sp": 3,
+    "kind": "code",
+    "deps": [],
+    "objective": "Lancer et tester le code local réellement audité, avec versions, route et état initial vérifiables.",
+    "evidence": "M0 : dépendances effect/workspace/happy-dom absentes ; tests runtime non exécutés. package.json déclare bun@1.3.14, les audits utilisaient Bun 1.3.9.",
+    "scope": [
+      "Documenter et préparer les dépendances du lockfile dans le worktree 40, sans mise à niveau générale.",
+      "Fournir une procédure locale de lancement web/backend identifiés, un manifest OS/Bun/commit/lockfile/client/ports et une baseline de checks ciblés.",
+      "Définir le dispositif de recette multi-worktree, le propriétaire des serveurs et la façon de prouver quelle révision est servie."
+    ],
+    "acceptance": [
+      "Procédure rejouable et manifest identifiant la révision servie, distincte du proxy web distant.",
+      "Checks ciblés chargés et exécutés ; résultats et éventuels échecs préexistants explicités, aucun test non exécuté déclaré vert.",
+      "Aucune altération des livrables M0, du lockfile sans justification, ni collision de processus/ports."
+    ],
+    "surfaces": [
+      "package.json",
+      "bun.lock",
+      "packages/opencode",
+      "packages/app",
+      "packages/core",
+      "packages/llm"
+    ],
+    "excludes": "Déploiement, upgrades généraux, serveur partagé redémarré, appels fournisseurs payants, changements produit métier.",
+    "smoke": "Parent ouvre le client local identifié ; relie URL, source servie et manifest ; vérifie les résultats de baseline.",
+    "risks": "AGENTS app interdit de redémarrer app/serveur : inventorier les processus existants, utiliser une instance isolée sans les interrompre. Toute impossibilité devient un point de décision précis.",
+    "id": "DA40-003",
+    "ref": ".project/tasks/DA40-003-socle-local-reproductible",
+    "depIds": [],
+    "root": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling"
+  },
+  {
+    "key": "runtime",
+    "domain": "30",
+    "branch": "30-agent-runtime",
+    "slug": "qualification-parcours-runtime",
+    "title": "Qualifier le parcours runtime et les points de contrôle du placement",
+    "sp": 3,
+    "kind": "non-code",
+    "deps": [
+      "socle"
+    ],
+    "objective": "Prouver le parcours client/serveur/session effectif et borner les futurs contrôles d'admission du Sprint 2.",
+    "evidence": "DA30-001 : V1/V2, layout et transport sont indépendants ; coordinateur process-local et usage auxiliaire incomplet.",
+    "scope": [
+      "Tracer une route pilote locale précise, de la requête au placement Session/Location et aux outils.",
+      "Cartographier admissions, écritures fichiers, shell/PTY et processus descendants ; distinguer points couverts et trous de couverture.",
+      "Évaluer les capacités MT nécessaires et produire le contrat d'entrée pour binding/lease/reprise, sans implémenter le registre."
+    ],
+    "acceptance": [
+      "Manifest et preuves identifient client, route, version session et adaptateur sans inférence depuis le layout.",
+      "Chaque famille d'écriture a un point de contrôle démontré ou une limitation explicite ; verdict faisable/conditionnel/non faisable motivé.",
+      "Garde de lancement écrivain proposée pour Sprint 2 ; incertitude de quiescence traitée par refus, pas par expiration seule."
+    ],
+    "surfaces": [
+      "packages/server/src/handlers/message.ts",
+      "packages/core/src/session.ts",
+      "packages/core/src/session/execution/local.ts",
+      "packages/core/src/session/runner/llm.ts",
+      "packages/core/src/location-mutation.ts"
+    ],
+    "excludes": "Implémentation du lease ou ledger, modification du moteur, benchmark économique, campagne API payante.",
+    "smoke": "Parent confronte matrice et traces à la route locale choisie ; tests existants/fixtures sans fournisseur réel privilégiés.",
+    "risks": "La qualification peut invalider le chemin choisi. Remettre la preuve au parent avant toute extension de scope ; aucune affirmation de protection universelle du shell.",
+    "id": "DA30-003",
+    "ref": ".project/tasks/DA30-003-qualification-parcours-runtime",
+    "depIds": [
+      "DA40-003"
+    ],
+    "root": "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime"
+  },
+  {
+    "key": "git",
+    "domain": "20",
+    "branch": "20-workspace-git",
+    "slug": "contexte-local-verifiable",
+    "title": "Exposer un contexte local et Git vérifiable en lecture seule",
+    "sp": 5,
+    "kind": "code",
+    "deps": [
+      "socle",
+      "runtime"
+    ],
+    "objective": "Donner à l'interface un contrat fiable de chemin, disponibilité et état Git pour le checkout réellement consulté.",
+    "evidence": "DA20-001 : Project.ID partagé entre clones, base historique indéfinie, états detached et diff incomplet ambigus.",
+    "scope": [
+      "Réutiliser les services existants pour résoudre chemin canonique, top-level, checkout et disponibilité.",
+      "Définir/exposer branche ou detached, HEAD, base_ref/base_oid explicites et état de résolution ; staging reste une configuration DA, jamais un fallback universel silencieux.",
+      "Fournir erreurs structurées pour dossier absent/inaccessible/non-Git et états de revue incomplets/conflits lorsque disponibles ; contrat consommable par UI."
+    ],
+    "acceptance": [
+      "Réponses cohérentes avec Git sur fixtures existant, absent, non-Git, detached et base introuvable.",
+      "Deux clones de même origin ne substituent pas leur chemin malgré Project.ID partagé.",
+      "Lire/ouvrir ne crée ni .git ni branche/worktree ; base inconnue ne signifie pas clean.",
+      "Contrat public, génération et checks appropriés respectent les dépendances Schema/Core/Protocol/Server/Client."
+    ],
+    "surfaces": [
+      "packages/core/src/git.ts",
+      "packages/core/src/project.ts",
+      "packages/core/src/location.ts",
+      "packages/opencode/src/git/index.ts",
+      "packages/opencode/src/project/vcs.ts",
+      "packages/schema",
+      "packages/protocol",
+      "packages/server"
+    ],
+    "excludes": "Création/reset/retrait worktree, changement de branche, migration d'identité native, diff UI complet, lease et réparation de Session.",
+    "smoke": "Parent compare l'état exposé et les mesures Git/ filesystem ; erreurs doivent être observables sans action mutatrice.",
+    "risks": "Ne pas développer deux contrats métier V1/V2. Le chemin certifié par qualification gouverne le scope. API/codegen à régénérer uniquement si contrat public modifié.",
+    "id": "DA20-002",
+    "ref": ".project/tasks/DA20-002-contexte-local-verifiable",
+    "depIds": [
+      "DA40-003",
+      "DA30-003"
+    ],
+    "root": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git"
+  },
+  {
+    "key": "ui",
+    "domain": "10",
+    "branch": "10-product-ui",
+    "slug": "ouverture-projet-explicite",
+    "title": "Ouvrir explicitement le bon projet et afficher son contexte réel",
+    "sp": 5,
+    "kind": "code",
+    "deps": [
+      "socle",
+      "git"
+    ],
+    "objective": "Permettre de parcourir puis confirmer un dossier précis et de comprendre le contexte actif sans mutation Git implicite.",
+    "evidence": "DA10/20 : sélection web ambiguë, projet déplacé persistant, erreur fichiers générique ; home-controller add appelle initGit si file.list vide.",
+    "scope": [
+      "Séparer navigation, saisie absolue, aperçu et confirmation sur la route web pilote retenue.",
+      "Retirer l'initGit implicite du parcours d'ouverture couvert ; afficher erreur et résultat réel avant annoncer succès.",
+      "Afficher chemin canonique, disponibilité, branche/HEAD et base, en consommant le contrat 20 ; dossier manquant conserve l'historique consultable avec diagnostic.",
+      "Réutiliser composants/design system/i18n existants ; conserver le chat et les panneaux."
+    ],
+    "acceptance": [
+      "Annuler, naviguer et ouvrir un dossier vide n'initialisent pas Git ; fermeture d'un dialogue ne vaut pas succès.",
+      "Chemin collé, dossier inaccessible et récent déplacé donnent un état explicite ; aucune réparation historique implicite.",
+      "Bandeau et sélection concordent avec le checkout actif ; aucune confusion entre clones ou sessions.",
+      "Tests des parcours affectés et smoke parent sur le client local réellement servi ; périmètre web/OS clairement indiqué."
+    ],
+    "surfaces": [
+      "packages/app/src/pages/home/home-controller.ts",
+      "packages/app/src/components/dialog-select-directory-v2.tsx",
+      "packages/app/src/components/dialog-select-directory.tsx",
+      "packages/app/src/context/server.tsx",
+      "packages/app/src/pages/session",
+      "packages/app/src/i18n"
+    ],
+    "excludes": "Redesign global, favori avancé, parité Electron/multi-OS, migration historique, binding/lease ou orchestration parallèle.",
+    "smoke": "Parent exerce chemin absolu, navigation/confirmation/annulation, fixture vide, chemin manquant, réouverture et contexte Git ; contrôle absence de .git avant/après.",
+    "risks": "Respecter AGENTS app pour i18n, benchmark préalable si session/timeline modifiées et aucun restart. Une route non qualifiée n'est pas déclarée supportée.",
+    "id": "DA10-002",
+    "ref": ".project/tasks/DA10-002-ouverture-projet-explicite",
+    "depIds": [
+      "DA40-003",
+      "DA20-002"
+    ],
+    "root": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui"
+  },
+  {
+    "key": "parent",
+    "domain": "40",
+    "branch": "staging",
+    "slug": "orchestration-sprint-1",
+    "title": "Orchestrer et réceptionner le Sprint 1 — Projet et environnement fiables",
+    "sp": 2,
+    "kind": "non-code",
+    "deps": [],
+    "objective": "Coordonner les quatre tâches, contrôler leurs dépendances et réceptionner le parcours du Sprint 1 avant de cadrer Sprint 2.",
+    "evidence": "M0 terminé ; release 0.1 et découpage trois sprints validés par l'utilisateur. Aucun produit encore modifié.",
+    "scope": [
+      "Préflight Git/chats/MT/APEX, protection des livrables hérités, allocation des worktrees et contrôle d'un écrivain par domaine.",
+      "Faire progresser les tâches selon socle → runtime → Git → UI ; suivre les preuves et remonter les changements de contrat.",
+      "Exécuter les smokes parents, organiser les corrections dans leurs worktrees et consolider la démonstration.",
+      "Mesurer charge réelle et réviser le scope Sprint 2 ; tenir une proposition d'intégration/release distincte des actes Git."
+    ],
+    "acceptance": [
+      "Chaque tâche garde carte/dossier/chat/worktree concordants ; aucun Build produit sur staging.",
+      "Les quatre livraisons disposent des checks et revues parent ; seuls les résultats réellement exercés sont déclarés réussis.",
+      "Manifest de recette associe tous les changements utilisés et leur source ; aucune démonstration sur une version distante non identifiée.",
+      "Bilan Sprint 1 avec critères, dettes, résultats, charge observée et décision explicite de suite."
+    ],
+    "surfaces": [
+      "PLAN-GENERAL.md",
+      ".project/runtime",
+      "docs/product/releases/0.1.md",
+      "docs/product/sprints/sprint-1.md"
+    ],
+    "excludes": "Implémentation à la place des enfants, lancement automatique Sprint 2, publication, push/merge/rebase/promotion/retrait worktree.",
+    "smoke": "Parent reçoit le client local, vérifie ouvrir/annuler/chemin manquant/contexte Git et relit qualification runtime ; pas de test de lease livré dans ce sprint.",
+    "risks": "Orchestration démarre sans attendre les enfants ; sa sortie dépend de leurs quatre validations. Le partage 40-tooling concerne seulement socle, parent restant dans le conteneur local.",
+    "id": "DA40-004",
+    "ref": ".project/tasks/DA40-004-orchestration-sprint-1",
+    "depIds": [],
+    "root": "/Users/leanbot/Documents/40_Daidalon/Daidalon"
+  }
+]

@@ -1,0 +1,27 @@
+{
+  "baseline_count": 33,
+  "changed": [
+    ".project/tasks/DA10-002-ouverture-projet-explicite/STATE.md",
+    "PLAN-GENERAL.md"
+  ],
+  "unexpected": [],
+  "index_exact_da20": true,
+  "da20_hashes_and_index_preserved": {
+    "packages/core/src/local-context.ts": true,
+    "packages/core/test/local-context.test.ts": true,
+    "packages/opencode/src/server/routes/instance/httpapi/groups/global.ts": true,
+    "packages/opencode/src/server/routes/instance/httpapi/handlers/global.ts": true,
+    "packages/opencode/src/server/routes/instance/httpapi/public.ts": true,
+    "packages/opencode/src/server/routes/instance/httpapi/server.ts": true,
+    "packages/opencode/test/server/httpapi-control-plane.test.ts": true,
+    "packages/opencode/test/server/httpapi-exercise/index.ts": true,
+    "packages/opencode/test/server/httpapi-global.test.ts": true,
+    "packages/opencode/test/server/httpapi-local-context.test.ts": true,
+    "packages/opencode/test/server/httpapi-public-openapi.test.ts": true,
+    "packages/schema/src/local-context.ts": true,
+    "packages/sdk/js/src/v2/gen/sdk.gen.ts": true,
+    "packages/sdk/js/src/v2/gen/types.gen.ts": true,
+    "packages/sdk/js/test/local-context.test.ts": true
+  },
+  "lockfile_matches_head": true
+}

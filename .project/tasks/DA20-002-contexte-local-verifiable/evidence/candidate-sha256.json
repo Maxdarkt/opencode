@@ -1,0 +1,17 @@
+{
+  "packages/core/src/local-context.ts": "a2927502889fe2fa7785847dbea961fde1785f2d07c2bdeb1758fa6c9003f491",
+  "packages/core/test/local-context.test.ts": "5b66931a279434e09857e179cfa4c08c66621f5ed80f4afbb7dcb3860d213611",
+  "packages/opencode/src/server/routes/instance/httpapi/groups/global.ts": "2a074bd8dedba7e0dc8ea0edfe0e49accf3ef48b743f650fadea6e235779c417",
+  "packages/opencode/src/server/routes/instance/httpapi/handlers/global.ts": "0c65cdd2beafe46336cbb2e70d3031379bd4c390cb3d94bcebe50a6306a22df9",
+  "packages/opencode/src/server/routes/instance/httpapi/public.ts": "4c25aebda6214ab9ac54a1aefe1835392a171ce4442414ef34b71fa5c0865557",
+  "packages/opencode/src/server/routes/instance/httpapi/server.ts": "197c92c504709c6f18a36d18c7cba77e615b7d60623a75ea97983983e4a4c208",
+  "packages/opencode/test/server/httpapi-control-plane.test.ts": "b02653a299a8152f2fe80aabdbbf8d5b74f7e853d6d23cd02d59cafe74b7fe87",
+  "packages/opencode/test/server/httpapi-exercise/index.ts": "1915496e42c2f68c13ebda9a096323bd6d636b6eec3ea6da5b03488618d5ae36",
+  "packages/opencode/test/server/httpapi-global.test.ts": "b41ea0ba077e8bf7c94c248408fe4679574fe0de35fbea2d978be6a5a466a5d6",
+  "packages/opencode/test/server/httpapi-local-context.test.ts": "5d56dade0c36826d7ade5623bd022cc0941601797a8413d89b7a931293212870",
+  "packages/opencode/test/server/httpapi-public-openapi.test.ts": "7c0787490b6a9b4dc7a2c487fc2f4f36b431eb9081f888a50477987b662a38b0",
+  "packages/schema/src/local-context.ts": "ce5c54c94b5c98cc2723c27d95d49df310d0c6dc3adf5a11619c81c173d34dfe",
+  "packages/sdk/js/src/v2/gen/sdk.gen.ts": "687a16b4d07bf38d91a854de728e65b6f3d9751c0536edb38544acabc7d33941",
+  "packages/sdk/js/src/v2/gen/types.gen.ts": "5a596e40e3fdd6ac46e481afce6f2021ee5da7deb140616ae51cd63f6301a2ab",
+  "packages/sdk/js/test/local-context.test.ts": "567fe6bf394a689b8a08e5db8683de3649566749e5730eca9f3163f83c9da22c"
+}

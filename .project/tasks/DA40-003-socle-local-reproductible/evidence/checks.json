@@ -1,0 +1,75 @@
+[
+  {
+    "name": "app-focused",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/packages/app",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun",
+      "test",
+      "--conditions=solid",
+      "src/utils/worktree.test.ts",
+      "src/utils/server-health.test.ts",
+      "src/components/directory-picker-domain.test.ts"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "llm-focused",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/packages/llm",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun",
+      "test",
+      "test/endpoint.test.ts"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "core-focused",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/packages/core",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun",
+      "test",
+      "test/location.test.ts"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "app-typecheck",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/packages/app",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun",
+      "run",
+      "typecheck"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "llm-typecheck",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/packages/llm",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun",
+      "run",
+      "typecheck"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "core-typecheck",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/packages/core",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun",
+      "run",
+      "typecheck"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "opencode-typecheck",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/packages/opencode",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun",
+      "run",
+      "typecheck"
+    ],
+    "exit": 0
+  }
+]

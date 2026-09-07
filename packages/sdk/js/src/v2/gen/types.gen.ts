@@ -3038,6 +3038,31 @@ export type MoveSessionDestination = {
   directory: string
 }
 
+export type LocalContextInfo = {
+  requested_directory: string
+  canonical_directory: string | null
+  availability: "available" | "absent" | "inaccessible" | "not_directory" | "invalid"
+  session_directory: string | null
+  session_canonical_directory: string | null
+  session_status: "not_requested" | "found" | "missing" | "unavailable" | "workspace"
+  concordance: "not_applicable" | "matches" | "mismatch" | "unknown"
+  git: {
+    status: "available" | "non_git" | "unavailable"
+    top_level: string | null
+    git_directory: string | null
+    common_directory: string | null
+    branch: string | null
+    head: string | null
+    head_status: "branch" | "detached" | "unborn" | "unknown"
+    base_ref: string | null
+    base_oid: string | null
+    base_status: "not_requested" | "resolved" | "unresolved"
+    dirty: boolean | null
+    conflicts: boolean | null
+    review: "clean" | "changed" | "conflicts" | "incomplete"
+  } | null
+}
+
 export type ModelRef = {
   id: string
   providerID: string
@@ -7225,6 +7250,35 @@ export type ExperimentalControlPlaneMoveSessionResponses = {
 
 export type ExperimentalControlPlaneMoveSessionResponse =
   ExperimentalControlPlaneMoveSessionResponses[keyof ExperimentalControlPlaneMoveSessionResponses]
+
+export type GlobalContextData = {
+  body?: never
+  path?: never
+  query: {
+    directory: string
+    base_ref?: string
+    session_id?: string
+  }
+  url: "/global/context"
+}
+
+export type GlobalContextErrors = {
+  /**
+   * Bad request
+   */
+  400: BadRequestError
+}
+
+export type GlobalContextError = GlobalContextErrors[keyof GlobalContextErrors]
+
+export type GlobalContextResponses = {
+  /**
+   * LocalContext.Info
+   */
+  200: LocalContextInfo
+}
+
+export type GlobalContextResponse = GlobalContextResponses[keyof GlobalContextResponses]
 
 export type GlobalHealthData = {
   body?: never

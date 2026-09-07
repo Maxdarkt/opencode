@@ -1,3 +1,4 @@
+import { LocalContext } from "@opencode-ai/core/local-context"
 import { Config as EffectConfig, Context, Effect, Layer } from "effect"
 import { HttpApiBuilder, OpenApi } from "effect/unstable/httpapi"
 import { HttpClient, HttpMiddleware, HttpRouter, HttpServer, HttpServerResponse } from "effect/unstable/http"
@@ -212,6 +213,7 @@ type RouteRequirements =
 const app = LayerNode.group([
   Npm.node,
   FSUtil.node,
+  LocalContext.node,
   Database.node,
   Auth.node,
   Account.node,

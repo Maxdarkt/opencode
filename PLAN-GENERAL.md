@@ -1,31 +1,27 @@
 # Daidalon — plan général
 
-**Projet MT Tasks :** `DA`  
-**Branche d'intégration locale :** `staging`  
-**Dernière mise à jour :** 2026-09-06
+Mis à jour le 2026-09-07. Projet MT DA ; branche source staging, sans Build produit. [Index sprints](/Users/leanbot/Documents/40_Daidalon/Daidalon/sprint.md).
 
-## M0 — Audit et validation
+## Travail courant
 
-**Statut :** actif  
-**Budget :** 17 SP
+Aucun sprint actif après la clôture du Sprint 1. Le Sprint 2 ne sera cadré et activé qu'après validation de la baseline commune.
 
-| Ordre | Identifiant | Domaine | Titre | Statut | Référence APEX |
-|---:|---|---|---|---|---|
-| 0 | `DA40-002` | `40 tooling` | Orchestrer le Sprint M0 — Audit et validation | À faire | `.project/tasks/DA40-002-orchestration-m0` |
-| 1 | `DA10-001` | `10 product-ui` | Auditer le parcours UI et inventorier les irritants | À faire | `.project/tasks/DA10-001-audit-ui-opencode` |
-| 2 | `DA20-001` | `20 workspace-git` | Auditer l’architecture projet, session, Git et worktrees | À faire | `.project/tasks/DA20-001-audit-workspace-git` |
-| 3 | `DA30-001` | `30 agent-runtime` | Auditer le contexte, les modèles et les coûts | À faire | `.project/tasks/DA30-001-audit-runtime-couts` |
-| 4 | `DA30-002` | `30 agent-runtime` | Formaliser le modèle cible APEX et Sprint | À faire | `.project/tasks/DA30-002-modele-apex-sprint` |
-| 5 | `DA40-001` | `40 tooling` | Produire la gap analysis et la décision M0 | À faire | `.project/tasks/DA40-001-gap-analysis-m0` |
+| Carte active | Statut | But | Worktree |
+|---|---|---|---|
+| [DA40-010](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/tasks/DA40-010-assembler-baseline-commune/scope.md) | review, hors sprint | Baseline assemblée ; Pass B parent et commit local à effectuer | `features/50-integration` |
 
-### Dépendances
+## Historique
 
-- `DA10-001`, `DA20-001` et `DA30-001` peuvent être analysées en parallèle dans leurs worktrees respectifs.
-- `DA40-002` orchestre le sprint depuis `staging` sans développer le produit.
-- `DA30-002` utilise les constats des trois audits et s'exécute après `DA30-001` dans le même worktree.
-- `DA40-001` consolide les quatre tâches précédentes et porte la décision GO/NO-GO de M0.
-- Aucun développement produit important ne commence avant la clôture de `DA40-001`.
+- Sprint 1 completed : 7 cartes, 26 SP acceptés puis archivés. [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-1.md) ; [plan sortant](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/sprint-1/plan-sortant.md).
+- M0 completed : six cartes archivées après validation done. [Bilan et dossiers](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/m0.md). Snapshot conservé dans `.project/archives/m0`.
+- Carte héritée OC-0003 réconciliée, rattachée à `40-tooling`, close puis archived ; [trace](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/legacy-oc-0003.md).
+- DA40-005 reçue hors sprint : protocole Markdown/MT, modèles, réconciliation, reprise et routage modèle validés ; [trace](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/da40-005.md).
+- DA40-008 reçue hors sprint : `sprint-orchestrator` utilise checkpoints compacts, contexte ciblé, routage modèle attesté et guide portable de bootstrap projet ; [trace](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/da40-008.md).
+- DA40-009 reçue hors sprint : racine canonique, modèles, registre de projections, checkpoint et routine de reprise adoptés ; [trace](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/da40-009.md).
 
-## Sprint 1 candidat
+## Suite
+Recevoir DA40-010, puis préparer le Sprint 2 à partir de la baseline intégrée, de l'[architecture](/Users/leanbot/Documents/40_Daidalon/features/40-tooling/docs/product/architecture.md) et du bilan Sprint 1. Sprints 2/3 restent intentions jusqu'à cadrage et activation explicites. [Routine permanente](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/workflow/suivi-sprints.md).
 
-Le Sprint 1 ne sera matérialisé qu'après la décision M0. Sa tranche verticale candidate couvre un projet, une tâche APEX, une session et un worktree de bout en bout, avec contexte Git visible et premières métriques de coût.
+## Besoin produit à cadrer
+
+Mémoire durable de projet : conception DA40-005, intégration au skill DA40-008 et adoption Daidalon DA40-009 sont terminées. Le [protocole opérationnel](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/workflow/memoire-durable.md) et le [checkpoint](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/runtime/durable-memory-checkpoint.md) deviennent les points d'entrée.

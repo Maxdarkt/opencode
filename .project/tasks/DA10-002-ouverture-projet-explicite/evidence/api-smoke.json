@@ -1,0 +1,63 @@
+{
+  "results": [
+    {
+      "requested_directory": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui",
+      "canonical_directory": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui",
+      "availability": "available",
+      "session_directory": null,
+      "session_canonical_directory": null,
+      "session_status": "not_requested",
+      "concordance": "not_applicable",
+      "git": {
+        "status": "available",
+        "top_level": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui",
+        "git_directory": "/Users/leanbot/Documents/40_Daidalon/Daidalon/.git/worktrees/10-product-ui",
+        "common_directory": "/Users/leanbot/Documents/40_Daidalon/Daidalon/.git",
+        "branch": "10-product-ui",
+        "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+        "head_status": "branch",
+        "base_ref": "HEAD",
+        "base_oid": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+        "base_status": "resolved",
+        "dirty": true,
+        "conflicts": false,
+        "review": "changed"
+      }
+    },
+    {
+      "requested_directory": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/runtime/empty",
+      "canonical_directory": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/runtime/empty",
+      "availability": "available",
+      "session_directory": null,
+      "session_canonical_directory": null,
+      "session_status": "not_requested",
+      "concordance": "not_applicable",
+      "git": {
+        "status": "available",
+        "top_level": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui",
+        "git_directory": "/Users/leanbot/Documents/40_Daidalon/Daidalon/.git/worktrees/10-product-ui",
+        "common_directory": "/Users/leanbot/Documents/40_Daidalon/Daidalon/.git",
+        "branch": "10-product-ui",
+        "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+        "head_status": "branch",
+        "base_ref": "HEAD",
+        "base_oid": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+        "base_status": "resolved",
+        "dirty": true,
+        "conflicts": false,
+        "review": "changed"
+      }
+    },
+    {
+      "requested_directory": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/runtime/empty/missing",
+      "canonical_directory": null,
+      "availability": "absent",
+      "session_directory": null,
+      "session_canonical_directory": null,
+      "session_status": "not_requested",
+      "concordance": "not_applicable",
+      "git": null
+    }
+  ],
+  "empty_dot_git": false
+}

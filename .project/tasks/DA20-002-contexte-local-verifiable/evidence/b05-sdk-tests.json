@@ -1,0 +1,11 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/sdk/js",
+  "command": [
+    "bun",
+    "test",
+    "test/local-context.test.ts",
+    "test/session-history.test.ts"
+  ],
+  "exit": 0,
+  "seconds": 0.09
+}

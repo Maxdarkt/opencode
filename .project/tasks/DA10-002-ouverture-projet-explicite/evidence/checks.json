@@ -1,0 +1,58 @@
+[
+  {
+    "name": "install",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui",
+    "command": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun install --frozen-lockfile --ignore-scripts",
+    "exit_code": 0,
+    "log": "install.log"
+  },
+  {
+    "name": "b01-tests",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app",
+    "command": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun test --conditions=solid --preload ./happydom.ts ./src/components/directory-picker-domain.test.ts",
+    "exit_code": 0,
+    "log": "b01-tests.log"
+  },
+  {
+    "name": "b02-tests",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app",
+    "command": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun test --conditions=solid --preload ./happydom.ts ./src/pages/home/project-opening.test.ts",
+    "exit_code": 0,
+    "log": "b02-tests.log"
+  },
+  {
+    "name": "app-typecheck",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app",
+    "command": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun typecheck",
+    "exit_code": 0,
+    "log": "app-typecheck.log"
+  },
+  {
+    "name": "app-unit",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app",
+    "command": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun test --conditions=solid --only-failures --preload ./happydom.ts ./src",
+    "exit_code": 1,
+    "log": "app-unit.log"
+  },
+  {
+    "name": "baseline-locale",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app",
+    "command": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun test --conditions=solid --preload ./happydom.ts ./src/i18n/desktop-native.test.ts",
+    "exit_code": 1,
+    "log": "baseline-locale.log"
+  },
+  {
+    "name": "format",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui",
+    "command": "./node_modules/.bin/prettier --check packages/app/src/components/directory-picker.tsx packages/app/src/components/dialog-select-directory-v2.tsx packages/app/src/components/directory-picker-domain.ts packages/app/src/components/directory-picker-domain.test.ts packages/app/src/pages/home/home-controller.ts packages/app/src/pages/home/project-opening.ts packages/app/src/pages/home/project-opening.test.ts",
+    "exit_code": 0,
+    "log": "format.log"
+  },
+  {
+    "name": "lint",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui",
+    "command": "./node_modules/.bin/oxlint packages/app/src/components/directory-picker.tsx packages/app/src/components/dialog-select-directory-v2.tsx packages/app/src/components/directory-picker-domain.ts packages/app/src/components/directory-picker-domain.test.ts packages/app/src/pages/home/home-controller.ts packages/app/src/pages/home/project-opening.ts packages/app/src/pages/home/project-opening.test.ts",
+    "exit_code": 0,
+    "log": "lint.log"
+  }
+]

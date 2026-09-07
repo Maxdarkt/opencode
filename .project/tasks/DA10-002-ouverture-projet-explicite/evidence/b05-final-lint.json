@@ -1,0 +1,25 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui",
+  "command": [
+    "./node_modules/.bin/oxlint",
+    "packages/app/src/components/active-project-context.tsx",
+    "packages/app/src/components/dialog-select-directory-v2.css",
+    "packages/app/src/components/dialog-select-directory-v2.tsx",
+    "packages/app/src/components/directory-picker-domain.test.ts",
+    "packages/app/src/components/directory-picker-domain.ts",
+    "packages/app/src/components/directory-picker.tsx",
+    "packages/app/src/components/project-context-request.ts",
+    "packages/app/src/components/project-context-state.test.ts",
+    "packages/app/src/components/project-context-state.ts",
+    "packages/app/src/components/project-context-view.tsx",
+    "packages/app/src/components/use-project-context.ts",
+    "packages/app/src/context/language.tsx",
+    "packages/app/src/i18n/project-context.ts",
+    "packages/app/src/pages/home/home-controller.ts",
+    "packages/app/src/pages/home/project-opening.test.ts",
+    "packages/app/src/pages/home/project-opening.ts",
+    "packages/app/src/pages/layout-new.tsx",
+    "packages/app/src/pages/layout.tsx"
+  ],
+  "exit_code": 0
+}

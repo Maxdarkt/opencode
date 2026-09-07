@@ -1,3 +1,5 @@
+import { useProjectContext } from "./use-project-context"
+import { ProjectContextView } from "./project-context-view"
 import "@pierre/trees/web-components"
 import { FileTree } from "@pierre/trees"
 import { Dialog, DialogBody, DialogFooter, DialogHeader, DialogTitle } from "@opencode-ai/ui/v2/dialog-v2"
@@ -18,6 +20,7 @@ import {
   pickerFileSearchQuery,
   pickerAbsoluteInput,
   pickerMode,
+  pickerDirectoryReady,
   preloadTreeDirectories,
   cleanPickerInput,
   createPriorityTaskQueue,
@@ -225,9 +228,27 @@ export function DialogSelectDirectoryV2(props: DialogSelectDirectoryV2Props) {
     action()
   }
 
+  const result = createMemo(() =>
+    policy.result(root(), selected(), rootValid() && pickerDirectoryReady(input(), root(), home())),
+  )
+
+  const previewDirectory = () =>
+    !policy.includeFiles && pickerDirectoryReady(input(), root(), home()) ? selected() || root() : undefined
+  const context = useProjectContext(() =>
+    previewDirectory() ? { server: props.server, query: { directory: previewDirectory()! } } : undefined,
+  )
+  const canConfirm = () =>
+    policy.includeFiles
+      ? !!result()
+      : !!previewDirectory() &&
+        !context.pending &&
+        !context.error &&
+        context.data?.requested_directory === previewDirectory() &&
+        context.data?.availability === "available"
+
   function resolve() {
-    const path = policy.result(root(), selected(), rootValid())
-    if (!path) return
+    const path = policy.includeFiles ? result() : previewDirectory()
+    if (!path || !canConfirm()) return
     props.onSelect(props.multiple ? [path] : path)
     dialog.close()
   }
@@ -281,7 +302,10 @@ export function DialogSelectDirectoryV2(props: DialogSelectDirectoryV2Props) {
     void navigate(path)
   })
 
-  onCleanup(() => tree?.cleanUp())
+  onCleanup(() => {
+    navigation++
+    tree?.cleanUp()
+  })
 
   return (
     <Dialog size="large" class="directory-picker-v2">
@@ -298,11 +322,17 @@ export function DialogSelectDirectoryV2(props: DialogSelectDirectoryV2Props) {
             spellcheck={false}
             class="!w-full"
             onInput={(event) => {
+              if (!policy.includeFiles) {
+                navigation++
+                setRootValid(false)
+                setLoading(false)
+              }
               setInput(cleanPickerInput(event.currentTarget.value))
               setSelected("")
               setSuggestionsOpen(true)
               setActiveSuggestion(-1)
             }}
+            aria-label={language.t("dialog.directory.search.placeholder")}
             role="combobox"
             aria-autocomplete="list"
             aria-expanded={suggestionsOpen()}
@@ -371,13 +401,17 @@ export function DialogSelectDirectoryV2(props: DialogSelectDirectoryV2Props) {
             <div class="directory-picker-v2-state">{language.t("dialog.directory.readError")}</div>
           </Show>
         </div>
-        <div class="directory-picker-v2-selection">{policy.result(root(), selected(), rootValid())}</div>
+        <div class="directory-picker-v2-selection">
+          <Show when={!policy.includeFiles} fallback={result()}>
+            <ProjectContextView state={context} api={props.server.http.url} directory={previewDirectory() ?? ""} />
+          </Show>
+        </div>
       </DialogBody>
       <DialogFooter>
         <ButtonV2 variant="neutral" onClick={() => dialog.close()}>
           {language.t("common.cancel")}
         </ButtonV2>
-        <ButtonV2 variant="contrast" disabled={!policy.result(root(), selected(), rootValid())} onClick={resolve}>
+        <ButtonV2 variant="contrast" disabled={!canConfirm()} onClick={resolve}>
           {action[policy.action]}
         </ButtonV2>
       </DialogFooter>

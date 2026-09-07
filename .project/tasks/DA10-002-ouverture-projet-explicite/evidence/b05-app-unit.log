@@ -1,0 +1,96 @@
+bun test v1.3.14 (0d9b296a)
+
+src/i18n/desktop-native.test.ts:
+118 |   })
+119 | 
+120 |   test("uses Unicode likely subtags for script-sensitive bundles", () => {
+121 |     expect(detectDesktopNativeLocale(["zh-TW"])).toBe("zht")
+122 |     expect(detectDesktopNativeLocale(["zh-SG"])).toBe("zh")
+123 |     expect(detectDesktopNativeLocale(["pa-PK"])).toBe("pa")
+                                                       ^
+error: expect(received).toBe(expected)
+
+Expected: "pa"
+Received: "en"
+
+      at <anonymous> (/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app/src/i18n/desktop-native.test.ts:123:50)
+(fail) desktop native locale detection > uses Unicode likely subtags for script-sensitive bundles [1.72ms]
+
+src/i18n/parity.test.ts:
+107 |           .filter((key) => !Object.hasOwn(source, key))
+108 |           .sort()
+109 |         const expected = pluralFamilies(source)
+110 |           .flatMap((key) => (pluralCategories.get(locale) ?? []).map((category) => `${key}.${category}`))
+111 |           .sort()
+112 |         expect({ domain: domain.name, locale, missing, extra }).toEqual({
+                                                                      ^
+error: expect(received).toEqual(expected)
+
+@@ -13,7 +13,55 @@
+      "session.revertDock.summary.many",
+      "session.revertDock.summary.two",
+      "session.revertDock.summary.zero",
+    ],
+    "locale": "ar",
+-   "missing": [],
++   "missing": [
++     "project.context.api",
++     "project.context.unknown",
++     "project.context.requested",
++     "project.context.canonical",
++     "project.context.session",
++     "project.context.sessionCanonical",
++     "project.context.sessionStatus",
++     "project.context.concordance",
++     "project.context.git",
++     "project.context.checkout",
++     "project.context.branch",
++     "project.context.head",
++     "project.context.base",
++     "project.context.baseRef",
++     "project.context.baseOid",
++     "project.context.details",
++     "project.context.refresh",
++     "project.context.baseInput",
++     "project.context.error.auth",
++     "project.context.error.network",
++     "project.context.error.protocol",
++     "project.context.error.response",
++     "project.context.error.server",
++     "project.context.availability.available",
++     "project.context.availability.absent",
++     "project.context.availability.inaccessible",
++     "project.context.availability.not_directory",
++     "project.context.availability.invalid",
++     "project.context.session.not_requested",
++     "project.context.session.found",
++     "project.context.session.missing",
++     "project.context.session.unavailable",
++     "project.context.session.workspace",
++     "project.context.concordance.not_applicable",
++     "project.context.concordance.matches",
++     "project.context.concordance.mismatch",
++     "project.context.concordance.unknown",
++     "project.context.git.available",
++     "project.context.git.non_git",
++     "project.context.git.unavailable",
++     "project.context.head.branch",
++     "project.context.head.detached",
++     "project.context.head.unborn",
++     "project.context.head.unknown",
++     "project.context.base.not_requested",
++     "project.context.base.resolved",
++     "project.context.base.unresolved",
++   ],
+  }
+
+- Expected  - 1
++ Received  + 49
+
+      at <anonymous> (/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app/src/i18n/parity.test.ts:112:65)
+(fail) i18n parity > non-English locales have every English key and required plural variants [5.40ms]
+
+ 735 pass
+ 2 fail
+ 2865 expect() calls
+Ran 737 tests across 105 files. [2.27s]

@@ -1,0 +1,12 @@
+{
+  "baseline_files": 31,
+  "changed_baseline_paths": [
+    "PLAN-GENERAL.md",
+    ".project/tasks/DA20-002-contexte-local-verifiable/STATE.md"
+  ],
+  "unexpected": [],
+  "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+  "branch": "20-workspace-git",
+  "index_diff": "",
+  "lock_unchanged": true
+}

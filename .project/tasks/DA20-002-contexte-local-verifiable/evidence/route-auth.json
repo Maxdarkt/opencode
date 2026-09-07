@@ -1,0 +1,16 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+  "command": [
+    "bun",
+    "run",
+    "script/httpapi-exercise.ts",
+    "--mode",
+    "auth",
+    "--include",
+    "global.context",
+    "--fail-on-missing",
+    "--fail-on-skip"
+  ],
+  "exit": 0,
+  "seconds": 5.06
+}

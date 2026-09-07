@@ -1,0 +1,31 @@
+DEV
+NAV
+N/A
+FPS
+50
+FRAME
+1139
+JANK
+3
+LONG
+0/0
+DELAY
+6
+INP
+1744
+CLS
+0.00
+MEM
+1%
+DIR
+LTR
+Ouvrir un projet
+~
+Racine
+Parent
+API: http://127.0.0.1:4150
+/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/runtime/empty
+Folder is available
+Project context details
+Annuler
+Sélectionner le dossier

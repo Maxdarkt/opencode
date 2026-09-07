@@ -1,7 +1,7 @@
 # Daidalon — conception produit
 
 **Statut :** conception de référence avant développement  
-**Sources :** [`vision.md`](./vision.md), [`roadmap.md`](./roadmap.md), [`worktrees.md`](./worktrees.md)  
+**Sources :** [`vision.md`](./vision.md), [`roadmap.md`](./roadmap.md), [`worktrees.md`](./worktrees.md), [`architecture.md`](./architecture.md)
 **Dernière mise à jour :** 2026-09-06
 
 ## 1. Rôle de ce document

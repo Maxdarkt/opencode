@@ -1,0 +1,22 @@
+bun test v1.3.14 (0d9b296a)
+
+src/i18n/desktop-native.test.ts:
+118 |   })
+119 | 
+120 |   test("uses Unicode likely subtags for script-sensitive bundles", () => {
+121 |     expect(detectDesktopNativeLocale(["zh-TW"])).toBe("zht")
+122 |     expect(detectDesktopNativeLocale(["zh-SG"])).toBe("zh")
+123 |     expect(detectDesktopNativeLocale(["pa-PK"])).toBe("pa")
+                                                       ^
+error: expect(received).toBe(expected)
+
+Expected: "pa"
+Received: "en"
+
+      at <anonymous> (/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app/src/i18n/desktop-native.test.ts:123:50)
+(fail) desktop native locale detection > uses Unicode likely subtags for script-sensitive bundles [2.74ms]
+
+ 730 pass
+ 1 fail
+ 3032 expect() calls
+Ran 731 tests across 104 files. [2.23s]

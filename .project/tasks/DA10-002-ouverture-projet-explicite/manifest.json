@@ -1,0 +1,18 @@
+{
+  "root": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui",
+  "branch": "10-product-ui",
+  "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+  "composition": "unique candidate 10-product-ui: 15 staged DA20 paths plus unstaged UI paths",
+  "da20_source": "2d973aeaf6a289ba1f343663a758d7c70b1bcc11",
+  "ui": "http://127.0.0.1:4450",
+  "api": "http://127.0.0.1:4150",
+  "pids": {
+    "backend": 58716,
+    "client_launcher": 58717,
+    "client_listener": 58718
+  },
+  "fingerprints": "evidence/candidate-sha256.json",
+  "runtime": "Bun 1.3.14, allowlist evidence/processes.json",
+  "existing_4140_4440": "untouched",
+  "smoke": "API PASS and parent visual PASS; automated browser run incomplete, no further smoke at parent request"
+}

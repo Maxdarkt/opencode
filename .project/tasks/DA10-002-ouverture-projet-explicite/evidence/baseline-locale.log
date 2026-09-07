@@ -1,0 +1,29 @@
+bun test v1.3.14 (0d9b296a)
+
+src/i18n/desktop-native.test.ts:
+(pass) desktop native translations > uses native language names independent of the active locale [0.60ms]
+(pass) desktop native translations > accepts the exact typed bundle [0.27ms]
+(pass) desktop native translations > rejects unsupported locales and mismatched key sets [0.20ms]
+(pass) desktop native translations > interpolates native templates without changing unknown placeholders [0.07ms]
+(pass) desktop native locale detection > follows preference order and skips invalid or unsupported tags [0.44ms]
+118 |   })
+119 | 
+120 |   test("uses Unicode likely subtags for script-sensitive bundles", () => {
+121 |     expect(detectDesktopNativeLocale(["zh-TW"])).toBe("zht")
+122 |     expect(detectDesktopNativeLocale(["zh-SG"])).toBe("zh")
+123 |     expect(detectDesktopNativeLocale(["pa-PK"])).toBe("pa")
+                                                       ^
+error: expect(received).toBe(expected)
+
+Expected: "pa"
+Received: "en"
+
+      at <anonymous> (/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app/src/i18n/desktop-native.test.ts:123:50)
+(fail) desktop native locale detection > uses Unicode likely subtags for script-sensitive bundles [0.36ms]
+(pass) desktop native locale detection > recognizes Norwegian language tags [0.03ms]
+(pass) desktop native ICU data > accepts every locale in standard Intl formatters [18.20ms]
+
+ 7 pass
+ 1 fail
+ 450 expect() calls
+Ran 8 tests across 1 file. [285.00ms]

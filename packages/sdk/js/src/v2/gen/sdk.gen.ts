@@ -80,6 +80,8 @@ import type {
   GlobalConfigGetResponses,
   GlobalConfigUpdateErrors,
   GlobalConfigUpdateResponses,
+  GlobalContextErrors,
+  GlobalContextResponses,
   GlobalDisposeErrors,
   GlobalDisposeResponses,
   GlobalEventErrors,
@@ -1316,6 +1318,38 @@ export class Config extends HeyApiClient {
 }
 
 export class Global extends HeyApiClient {
+  /**
+   * Inspect local directory context
+   *
+   * Read an explicit local directory and optional persisted session placement without initializing a project. This observation is not a lease.
+   */
+  public context<ThrowOnError extends boolean = false>(
+    parameters: {
+      directory: string
+      base_ref?: string
+      session_id?: string
+    },
+    options?: Options<never, ThrowOnError>,
+  ) {
+    const params = buildClientParams(
+      [parameters],
+      [
+        {
+          args: [
+            { in: "query", key: "directory" },
+            { in: "query", key: "base_ref" },
+            { in: "query", key: "session_id" },
+          ],
+        },
+      ],
+    )
+    return (options?.client ?? this.client).get<GlobalContextResponses, GlobalContextErrors, ThrowOnError>({
+      url: "/global/context",
+      ...options,
+      ...params,
+    })
+  }
+
   /**
    * Get health
    *

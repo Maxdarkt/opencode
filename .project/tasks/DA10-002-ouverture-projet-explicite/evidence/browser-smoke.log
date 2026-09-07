@@ -1,0 +1,47 @@
+/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/node_modules/.bun/playwright@1.59.1/node_modules/playwright/lib/matchers/expect.js:213
+        return matcher.call(target, ...args);
+                       ^
+
+A [Error]: expect(locator).toBeEnabled() failed
+
+Locator:  getByRole('dialog').getByRole('button', { name: /^(Select folder|Sélectionner le dossier)$/ })
+Expected: enabled
+Received: disabled
+Timeout:  5000ms
+
+Call log:
+  - Expect "to.be.enabled" with timeout 5000ms
+  - waiting for getByRole('dialog').getByRole('button', { name: /^(Select folder|Sélectionner le dossier)$/ })
+    9 × locator resolved to <button disabled type="button" data-disabled="" data-size="normal" data-variant="contrast" data-component="button-v2">Sélectionner le dossier</button>
+      - unexpected value "disabled"
+
+    at Proxy.<anonymous> (/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/node_modules/.bun/playwright@1.59.1/node_modules/playwright/lib/matchers/expect.js:213:24)
+    at file:///Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/browser-smoke.mjs:24:25 {
+  matcherResult: {
+    message: 'expect(locator).toBeEnabled() failed\n' +
+      '\n' +
+      "Locator:  getByRole('dialog').getByRole('button', { name: /^(Select folder|Sélectionner le dossier)$/ })\n" +
+      'Expected: enabled\n' +
+      'Received: disabled\n' +
+      'Timeout:  5000ms\n' +
+      '\n' +
+      'Call log:\n' +
+      '  - Expect "to.be.enabled" with timeout 5000ms\n' +
+      "  - waiting for getByRole('dialog').getByRole('button', { name: /^(Select folder|Sélectionner le dossier)$/ })\n" +
+      '    9 × locator resolved to <button disabled type="button" data-disabled="" data-size="normal" data-variant="contrast" data-component="button-v2">Sélectionner le dossier</button>\n' +
+      '      - unexpected value "disabled"\n',
+    pass: false,
+    actual: 'disabled',
+    name: 'toBeEnabled',
+    expected: 'enabled',
+    log: [
+      '  - Expect "to.be.enabled" with timeout 5000ms',
+      "  - waiting for getByRole('dialog').getByRole('button', { name: /^(Select folder|Sélectionner le dossier)$/ })",
+      '    9 × locator resolved to <button disabled type="button" data-disabled="" data-size="normal" data-variant="contrast" data-component="button-v2">Sélectionner le dossier</button>',
+      '      - unexpected value "disabled"'
+    ],
+    timeout: 5000
+  }
+}
+
+Node.js v25.8.2

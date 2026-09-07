@@ -1,0 +1,176 @@
+
+  ! typescript-eslint(consistent-return): Function 'selection' expected no return value.
+    ,-[packages/app/src/components/directory-picker-domain.ts:40:9]
+ 39 |         if (!treePathWithin(base, root)) return
+ 40 |         return selectedTreePath(root, path, "file", base)
+    :         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 41 |       },
+    `----
+
+  ! typescript-eslint(consistent-return): Function 'result' expected no return value.
+    ,-[packages/app/src/components/directory-picker-domain.ts:58:7]
+ 57 |       if (!valid) return
+ 58 |       return selected || (root ? nativePickerPath(root) : undefined)
+    :       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 59 |     },
+    `----
+
+  ! typescript-eslint(consistent-return): Function 'pickerRelativePath' expected no return value.
+     ,-[packages/app/src/components/directory-picker-domain.ts:110:24]
+ 109 |   const target = insensitive ? targetPath.toLowerCase() : targetPath
+ 110 |   if (target === root) return ""
+     :                        ^^^^^^^^^
+ 111 |   const prefix = root.endsWith("/") ? root : root + "/"
+     `----
+
+  ! typescript-eslint(consistent-return): Function 'pickerRelativePath' expected no return value.
+     ,-[packages/app/src/components/directory-picker-domain.ts:113:3]
+ 112 |   if (!target.startsWith(prefix)) return
+ 113 |   return targetPath.slice(prefix.length)
+     :   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 114 | }
+     `----
+
+  ! typescript-eslint(consistent-return): Function 'selectedTreePath' expected no return value.
+     ,-[packages/app/src/components/directory-picker-domain.ts:236:16]
+ 235 |     if (directory) return
+ 236 |     if (!base) return path
+     :                ^^^^^^^^^^^
+ 237 |     const absolute = absoluteTreePath(root, path)
+     `----
+
+  ! typescript-eslint(consistent-return): Function 'selectedTreePath' expected no return value.
+     ,-[packages/app/src/components/directory-picker-domain.ts:238:5]
+ 237 |     const absolute = absoluteTreePath(root, path)
+ 238 |     return pickerRelativePath(base, absolute)
+     :     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 239 |   }
+     `----
+
+  ! typescript-eslint(consistent-return): Function 'selectedTreePath' expected no return value.
+     ,-[packages/app/src/components/directory-picker-domain.ts:240:3]
+ 239 |   }
+ 240 |   return directory ? nativePickerPath(absoluteTreePath(root, path)) : undefined
+     :   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ 241 | }
+     `----
+
+  ! typescript-eslint(consistent-return): Function 'scoped' expected a return value.
+     ,-[packages/app/src/components/directory-picker-domain.ts:333:16]
+ 332 |     const base = args.base()
+ 333 |     if (!base) return
+     :                ^^^^^^
+ 334 |     if (!raw) return { directory: trimPickerPath(base), path: "" }
+     `----
+
+  ! typescript-eslint(no-unsafe-type-assertion): Unsafe type assertion: type 'ServerSDK' is more narrow than the original type.
+     ,-[packages/app/src/components/directory-picker-domain.test.ts:136:15]
+ 135 |       const directories: string[] = []
+ 136 | ,->   const sdk = {
+ 137 | |       api: {
+ 138 | |         file: {
+ 139 | |           find: (input: { location?: { directory?: string } }) => {
+ 140 | |             directories.push(input.location?.directory ?? "")
+ 141 | |             return Promise.resolve({ data: [] })
+ 142 | |           },
+ 143 | |           list: () => Promise.resolve({ data: [] }),
+ 144 | |         },
+ 145 | |       },
+ 146 | `->   } as unknown as Parameters<typeof createDirectorySearch>[0]["sdk"]
+ 147 |       let base = "/repo"
+     `----
+
+  ! typescript-eslint(no-unsafe-type-assertion): Unsafe type assertion: type 'ServerSDK' is more narrow than the original type.
+     ,-[packages/app/src/components/directory-picker-domain.test.ts:158:15]
+ 157 |     test("keeps indexed directory results for servers that support empty search", async () => {
+ 158 | ,->   const sdk = {
+ 159 | |       api: {
+ 160 | |         file: {
+ 161 | |           find: () => Promise.resolve({ data: [{ path: "projects/", type: "directory" }] }),
+ 162 | |           list: () => Promise.reject(new Error("listing should not run when search returns results")),
+ 163 | |         },
+ 164 | |       },
+ 165 | `->   } as unknown as Parameters<typeof createDirectorySearch>[0]["sdk"]
+ 166 |       const search = createDirectorySearch({ sdk, home: () => "/home/luke", base: () => "/home/luke" })
+     `----
+
+  ! typescript-eslint(no-unsafe-type-assertion): Unsafe type assertion: type 'ServerSDK' is more narrow than the original type.
+     ,-[packages/app/src/components/directory-picker-domain.test.ts:177:15]
+ 176 |       }))
+ 177 | ,->   const sdk = {
+ 178 | |       api: {
+ 179 | |         file: {
+ 180 | |           find: () => Promise.resolve({ data: [] }),
+ 181 | |           list: (input: { location?: { directory?: string } }) => {
+ 182 | |             calls.push(input.location?.directory ?? "")
+ 183 | |             return Promise.resolve({
+ 184 | |               data: [...directories, { path: "README.md", type: "file" }],
+ 185 | |             })
+ 186 | |           },
+ 187 | |         },
+ 188 | |       },
+ 189 | `->   } as unknown as Parameters<typeof createDirectorySearch>[0]["sdk"]
+ 190 |       const search = createDirectorySearch({ sdk, home: () => "/home/luke", base: () => "/home/luke" })
+     `----
+
+  ! typescript-eslint(no-unsafe-type-assertion): Unsafe type assertion: type 'ServerSDK' is more narrow than the original type.
+     ,-[packages/app/src/components/directory-picker-domain.test.ts:199:15]
+ 198 |     test("matches the default directory listing when typed search is unsupported", async () => {
+ 199 | ,->   const sdk = {
+ 200 | |       api: {
+ 201 | |         file: {
+ 202 | |           find: () => Promise.resolve({ data: [] }),
+ 203 | |           list: () =>
+ 204 | |             Promise.resolve({
+ 205 | |               data: [
+ 206 | |                 { path: "Documents/", type: "directory" },
+ 207 | |                 { path: "Downloads/", type: "directory" },
+ 208 | |               ],
+ 209 | |             }),
+ 210 | |         },
+ 211 | |       },
+ 212 | `->   } as unknown as Parameters<typeof createDirectorySearch>[0]["sdk"]
+ 213 |       const search = createDirectorySearch({ sdk, home: () => "/home/luke", base: () => "/home/luke" })
+     `----
+
+  ! typescript-eslint(no-unsafe-type-assertion): Unsafe type assertion: type 'ServerSDK' is more narrow than the original type.
+     ,-[packages/app/src/components/directory-picker-domain.test.ts:220:15]
+ 219 |       const directories: string[] = []
+ 220 | ,->   const sdk = {
+ 221 | |       api: {
+ 222 | |         file: {
+ 223 | |           list: (input: { location?: { directory?: string } }) => {
+ 224 | |             directories.push(input.location?.directory ?? "")
+ 225 | |             return Promise.resolve({
+ 226 | |               data: [
+ 227 | |                 { path: "Users/", type: "directory" },
+ 228 | |                 { path: "tmp/", type: "directory" },
+ 229 | |               ],
+ 230 | |             })
+ 231 | |           },
+ 232 | |         },
+ 233 | |       },
+ 234 | `->   } as unknown as Parameters<typeof createDirectorySearch>[0]["sdk"]
+ 235 |       const search = createDirectorySearch({ sdk, home: () => "", base: () => undefined })
+     `----
+
+  ! typescript-eslint(consistent-return): Async function expected no return value.
+    ,-[packages/app/src/components/dialog-select-directory-v2.tsx:75:7]
+ 74 |           if ((await sdk.protocol) !== "v1") return
+ 75 | ,->       return sdk.client.path
+ 76 | |           .get()
+ 77 | |           .then((result) => result.data)
+ 78 | `->         .catch(() => undefined)
+ 79 |         },
+    `----
+
+  ! typescript-eslint(no-unsafe-type-assertion): Unsafe type assertion: type 'Node' is more narrow than the original type.
+     ,-[packages/app/src/components/dialog-select-directory-v2.tsx:242:30]
+ 241 |     const closeSuggestions = (event: PointerEvent) => {
+ 242 |       if (pathArea?.contains(event.target as Node)) return
+     :                              ^^^^^^^^^^^^^^^^^^^^
+ 243 |       setSuggestionsOpen(false)
+     `----
+
+Found 15 warnings and 0 errors.
+Finished in 819ms on 7 files with 130 rules using 10 threads.

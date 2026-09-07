@@ -1,0 +1,14 @@
+bun test v1.3.14 (0d9b296a)
+
+src/pages/home/project-opening.test.ts:
+(pass) waits for the real project before opening and selecting an empty directory [0.86ms]
+(pass) failed requests are visible and never announce a successful opening [0.72ms]
+(pass) a later server selection suppresses an obsolete response [0.06ms]
+(pass) cancel and disposal suppress late success and error [0.09ms]
+(pass) picker cancellation with no directories invalidates pending opening [0.04ms]
+(pass) deduplicates directories and selects the first successful result [0.06ms]
+
+ 6 pass
+ 0 fail
+ 8 expect() calls
+Ran 6 tests across 1 file. [97.00ms]

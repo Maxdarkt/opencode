@@ -1,0 +1,19 @@
+bun test v1.3.14 (0d9b296a)
+
+test/server/httpapi-public-openapi.test.ts:
+356 |   const spec = OpenApi.fromApi(PublicApi) as OpenApiSpec
+357 |   const context = spec.components.schemas.LocalContextInfo
+358 |   const fields = ["canonical_directory", "session_directory", "session_canonical_directory", "git"]
+359 |   for (const field of fields) {
+360 |     expect(context.required).toContain(field)
+361 |     expect(context.properties?.[field]?.anyOf).toContainEqual({ type: "null" })
+                                                     ^
+error: Received value must be an array type, or both received and expected values must be strings.
+      at <anonymous> (/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode/test/server/httpapi-public-openapi.test.ts:361:48)
+(fail) preserves required nullability in the local context OpenAPI and SDK [3178.51ms]
+
+ 0 pass
+ 18 filtered out
+ 1 fail
+ 2 expect() calls
+Ran 1 test across 1 file. [7.49s]

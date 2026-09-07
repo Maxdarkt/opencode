@@ -1,0 +1,15 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+  "command": [
+    "bun",
+    "test",
+    "test/server/httpapi-local-context.test.ts",
+    "test/server/httpapi-global.test.ts",
+    "test/server/httpapi-control-plane.test.ts",
+    "test/server/httpapi-public-openapi.test.ts",
+    "--timeout",
+    "30000"
+  ],
+  "exit": 0,
+  "seconds": 4.53
+}

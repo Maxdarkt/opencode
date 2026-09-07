@@ -1,10 +1,15 @@
+import { readProjectContext } from "@/components/project-context-request"
+import { ContextRequestError } from "@/components/project-context-state"
 import { useGlobal } from "@/context/global"
 import { type HomeProjectSelection, useLayout } from "@/context/layout"
 import { ServerConnection, useServer } from "@/context/server"
 import { useServerSync } from "@/context/server-sync"
 import { useTabs } from "@/context/tabs"
 import { toggleHomeProjectSelection } from "@/pages/layout/helpers"
-import { createEffect, createMemo } from "solid-js"
+import { createEffect, createMemo, onCleanup } from "solid-js"
+import { useLanguage } from "@/context/language"
+import { showToast } from "@/utils/toast"
+import { createProjectOpening } from "./project-opening"
 
 export function createHomeController() {
   const sync = useServerSync()
@@ -12,6 +17,7 @@ export function createHomeController() {
   const server = useServer()
   const global = useGlobal()
   const tabs = useTabs()
+  const language = useLanguage()
   const selection = layout.home.selection
   const focusedServer = createMemo(
     () => global.servers.list().find((conn) => ServerConnection.key(conn) === selection().server) ?? server.current,
@@ -35,6 +41,30 @@ export function createHomeController() {
       projects()[0],
   )
 
+  const opening = createProjectOpening({
+    read: async (conn: ServerConnection.Any, directory: string) => {
+      const ctx = global.ensureServerCtx(conn)
+      const context = await readProjectContext(ctx.sdk, { directory })
+      if (context.availability !== "available") throw new Error(context.availability)
+      return ctx.sdk.api.project.current({ location: { directory } })
+    },
+    commit: (conn, directory, project) => {
+      const ctx = global.ensureServerCtx(conn)
+      ctx.sync.child(directory, { bootstrap: false })[1]("project", project.id)
+      ctx.projects.open(directory)
+    },
+    select: (conn, directory) => {
+      global.ensureServerCtx(conn).projects.touch(directory)
+      setSelection({ server: ServerConnection.key(conn), directory })
+    },
+    error: (_conn, directory, cause) =>
+      showToast({
+        title: language.t("common.requestFailed"),
+        description: `${cause instanceof ContextRequestError ? language.t(`project.context.error.${cause.kind}`) : language.t("dialog.directory.readError")}\n${directory}`,
+      }),
+  })
+  onCleanup(() => opening.cancel())
+
   createEffect(() => {
     const list = global.servers.list()
     if (list.some((conn) => ServerConnection.key(conn) === selection().server)) return
@@ -43,10 +73,12 @@ export function createHomeController() {
   })
 
   function setSelection(next: HomeProjectSelection) {
+    opening.cancel()
     layout.home.setSelection(next)
   }
 
   function openProjectNewSession(conn: ServerConnection.Any, directory: string) {
+    opening.cancel()
     const ctx = global.ensureServerCtx(conn)
     ctx.projects.open(directory)
     ctx.projects.touch(directory)
@@ -86,27 +118,7 @@ export function createHomeController() {
           return
         setSelection(toggleHomeProjectSelection(selection(), key, directory))
       },
-      add: (conn: ServerConnection.Any, directories: string[]) => {
-        const directory = directories[0]
-        if (!directory) return
-        const ctx = global.ensureServerCtx(conn)
-        directories.forEach((item) => {
-          if (ctx.projects.list().some((project) => project.worktree === item)) return
-          const location = { directory: item }
-          void ctx.sdk.api.file
-            .list({ path: ".", location })
-            .then(async (files) => {
-              if (files.data.length > 0) return ctx.sdk.api.project.current({ location })
-              const result = await ctx.sdk.client.project.initGit({ directory: item })
-              return result.data ?? ctx.sdk.api.project.current({ location })
-            })
-            .then((project) => ctx.sync.child(item, { bootstrap: false })[1]("project", project.id))
-            .catch(() => undefined)
-          ctx.projects.open(item)
-        })
-        ctx.projects.touch(directory)
-        setSelection({ server: ServerConnection.key(conn), directory })
-      },
+      add: (conn: ServerConnection.Any, directories: string[]) => opening.open(conn, directories),
       openNewSession: () => {
         const conn = focusedServer()
         const project = newSessionProject()

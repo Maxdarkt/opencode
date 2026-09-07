@@ -1,0 +1,39 @@
+bun test v1.3.14 (0d9b296a)
+
+test/server/httpapi-public-openapi.test.ts:
+(pass) PublicApi OpenAPI v2 errors > includes plugin-facing core schemas [684.81ms]
+(pass) PublicApi OpenAPI v2 errors > documents nested legacy global sync events [0.16ms]
+(pass) PublicApi OpenAPI v2 errors > names the v2 event union without the SSE string wrapper collision [0.06ms]
+(pass) PublicApi OpenAPI v2 errors > preserves /api auth responses [0.27ms]
+(pass) PublicApi OpenAPI v2 errors > documents references separately from filesystem routes [0.04ms]
+(pass) PublicApi OpenAPI v2 errors > preserves required request bodies for v2 mutations [0.02ms]
+(pass) PublicApi OpenAPI v2 errors > documents integration discovery and connection routes [0.03ms]
+(pass) PublicApi OpenAPI v2 errors > does not rewrite /api endpoint errors to legacy error components [0.52ms]
+(pass) PublicApi OpenAPI v2 errors > new /api endpoint errors cannot use built-in components without an explicit allowlist [0.66ms]
+(pass) PublicApi OpenAPI v2 errors > documents v2 provider and model catalog errors [0.03ms]
+(pass) PublicApi OpenAPI v2 errors > documents v2 session not-found errors [0.12ms]
+(pass) PublicApi OpenAPI v2 errors > documents v2 unfinished session mutation errors [0.03ms]
+(pass) PublicApi OpenAPI v2 errors > documents v2 session read data errors [0.09ms]
+(pass) PublicApi OpenAPI v2 errors > documents session busy errors [0.04ms]
+(pass) PublicApi OpenAPI v2 errors > documents permission and question not-found errors [0.03ms]
+(pass) PublicApi OpenAPI v2 errors > documents MCP server not-found errors [0.05ms]
+(pass) PublicApi OpenAPI v2 errors > documents PTY resource and ticket errors [0.07ms]
+(pass) PublicApi OpenAPI v2 errors > documents project not-found errors [0.01ms]
+
+test/server/httpapi-global.test.ts:
+(pass) global HttpApi > upgrades to the requested version [31.31ms]
+(pass) global HttpApi > rejects invalid upgrade payloads [15.98ms]
+(pass) global HttpApi > rejects invalid upgrade target versions [10.87ms]
+(pass) global HttpApi > rejects unsupported upgrade content types [20.12ms]
+
+test/server/httpapi-control-plane.test.ts:
+(pass) control-plane HttpApi > moves a session through the root control-plane route [27.47ms]
+
+test/server/httpapi-local-context.test.ts:
+(pass) authenticates and requires an explicit directory without initializing the target [277.35ms]
+(pass) compares the persisted session placement rather than substituting the requested directory [968.45ms]
+
+ 25 pass
+ 0 fail
+ 205 expect() calls
+Ran 25 tests across 4 files. [4.51s]

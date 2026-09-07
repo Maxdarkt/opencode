@@ -1,0 +1,12 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+  "command": [
+    "git",
+    "diff",
+    "--check",
+    "--",
+    "packages"
+  ],
+  "exit": 0,
+  "seconds": 0.02
+}

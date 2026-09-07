@@ -1,0 +1,18 @@
+{
+  "HOME": "/Users/leanbot",
+  "USER": "leanbot",
+  "TMPDIR": "/var/folders/pz/2l1p3_8n7m30pt509cjjcq8w0000gn/T/",
+  "LANG": "C.UTF-8",
+  "PATH": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+  "XDG_DATA_HOME": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/.project/tasks/DA20-002-contexte-local-verifiable/evidence/runtime/data",
+  "XDG_CACHE_HOME": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/.project/tasks/DA20-002-contexte-local-verifiable/evidence/runtime/cache",
+  "XDG_CONFIG_HOME": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/.project/tasks/DA20-002-contexte-local-verifiable/evidence/runtime/config",
+  "XDG_STATE_HOME": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/.project/tasks/DA20-002-contexte-local-verifiable/evidence/runtime/state",
+  "OPENCODE_TEST_HOME": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/.project/tasks/DA20-002-contexte-local-verifiable/evidence/runtime/home",
+  "OPENCODE_TEST_MANAGED_CONFIG_DIR": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/.project/tasks/DA20-002-contexte-local-verifiable/evidence/runtime/managed",
+  "OPENCODE_DISABLE_AUTOUPDATE": "true",
+  "OPENCODE_DISABLE_MODELS_FETCH": "true",
+  "OPENCODE_DISABLE_PROJECT_CONFIG": "true",
+  "OPENCODE_MODELS_PATH": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/core/test/plugin/fixtures/models-dev.json",
+  "OPENCODE_CONFIG_CONTENT": "{\"plugin\":[],\"disabled_providers\":[\"opencode\"]}"
+}

@@ -1,3 +1,6 @@
+import { LocalContext } from "@opencode-ai/core/local-context"
+import { Session } from "@/session/session"
+import { SessionID } from "@/session/schema"
 import { Config } from "@/config/config"
 import { GlobalBus, type GlobalEvent as GlobalBusEvent } from "@/bus/global"
 import { EffectBridge } from "@/effect/bridge"
@@ -59,6 +62,8 @@ function eventResponse() {
 
 export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handlers) =>
   Effect.gen(function* () {
+    const localContext = yield* LocalContext.Service
+    const sessions = yield* Session.Service
     const config = yield* Config.Service
     const installation = yield* Installation.Service
     const bridge = yield* EffectBridge.make()
@@ -115,7 +120,24 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
       return HttpServerResponse.jsonUnsafe(result)
     })
 
+    const context = Effect.fn("GlobalHttpApi.context")(function* (ctx: {
+      query: { directory: string; base_ref?: string; session_id?: SessionID }
+    }) {
+      const session = ctx.query.session_id
+        ? yield* sessions.get(ctx.query.session_id).pipe(
+            Effect.map((value) => ({
+              status: value.workspaceID ? ("workspace" as const) : ("found" as const),
+              directory: value.directory,
+            })),
+            Effect.catch(() => Effect.succeed({ status: "missing" as const })),
+            Effect.catchDefect(() => Effect.succeed({ status: "unavailable" as const })),
+          )
+        : undefined
+      return yield* localContext.inspect({ directory: ctx.query.directory, base_ref: ctx.query.base_ref, session })
+    })
+
     return handlers
+      .handle("context", context)
       .handle("health", health)
       .handleRaw("event", event)
       .handle("configGet", configGet)

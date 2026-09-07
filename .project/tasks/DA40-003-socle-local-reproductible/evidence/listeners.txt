@@ -1,0 +1,3 @@
+COMMAND   PID    USER   FD   TYPE             DEVICE SIZE/OFF NODE NAME
+bun     27514 leanbot   10u  IPv4 0x6a7d11224536b7da      0t0  TCP 127.0.0.1:4140 (LISTEN)
+node    27516 leanbot   23u  IPv4 0x642e762a7b8978c3      0t0  TCP 127.0.0.1:4440 (LISTEN)

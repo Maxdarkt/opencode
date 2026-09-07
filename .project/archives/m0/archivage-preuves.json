@@ -1,0 +1,92 @@
+{
+  "before": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"ok\": true,\n  \"action\": \"list\",\n  \"request_id\": \"3bae4b48-055c-4bf6-907a-ede946c9d00b\",\n  \"board\": \"human\",\n  \"project\": \"DA\",\n  \"scope\": \"project\",\n  \"count\": 6,\n  \"limit\": 20,\n  \"truncated\": false,\n  \"tasks\": [\n    {\n      \"display_id\": \"DA40-002\",\n      \"title\": \"Orchestrer le Sprint M0 — Audit et validation\",\n      \"status\": \"done\",\n      \"priority\": \"high\",\n      \"priority_level\": 2,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA40-002-orchestration-m0\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"40\"\n    },\n    {\n      \"display_id\": \"DA40-001\",\n      \"title\": \"Produire la gap analysis et la décision M0\",\n      \"status\": \"done\",\n      \"priority\": \"high\",\n      \"priority_level\": 2,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA40-001-gap-analysis-m0\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"40\"\n    },\n    {\n      \"display_id\": \"DA30-002\",\n      \"title\": \"Formaliser le modèle cible APEX et Sprint\",\n      \"status\": \"done\",\n      \"priority\": \"medium\",\n      \"priority_level\": 3,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA30-002-modele-apex-sprint\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"30\"\n    },\n    {\n      \"display_id\": \"DA30-001\",\n      \"title\": \"Auditer le contexte, les modèles et les coûts\",\n      \"status\": \"done\",\n      \"priority\": \"high\",\n      \"priority_level\": 2,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA30-001-audit-runtime-couts\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"30\"\n    },\n    {\n      \"display_id\": \"DA20-001\",\n      \"title\": \"Auditer l’architecture projet, session, Git et worktrees\",\n      \"status\": \"done\",\n      \"priority\": \"high\",\n      \"priority_level\": 2,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA20-001-audit-workspace-git\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"20\"\n    },\n    {\n      \"display_id\": \"DA10-001\",\n      \"title\": \"Auditer le parcours UI et inventorier les irritants\",\n      \"status\": \"done\",\n      \"priority\": \"high\",\n      \"priority_level\": 2,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA10-001-audit-ui-opencode\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"10\"\n    }\n  ]\n}"
+      }
+    ]
+  },
+  "after": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\n  \"ok\": true,\n  \"action\": \"list\",\n  \"request_id\": \"67bed1c6-3b92-41eb-836d-1eceb9767b85\",\n  \"board\": \"human\",\n  \"project\": \"DA\",\n  \"scope\": \"project\",\n  \"count\": 6,\n  \"limit\": 20,\n  \"truncated\": false,\n  \"tasks\": [\n    {\n      \"display_id\": \"DA40-002\",\n      \"title\": \"Orchestrer le Sprint M0 — Audit et validation\",\n      \"status\": \"archived\",\n      \"priority\": \"high\",\n      \"priority_level\": 2,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA40-002-orchestration-m0\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"40\"\n    },\n    {\n      \"display_id\": \"DA40-001\",\n      \"title\": \"Produire la gap analysis et la décision M0\",\n      \"status\": \"archived\",\n      \"priority\": \"high\",\n      \"priority_level\": 2,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA40-001-gap-analysis-m0\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"40\"\n    },\n    {\n      \"display_id\": \"DA30-002\",\n      \"title\": \"Formaliser le modèle cible APEX et Sprint\",\n      \"status\": \"archived\",\n      \"priority\": \"medium\",\n      \"priority_level\": 3,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA30-002-modele-apex-sprint\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"30\"\n    },\n    {\n      \"display_id\": \"DA30-001\",\n      \"title\": \"Auditer le contexte, les modèles et les coûts\",\n      \"status\": \"archived\",\n      \"priority\": \"high\",\n      \"priority_level\": 2,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA30-001-audit-runtime-couts\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"30\"\n    },\n    {\n      \"display_id\": \"DA20-001\",\n      \"title\": \"Auditer l’architecture projet, session, Git et worktrees\",\n      \"status\": \"archived\",\n      \"priority\": \"high\",\n      \"priority_level\": 2,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA20-001-audit-workspace-git\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"20\"\n    },\n    {\n      \"display_id\": \"DA10-001\",\n      \"title\": \"Auditer le parcours UI et inventorier les irritants\",\n      \"status\": \"archived\",\n      \"priority\": \"high\",\n      \"priority_level\": 2,\n      \"assignee\": \"codex\",\n      \"external_ref\": \".project/tasks/DA10-001-audit-ui-opencode\",\n      \"sprint_id\": \"8e4da9b4-a13a-465a-8c0b-850eb385c266\",\n      \"sprint_ref\": null,\n      \"worktree_code\": \"10\"\n    }\n  ]\n}"
+      }
+    ]
+  },
+  "chats": [
+    {
+      "id": "01a0766c-6d41-73e1-b5fb-0631fbc844a2",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"threadId\":\"01a0766c-6d41-73e1-b5fb-0631fbc844a2\",\"archived\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "id": "01a0766c-6f43-76a3-acdf-6953d7900c1f",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"threadId\":\"01a0766c-6f43-76a3-acdf-6953d7900c1f\",\"archived\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "id": "01a0766c-71dd-7e31-8041-9984e35d204e",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"threadId\":\"01a0766c-71dd-7e31-8041-9984e35d204e\",\"archived\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "id": "01a0767b-52b7-7523-aad1-ffb16b1747c8",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"threadId\":\"01a0767b-52b7-7523-aad1-ffb16b1747c8\",\"archived\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "id": "01a07687-4e6c-7f03-b706-73868e97c674",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"threadId\":\"01a07687-4e6c-7f03-b706-73868e97c674\",\"archived\":true}"
+          }
+        ],
+        "isError": false
+      }
+    },
+    {
+      "id": "01a074f6-0251-70f3-8535-85ac8565aa53",
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\"threadId\":\"01a074f6-0251-70f3-8535-85ac8565aa53\",\"archived\":true}"
+          }
+        ],
+        "isError": false
+      }
+    }
+  ]
+}

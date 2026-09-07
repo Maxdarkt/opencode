@@ -412,3 +412,8 @@ export function createDirectorySearch(args: { sdk: ServerSDK; base: () => string
     return Array.from(new Set([base, ...matches, ...children].filter(Boolean))).slice(0, 50)
   }
 }
+
+// A typed path must be navigated before the previous directory can be confirmed.
+export function pickerDirectoryReady(input: string, root: string, home: string) {
+  return !!root && input === displayPickerPath(root, input, home)
+}

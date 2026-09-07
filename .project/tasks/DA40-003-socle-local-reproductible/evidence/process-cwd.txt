@@ -1,0 +1,3 @@
+COMMAND   PID    USER   FD   TYPE DEVICE SIZE/OFF     NODE NAME
+bun     27514 leanbot  cwd    DIR   1,18      608 23210443 /Users/leanbot/Documents/40_Daidalon/features/40-tooling/packages/opencode
+bun     27515 leanbot  cwd    DIR   1,18      704 23207602 /Users/leanbot/Documents/40_Daidalon/features/40-tooling/packages/app

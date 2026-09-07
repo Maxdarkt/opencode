@@ -1,0 +1,58 @@
+{
+  "owner": "DA10-002; handoff parent",
+  "processes": [
+    {
+      "name": "backend",
+      "pid": 58716,
+      "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/opencode",
+      "command": [
+        "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun",
+        "run",
+        "./src/index.ts",
+        "serve",
+        "--hostname",
+        "127.0.0.1",
+        "--port",
+        "4150"
+      ],
+      "port": 4150
+    },
+    {
+      "name": "client",
+      "pid": 58717,
+      "cwd": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app",
+      "command": [
+        "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin/bun",
+        "run",
+        "dev",
+        "--",
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "4450",
+        "--strictPort"
+      ],
+      "port": 4450
+    }
+  ],
+  "environment": {
+    "HOME": "/Users/leanbot",
+    "USER": "leanbot",
+    "TMPDIR": "/var/folders/pz/2l1p3_8n7m30pt509cjjcq8w0000gn/T/",
+    "LANG": "C.UTF-8",
+    "PATH": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling/.project/tasks/DA40-003-socle-local-reproductible/evidence/runtime/package/bin:/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+    "XDG_DATA_HOME": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/runtime/data",
+    "XDG_CACHE_HOME": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/runtime/cache",
+    "XDG_CONFIG_HOME": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/runtime/config",
+    "XDG_STATE_HOME": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/runtime/state",
+    "OPENCODE_TEST_HOME": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/runtime/home",
+    "OPENCODE_TEST_MANAGED_CONFIG_DIR": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/runtime/managed",
+    "OPENCODE_DISABLE_AUTOUPDATE": "true",
+    "OPENCODE_DISABLE_MODELS_FETCH": "true",
+    "OPENCODE_DISABLE_PROJECT_CONFIG": "true",
+    "OPENCODE_MODELS_PATH": "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/core/test/plugin/fixtures/models-dev.json",
+    "OPENCODE_CONFIG_CONTENT": "{\"plugin\":[],\"disabled_providers\":[\"opencode\"]}",
+    "VITE_OPENCODE_SERVER_HOST": "127.0.0.1",
+    "VITE_OPENCODE_SERVER_PORT": "4150"
+  }
+}

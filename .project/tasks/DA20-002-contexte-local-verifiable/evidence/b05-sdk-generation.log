@@ -1,0 +1,41 @@
+$ bun run ./src/index.ts generate
+[95m[@hey-api/sdk] `instance` is deprecated. Use `operations: { strategy: "single", containerName: "OpencodeClient", methods: "instance" }` instead.[39m
+[90m@hey-api/openapi-ts v0.90.10[39m
+
+[90m[Job 1] [39m⏳ [36mGenerating from 1 input:[39m
+[90m[Job 1] [39m[36m  [1] [39m./openapi.json
+[90m[Job 1] [39m[32m✅ Done![39m Your output is in [96m/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/sdk/js/src/v2/gen[39m
+src/gen/client.gen.ts 49ms (unchanged)
+src/gen/client/client.gen.ts 37ms (unchanged)
+src/gen/client/index.ts 4ms (unchanged)
+src/gen/client/types.gen.ts 16ms (unchanged)
+src/gen/client/utils.gen.ts 30ms (unchanged)
+src/gen/core/auth.gen.ts 3ms (unchanged)
+src/gen/core/bodySerializer.gen.ts 9ms (unchanged)
+src/gen/core/params.gen.ts 10ms (unchanged)
+src/gen/core/pathSerializer.gen.ts 11ms (unchanged)
+src/gen/core/queryKeySerializer.gen.ts 5ms (unchanged)
+src/gen/core/serverSentEvents.gen.ts 12ms (unchanged)
+src/gen/core/types.gen.ts 5ms (unchanged)
+src/gen/core/utils.gen.ts 8ms (unchanged)
+src/gen/sdk.gen.ts 93ms (unchanged)
+src/gen/types.gen.ts 183ms (unchanged)
+src/v2/client.ts 61ms (unchanged)
+src/v2/data.ts 16ms (unchanged)
+src/v2/gen/client.gen.ts 7ms
+src/v2/gen/client/client.gen.ts 28ms
+src/v2/gen/client/index.ts 4ms
+src/v2/gen/client/types.gen.ts 17ms
+src/v2/gen/client/utils.gen.ts 30ms
+src/v2/gen/core/auth.gen.ts 9ms
+src/v2/gen/core/bodySerializer.gen.ts 5ms
+src/v2/gen/core/params.gen.ts 10ms
+src/v2/gen/core/pathSerializer.gen.ts 10ms
+src/v2/gen/core/queryKeySerializer.gen.ts 7ms
+src/v2/gen/core/serverSentEvents.gen.ts 15ms
+src/v2/gen/core/types.gen.ts 8ms
+src/v2/gen/core/utils.gen.ts 7ms
+src/v2/gen/sdk.gen.ts 188ms
+src/v2/gen/types.gen.ts 209ms
+src/v2/index.ts 3ms (unchanged)
+src/v2/server.ts 5ms (unchanged)
