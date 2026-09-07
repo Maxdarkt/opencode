@@ -43,6 +43,7 @@ it.live("authenticates and requires an explicit directory without initializing t
     const info = Schema.decodeUnknownSync(LocalContext.Info)(yield* response.json)
     expect(info.git?.status).toBe("non_git")
     expect(info.session_status).toBe("not_requested")
+    expect(info.task).toBeNull()
     expect(yield* Effect.promise(() => fs.readdir(dir))).toEqual(before)
     const missing = yield* client.execute(
       HttpClientRequest.get(`/global/context?directory=${encodeURIComponent(path.join(dir, "absent"))}`).pipe(auth),

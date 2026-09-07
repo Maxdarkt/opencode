@@ -1,5 +1,34 @@
 import { Schema } from "effect"
 
+const TaskContext = Schema.Struct({
+  binding: Schema.Struct({
+    mtTaskID: Schema.String,
+    apexExternalRef: Schema.String,
+    sessionID: Schema.String,
+    projectID: Schema.String,
+    location: Schema.Struct({ directory: Schema.String, workspaceID: Schema.optional(Schema.NullOr(Schema.String)) }),
+    checkout: Schema.Struct({
+      repository: Schema.String,
+      branch: Schema.String,
+      worktree: Schema.String,
+      head: Schema.String,
+    }),
+    version: Schema.Literal(1),
+  }),
+  execution: Schema.NullOr(
+    Schema.Struct({
+      mtTaskID: Schema.String,
+      sessionID: Schema.String,
+      worktree: Schema.String,
+      ownerID: Schema.String,
+      generation: Schema.Finite,
+      effects: Schema.mutable(
+        Schema.Array(Schema.Struct({ effectID: Schema.String, state: Schema.Literals(["pending", "confirmed"]) })),
+      ),
+    }),
+  ),
+})
+
 export const Info = Schema.Struct({
   requested_directory: Schema.String,
   canonical_directory: Schema.NullOr(Schema.String),
@@ -25,6 +54,7 @@ export const Info = Schema.Struct({
       review: Schema.Literals(["clean", "changed", "conflicts", "incomplete"]),
     }),
   ),
+  task: Schema.optional(Schema.NullOr(TaskContext)),
 }).annotate({ identifier: "LocalContext.Info" })
 export interface Info extends Schema.Schema.Type<typeof Info> {}
 

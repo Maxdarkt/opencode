@@ -3061,6 +3061,36 @@ export type LocalContextInfo = {
     conflicts: boolean | null
     review: "clean" | "changed" | "conflicts" | "incomplete"
   } | null
+  task?: {
+    binding: {
+      mtTaskID: string
+      apexExternalRef: string
+      sessionID: string
+      projectID: string
+      location: {
+        directory: string
+        workspaceID?: string | null | null
+      }
+      checkout: {
+        repository: string
+        branch: string
+        worktree: string
+        head: string
+      }
+      version: 1
+    }
+    execution: {
+      mtTaskID: string
+      sessionID: string
+      worktree: string
+      ownerID: string
+      generation: number
+      effects: Array<{
+        effectID: string
+        state: "pending" | "confirmed"
+      }>
+    } | null
+  } | null | null
 }
 
 export type ModelRef = {

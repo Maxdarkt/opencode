@@ -64,7 +64,7 @@ export function ActiveProjectContext() {
         })
         return (
           <div class="w-full shrink-0 border-b border-border-weak-base px-3 py-2 max-h-64 overflow-auto">
-            <ProjectContextView state={context} api={conn()!.http.url} directory={directory()!} />
+            <ProjectContextView state={context} api={conn()!.http.url} directory={directory()!} sessionID={params.id} />
             <form
               class="flex gap-2 items-center mt-1"
               onSubmit={(event) => {
