@@ -1,0 +1,22 @@
+# STATE — DA30-004
+
+- schema: `apex-state/v2`
+- generation: `9`
+- updated_at: `2026-09-07T14:01:10+02:00`
+- phase: `VERIFY`
+- status: `checkpoint`
+- tracking: `tracked`
+- MT: `review`; update `01018b53-3f7f-4af6-abc8-30a7bb463a09`, relecture `7ead670c-5b60-41cf-8827-67495e769910`.
+- Sprint: `da-release-0.1-sprint-2` (`ddc01132-b26a-446a-85a0-04d2d37a0a01`).
+- Git: branche `execution-ownership`; base `9ba850b68b49bd20e2e40d24ceba39dd5fb19af2`; dépendance locale `eceeb7dd7734f60491e09cdac72fa297993f4c4b` après cherry-pick exact de DA20-003; ce STATE est inclus dans le commit DA30-004 de 21 fichiers, dont le hash exact est annoncé au parent hors auto-référence.
+- Dirty hors tâche à préserver: `PLAN-GENERAL.md`, `docs/product/releases/0.1.md`, `sprint.md`, `docs/product/sprints/sprint-2.md`; aucun staged.
+- active_block: `null`
+- completed_blocks: `[B1-contract-ownership, B2-effect-recovery, B3-verify-handoff]`
+- decisions: Analyze approuvé sans gate; Plan validé sous mandat Sprint dans `plan.md`; aucune décision ouverte.
+- read_set: `AGENTS.md` (HEAD), `.project/apex.json` (HEAD), `scope.md` (dirty), `analyze.md` (dirty), `plan.md` (dirty), DA20-003 commit/tree ci-dessus, `packages/core/src/task-binding.ts` (HEAD), `packages/schema/src/task-binding.ts` (HEAD), `packages/core/src/session/run-coordinator.ts` (HEAD).
+- checks: Core complet PASS (1122/3138); ciblé PASS (44/176); typechecks PASS; migration PASS; lint/format/diff-check PASS; Schema global 13 PASS / 2 FAIL préexistants. Voir `verify.md`.
+- blockers: aucun.
+- debts: dette `event-manifest` DA20-003 préexistante et hors périmètre; aucune dette DA30-004 observée.
+- chat/routage: `01a07b7b-4a62-7842-80fa-4d645525df4c`; `gpt-5.6-sol/high` attesté par le parent depuis `01a076a4-b458-72a3-8e2b-bf975091a840`.
+- next_action: parent intègre le commit DA30-004 annoncé au handoff, exécute le smoke visuel avec DA10-003 et décide la clôture.
+- resume: MT est `review`; ne pas rejouer la transition. Si le parent refuse le smoke, remettre `in_progress`, relire ce STATE et rouvrir un bloc de correction borné; sinon aucune action enfant. Exclure toujours les projections Sprint.

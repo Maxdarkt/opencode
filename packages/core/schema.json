@@ -1,9 +1,9 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "fe0ef058-0e49-4b2a-b5a4-bc9629c67b6a",
+  "id": "65912045-e95d-4845-94e1-2c9d0ae1f223",
   "prevIds": [
-    "f14a9b18-8207-487e-a3d3-227e629ba9ad"
+    "fe0ef058-0e49-4b2a-b5a4-bc9629c67b6a"
   ],
   "ddl": [
     {
@@ -84,6 +84,14 @@
     },
     {
       "name": "task_binding",
+      "entityType": "tables"
+    },
+    {
+      "name": "task_execution_effect",
+      "entityType": "tables"
+    },
+    {
+      "name": "task_execution_ownership",
       "entityType": "tables"
     },
     {
@@ -1617,6 +1625,126 @@
       "table": "task_binding"
     },
     {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "mt_task_id",
+      "entityType": "columns",
+      "table": "task_execution_effect"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "effect_id",
+      "entityType": "columns",
+      "table": "task_execution_effect"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "state",
+      "entityType": "columns",
+      "table": "task_execution_effect"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "time_created",
+      "entityType": "columns",
+      "table": "task_execution_effect"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "time_updated",
+      "entityType": "columns",
+      "table": "task_execution_effect"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "mt_task_id",
+      "entityType": "columns",
+      "table": "task_execution_ownership"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "session_id",
+      "entityType": "columns",
+      "table": "task_execution_ownership"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "worktree",
+      "entityType": "columns",
+      "table": "task_execution_ownership"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "owner_id",
+      "entityType": "columns",
+      "table": "task_execution_ownership"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "generation",
+      "entityType": "columns",
+      "table": "task_execution_ownership"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "time_created",
+      "entityType": "columns",
+      "table": "task_execution_ownership"
+    },
+    {
+      "type": "integer",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "time_updated",
+      "entityType": "columns",
+      "table": "task_execution_ownership"
+    },
+    {
       "columns": [
         "project_id"
       ],
@@ -1843,6 +1971,36 @@
     },
     {
       "columns": [
+        "mt_task_id"
+      ],
+      "tableTo": "task_execution_ownership",
+      "columnsTo": [
+        "mt_task_id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_task_execution_effect_mt_task_id_task_execution_ownership_mt_task_id_fk",
+      "entityType": "fks",
+      "table": "task_execution_effect"
+    },
+    {
+      "columns": [
+        "mt_task_id"
+      ],
+      "tableTo": "task_binding",
+      "columnsTo": [
+        "mt_task_id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "nameExplicit": false,
+      "name": "fk_task_execution_ownership_mt_task_id_task_binding_mt_task_id_fk",
+      "entityType": "fks",
+      "table": "task_execution_ownership"
+    },
+    {
+      "columns": [
         "email",
         "url"
       ],
@@ -1870,6 +2028,16 @@
       "name": "todo_pk",
       "entityType": "pks",
       "table": "todo"
+    },
+    {
+      "columns": [
+        "mt_task_id",
+        "effect_id"
+      ],
+      "nameExplicit": false,
+      "name": "task_execution_effect_pk",
+      "entityType": "pks",
+      "table": "task_execution_effect"
     },
     {
       "columns": [
@@ -2022,6 +2190,15 @@
       "nameExplicit": false,
       "name": "task_binding_pk",
       "table": "task_binding",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "mt_task_id"
+      ],
+      "nameExplicit": false,
+      "name": "task_execution_ownership_pk",
+      "table": "task_execution_ownership",
       "entityType": "pks"
     },
     {
@@ -2375,6 +2552,66 @@
       "name": "task_binding_project_idx",
       "entityType": "indexes",
       "table": "task_binding"
+    },
+    {
+      "columns": [
+        {
+          "value": "mt_task_id",
+          "isExpression": false
+        },
+        {
+          "value": "state",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "task_execution_effect_state_idx",
+      "entityType": "indexes",
+      "table": "task_execution_effect"
+    },
+    {
+      "columns": [
+        {
+          "value": "session_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "origin": "manual",
+      "name": "task_execution_ownership_session_idx",
+      "entityType": "indexes",
+      "table": "task_execution_ownership"
+    },
+    {
+      "columns": [
+        {
+          "value": "worktree",
+          "isExpression": false
+        }
+      ],
+      "isUnique": true,
+      "where": null,
+      "origin": "manual",
+      "name": "task_execution_ownership_worktree_idx",
+      "entityType": "indexes",
+      "table": "task_execution_ownership"
+    },
+    {
+      "columns": [
+        {
+          "value": "owner_id",
+          "isExpression": false
+        }
+      ],
+      "isUnique": false,
+      "where": null,
+      "origin": "manual",
+      "name": "task_execution_ownership_owner_idx",
+      "entityType": "indexes",
+      "table": "task_execution_ownership"
     }
   ],
   "renames": []
