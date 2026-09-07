@@ -1,0 +1,24 @@
+# STATE — DA20-003
+
+- schema: `apex-state/v2`
+- generation: `9`
+- updated_at: `2026-09-07T13:20:00+02:00`
+- phase: `VERIFY`
+- status: `active`
+- tracking: `tracked`
+- MT: `DA20-003` / `in_progress`; mutation `1558c99d-1c9e-460e-a3fc-b533b835d046`, relue via `403903bd-2be2-47b9-85d0-15778c77c564`.
+- Sprint: `da-release-0.1-sprint-2` (`ddc01132-b26a-446a-85a0-04d2d37a0a01`).
+- Git: branche `task-session-binding`; base/HEAD `9ba850b68b49bd20e2e40d24ceba39dd5fb19af2`; dirty initial = projections Sprint modifiées (`PLAN-GENERAL.md`, `docs/product/releases/0.1.md`, `sprint.md`) et artefacts Sprint/APEX non suivis, antérieurs au Build.
+- Worktree: `/Users/leanbot/Documents/40_Daidalon/features/s2-20-binding`; staging exclu.
+- Session enfant: `01a07b7a-fde8-76f0-ae19-64a99c75fd32`.
+- active_block: `verify-handoff`
+- completed_blocks: `[analyze, plan, B1-contract-persistence, B2-resume-conflicts, technical-smoke]`
+- Routage: requested_model=`gpt-5.6-sol`, requested_effort=`high`; observed_model=`gpt-5.6-sol`, observed_effort=`high`; source=`attestation parent explicite après création faute de métadonnées runtime observables, API acceptée sans signal de substitution`; attesté à `2026-09-07T12:53:00+02:00`; divergence=`aucune observée`.
+- Décisions: mandat Sprint reçu pour Analyze, Plan, Build, checks, smoke technique, commit local borné et passage MT en review; aucun push/merge/rebase/promotion/reset/nettoyage destructif/suppression de worktree.
+- read_set: `plan.md@dirty`, `analyze.md@dirty`, `AGENTS.md@bd335285`, `.project/apex.json@fb3a85bf`, `scope.md@dirty`, `packages/schema/AGENTS.md@1d5747d5`, cibles B1/B2 et patterns migration/tests @HEAD, registre canonique `canonical-projections.md@observation-2026-09-07T12:24:38+0200`.
+- checks: voir `verify.md`; critères DA20-003 verts. Suite Schema = 13 PASS / 2 FAIL préexistants reproduits sur baseline `9ba850b68`.
+- blockers: aucun.
+- debts: aucune dette identifiée en Analyze.
+- debts: `problems.md#DEBT-SCHEMA-EVENT-MANIFEST` (hors périmètre, préexistant, aucun doublon MT trouvé, à arbitrer/scoper par le parent); ownership/lease et UI sont des sorties dépendantes déjà portées par DA30-004 et DA10-003.
+- next_action: indexer uniquement le pathset de `verify.md`, contrôler le diff staged puis créer le commit local conventionnel; ensuite mettre à jour STATE/handoff et passer MT en review.
+- resume: reprendre DA20-003 génération 9 en Verify; relire `verify.md`, mesurer Git et exécuter exactement le commit borné déjà autorisé, sans inclure les projections Sprint préexistantes.
