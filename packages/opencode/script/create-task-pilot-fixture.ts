@@ -16,14 +16,16 @@ import path from "path"
 const [databasePath, snapshotPath, worktreeArgument] = process.argv.slice(2)
 
 if (!databasePath || !snapshotPath || !worktreeArgument)
-  throw new Error("Usage: bun run script/create-task-pilot-fixture.ts <database-path> <snapshot-path> <worktree>")
+  throw new Error(
+    "Usage: bun run script/create-task-pilot-fixture.ts <database-path> <authority-snapshot-path> <worktree>",
+  )
 
 const worktree = path.resolve(worktreeArgument)
 const database = path.resolve(databasePath)
 const snapshot = path.resolve(snapshotPath)
 
 if (await Bun.file(database).exists()) throw new Error(`Database path already exists: ${database}`)
-if (await Bun.file(snapshot).exists()) throw new Error(`Snapshot path already exists: ${snapshot}`)
+if (!(await Bun.file(snapshot).exists())) throw new Error(`Authority snapshot does not exist: ${snapshot}`)
 
 const git = async (args: string[]) => {
   const process = Bun.spawn(["git", "-C", worktree, ...args], { stdout: "pipe", stderr: "pipe" })
@@ -35,7 +37,14 @@ const head = await git(["rev-parse", "HEAD"])
 const branch = await git(["branch", "--show-current"])
 if (!branch) throw new Error(`Worktree has no branch: ${worktree}`)
 
-const taskID = "LOCAL-TASK-PILOT-FIXTURE"
+const source = (await Bun.file(snapshot).json()) as {
+  tasks?: ReadonlyArray<{ id?: unknown; git?: { worktreePath?: unknown; head?: unknown } }>
+}
+const task = source.tasks?.find((candidate) => candidate.git?.worktreePath === worktree && candidate.git?.head === head)
+if (!task || typeof task.id !== "string" || !task.id)
+  throw new Error(`Authority snapshot has no task for ${worktree} at ${head}`)
+
+const taskID = task.id
 const sessionID = SessionSchema.ID.make("ses_task_pilot_fixture")
 const projectID = ProjectV2.ID.make("project_task_pilot_fixture")
 const identity = TaskBinding.Identity.make({
@@ -46,33 +55,6 @@ const identity = TaskBinding.Identity.make({
   location: { directory: AbsolutePath.make(worktree) },
   checkout: { repository: AbsolutePath.make(worktree), branch, worktree: AbsolutePath.make(worktree), head },
 })
-const now = Date.now()
-const observedAt = new Date(now).toISOString()
-const expiresAt = new Date(now + 15 * 60_000).toISOString()
-
-await Bun.write(
-  snapshot,
-  JSON.stringify(
-    {
-      schemaVersion: 2,
-      generation: 1,
-      authority: { business: "mt-tasks", phasesAndEvidence: "apex-task-folders" },
-      observedAt,
-      expiresAt,
-      tasks: [
-        {
-          id: taskID,
-          mtStatus: "in_progress",
-          apex: { phase: "analyze" },
-          git: { worktreePath: worktree, head },
-        },
-      ],
-    },
-    null,
-    2,
-  ),
-)
-
 const layer = AppNodeBuilder.build(
   LayerNode.group([Database.node, TaskBinding.node, TaskExecution.node, TaskAuthority.node]),
   [[Database.node, Database.layerFromPath(database)]],
@@ -127,7 +109,6 @@ console.log(
       head,
       taskID,
       sessionID,
-      expiresAt,
       ...result,
     },
     null,
