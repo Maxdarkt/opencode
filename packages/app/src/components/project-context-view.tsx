@@ -43,12 +43,12 @@ export function ProjectContextView(props: {
     const data = props.state.data
     return data ? getActiveTaskState(data, props.sessionID) : undefined
   }
-  const pilotContext = (): TaskPilotContext | undefined => {
+  const pilotObservation = () => {
     const value = active()
-    if (value === "concordant") return "concordant"
-    if (value === "incomplete") return "incomplete"
-    if (value === "divergent") return "divergent"
-    if (value === "resuming") return "resuming"
+    const authority = props.state.data?.task?.authority
+    if (!value || !authority || authority.state !== "available") return { context: "incomplete" as const }
+    if (value !== "concordant") return { context: value as TaskPilotContext }
+    return { context: "concordant" as const, mtStatus: authority.mtStatus, apexPhase: authority.apexPhase }
   }
   const taskRows = () => {
     const data = props.state.data
@@ -93,7 +93,7 @@ export function ProjectContextView(props: {
               <>
                 <TaskPilotView
                   task={data().task ?? undefined}
-                  observation={pilotContext() ? { context: pilotContext()! } : undefined}
+                  observation={pilotObservation()}
                   onOpen={props.onOpenTask}
                 />
                 <dl class="grid grid-cols-[minmax(100px,auto)_minmax(0,1fr)] gap-x-3 gap-y-1 p-2">

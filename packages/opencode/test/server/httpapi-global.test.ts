@@ -11,6 +11,7 @@ import { SessionMessage } from "@opencode-ai/core/session/message"
 import { SessionSchema } from "@opencode-ai/core/session/schema"
 import { SessionMessageTable, SessionTable } from "@opencode-ai/core/session/sql"
 import { TaskBindingTable } from "@opencode-ai/core/task-binding/sql"
+import { TaskAuthority } from "@opencode-ai/core/task-authority"
 import { node } from "@opencode-ai/core/task-metrics"
 import { Session } from "@/session/session"
 import { NodeHttpServer } from "@effect/platform-node"
@@ -124,6 +125,7 @@ const apiLayer = HttpRouter.serve(
   Layer.provide(Layer.mock(Auth.Service)({})),
   Layer.provide(Layer.mock(Config.Service)({})),
   Layer.provide(Layer.mock(LocalContext.Service)({})),
+  Layer.provide(Layer.mock(TaskAuthority.Service)({})),
   Layer.provide(Layer.mock(Session.Service)({})),
   Layer.provide(Layer.mock(MoveSession.Service)({})),
   Layer.provide(

@@ -3,6 +3,7 @@ import { Database } from "@opencode-ai/core/database/database"
 import { TaskBindingTable } from "@opencode-ai/core/task-binding/sql"
 import { TaskExecutionEffectTable, TaskExecutionOwnershipTable } from "@opencode-ai/core/task-execution/sql"
 import { TaskMetrics } from "@opencode-ai/core/task-metrics"
+import { TaskAuthority } from "@opencode-ai/core/task-authority"
 import { Session } from "@/session/session"
 import { SessionID } from "@/session/schema"
 import { Config } from "@/config/config"
@@ -73,6 +74,7 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
     const config = yield* Config.Service
     const installation = yield* Installation.Service
     const metrics = yield* TaskMetrics.Service
+    const authority = yield* TaskAuthority.Service
     const bridge = yield* EffectBridge.make()
 
     const health = Effect.fn("GlobalHttpApi.health")(function* () {
@@ -174,38 +176,49 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
                         .all()
                         .pipe(Effect.orDie),
                     ]).pipe(
-                      Effect.map(([execution, effects]) => ({
-                        binding: {
-                          mtTaskID: binding.mt_task_id,
-                          apexExternalRef: binding.apex_external_ref,
-                          sessionID: binding.session_id,
-                          projectID: binding.project_id,
-                          location: {
-                            directory: binding.location_directory,
-                            workspaceID: binding.location_workspace_id,
-                          },
-                          checkout: {
-                            repository: binding.repository,
-                            branch: binding.branch,
+                      Effect.flatMap(([execution, effects]) =>
+                        authority
+                          .observe({
+                            mtTaskID: binding.mt_task_id,
                             worktree: binding.worktree,
                             head: binding.head,
-                          },
-                          version: binding.version as 1,
-                        },
-                        execution: execution
-                          ? {
-                              mtTaskID: execution.mt_task_id,
-                              sessionID: execution.session_id,
-                              worktree: execution.worktree,
-                              ownerID: execution.owner_id,
-                              generation: execution.generation,
-                              effects: effects.map((effect) => ({
-                                effectID: effect.effect_id,
-                                state: effect.state,
-                              })),
-                            }
-                          : null,
-                      })),
+                          })
+                          .pipe(
+                            Effect.map((observation) => ({
+                              binding: {
+                                mtTaskID: binding.mt_task_id,
+                                apexExternalRef: binding.apex_external_ref,
+                                sessionID: binding.session_id,
+                                projectID: binding.project_id,
+                                location: {
+                                  directory: binding.location_directory,
+                                  workspaceID: binding.location_workspace_id,
+                                },
+                                checkout: {
+                                  repository: binding.repository,
+                                  branch: binding.branch,
+                                  worktree: binding.worktree,
+                                  head: binding.head,
+                                },
+                                version: binding.version as 1,
+                              },
+                              execution: execution
+                                ? {
+                                    mtTaskID: execution.mt_task_id,
+                                    sessionID: execution.session_id,
+                                    worktree: execution.worktree,
+                                    ownerID: execution.owner_id,
+                                    generation: execution.generation,
+                                    effects: effects.map((effect) => ({
+                                      effectID: effect.effect_id,
+                                      state: effect.state,
+                                    })),
+                                  }
+                                : null,
+                              authority: observation,
+                            })),
+                          ),
+                      ),
                     )
                   : Effect.succeed(undefined),
               ),

@@ -3158,6 +3158,20 @@ export type TaskMetricsResponse =
       metrics: TaskMetricsSprint
     }
 
+export type TaskPilotMtStatus = "todo" | "in_progress" | "review" | "done" | "blocked"
+
+export type TaskPilotApexPhase = "analyze" | "plan" | "build" | "smoke" | "verify"
+
+export type TaskAuthorityObservation = {
+  state: "available" | "absent" | "inaccessible" | "invalid" | "expired" | "divergent"
+  provenance: "runtime_snapshot"
+  observedAt?: string
+  expiresAt?: string
+  generation?: number
+  mtStatus?: TaskPilotMtStatus
+  apexPhase?: TaskPilotApexPhase
+}
+
 export type LocalContextInfo = {
   requested_directory: string
   canonical_directory: string | null
@@ -3210,6 +3224,7 @@ export type LocalContextInfo = {
         state: "pending" | "confirmed"
       }>
     } | null
+    authority?: TaskAuthorityObservation | null | null
   } | null | null
 }
 

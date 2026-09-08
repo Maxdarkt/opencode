@@ -1,4 +1,5 @@
 import { Schema } from "effect"
+import { TaskAuthority } from "./task-authority"
 
 const TaskContext = Schema.Struct({
   binding: Schema.Struct({
@@ -27,6 +28,7 @@ const TaskContext = Schema.Struct({
       ),
     }),
   ),
+  authority: Schema.optional(Schema.NullOr(TaskAuthority.Observation)),
 })
 
 export const Info = Schema.Struct({

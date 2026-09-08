@@ -396,6 +396,7 @@ test("preserves required nullability in the local context OpenAPI and SDK", () =
     session_status: "not_requested",
     concordance: "not_applicable",
     git: null,
+    task: null,
   }
   expect(toSchema(toSdk(absent))).toEqual(absent)
 })
