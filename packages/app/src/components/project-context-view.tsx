@@ -1,6 +1,6 @@
 import { For, Show } from "solid-js"
 import { useLanguage } from "@/context/language"
-import { getActiveTaskState } from "./active-task-context-state"
+import { getActiveTaskState, type ActiveTaskContext } from "./active-task-context-state"
 import type { ContextState } from "./project-context-state"
 import { TaskPilotView } from "./task-pilot-view"
 import type { TaskPilotContext, TaskPilotExistingIdentity } from "./task-pilot-state"
@@ -43,13 +43,7 @@ export function ProjectContextView(props: {
     const data = props.state.data
     return data ? getActiveTaskState(data, props.sessionID) : undefined
   }
-  const pilotObservation = () => {
-    const value = active()
-    const authority = props.state.data?.task?.authority
-    if (!value || !authority || authority.state !== "available") return { context: "incomplete" as const }
-    if (value !== "concordant") return { context: value as TaskPilotContext }
-    return { context: "concordant" as const, mtStatus: authority.mtStatus, apexPhase: authority.apexPhase }
-  }
+  const pilotObservation = () => taskPilotObservation(props.state.data, props.sessionID)
   const taskRows = () => {
     const data = props.state.data
     const task = data?.task
@@ -126,4 +120,12 @@ export function ProjectContextView(props: {
       </Show>
     </section>
   )
+}
+
+export function taskPilotObservation(context?: ActiveTaskContext, sessionID?: string) {
+  const value = context ? getActiveTaskState(context, sessionID) : undefined
+  const authority = context?.task?.authority
+  if (!value || !authority || authority.state !== "available") return { context: "incomplete" as const }
+  if (value !== "concordant") return { context: value as TaskPilotContext }
+  return { context: "concordant" as const, mtStatus: authority.mtStatus, apexPhase: authority.apexPhase }
 }
