@@ -1,8 +1,8 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `8`
-- Updated: `2026-09-10T06:54:00+02:00`
+- Generation: `10`
+- Updated: `2026-09-10T07:09:00+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `4`
@@ -15,7 +15,7 @@
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA30-009:2:B1-complete`
+- Next event: `DA30-009:4:B1-checks-rerun`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -24,7 +24,7 @@
 
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
-| DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 2 | `in_progress / B1 dispatched` | `none` | B1 Luna/medium en cours; B2 interdit jusqu’à remise/checks. |
+| DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 4 | `in_progress / dependency checks dispatched` | `none` | Luna/medium restaure les dépendances isolées et rejoue B1; B2 interdit. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
 | DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
@@ -45,6 +45,7 @@
 - Remise `DA30-009:1:analyze-complete` reçue puis marquée `relaunched` : contrat A→B fail-closed, B1 contrat de file pur puis B2 projection d'autorité. `git diff --check` enfant vert; aucune mutation code. Même chat relancé en Plan Terra/medium.
 - Remise `DA30-009:2:plan-complete` reçue : B1 et B2 sont séparés, avec paquet B1 borné et checks nommés. Aucun blocage ni décision métier. Ledger écrit avant délégation Build.
 - B1 a été délégué au même chat, Luna/medium demandé. Les métadonnées exécutantes ne sont pas observées et ne bloquent pas; Build reste confiné au worktree task-owned.
+- Remise `DA30-009:4:B1-checks-blocked` reçue : implémentation B1 limitée au pathset prévu, transpilation et whitespace verts, mais tests/typechecks bloqués par dépendances workspace absentes et `tsgo` indisponible. Aucun succès B1 ni B2 n'est déclaré.
 
 ## Blockers and decisions
 
@@ -54,7 +55,7 @@
 
 ## Next action
 
-Attendre `DA30-009:2:B1-complete`, relire son STATE/artefact/checks et ne router B2 qu'après preuve B1 complète.
+Attendre `DA30-009:4:B1-checks-rerun`, accepter B1 seulement sur preuves complètes et ne router B2 qu'après réception.
 
 ## Resume
 

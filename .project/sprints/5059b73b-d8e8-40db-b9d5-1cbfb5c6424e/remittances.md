@@ -28,3 +28,14 @@
 - Decision: aucune décision utilisateur requise; le mandat Sprint couvre B1 précisément.
 - Recommendation / next instruction: même chat relancé en B1 seul sous `gpt-5.6-luna` / `medium` à `2026-09-10T06:54:00+02:00`; checks B1 obligatoires, B2 interdit.
 - Git: HEAD `57da5e0d156c1b6f73c2c4528b502d6b764d9891`, seulement preuves APEX non suivies.
+
+### DA30-009:4:B1-checks-blocked
+
+- State: `relaunched`
+- Objective / position: B1 implémenté au checkpoint `BUILD/B1 → dependency-resolved checks`.
+- Effects and evidence: contrat TaskQueue pur, export Schema, évaluateur Core et tests A/B ajoutés; [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/STATE.md), [preuve B1](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/blocs/B1-task-queue.md).
+- Checks: transpilation Bun et `git diff --check` PASS; tests B1 et typechecks Schema/Core bloqués par l'absence des dépendances workspace et de `tsgo`.
+- Problems / impact: B1 n'est pas validé; B2 et les tâches dépendantes restent suspendus. Le worktree contient quatre fichiers fonctionnels non committés, tous dans le pathset B1.
+- Decision: aucune décision utilisateur requise; la restauration locale et réversible des dépendances est couverte par le mandat d'implémentation.
+- Recommendation / next instruction: même chat relancé Luna/medium pour restaurer seulement le runtime de dépendances isolé puis rejouer les checks B1; aucun B2/commit.
+- Git: branche task-owned, HEAD `57da5e0d`, dirty B1 attendu.
