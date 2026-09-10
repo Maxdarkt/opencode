@@ -23,3 +23,12 @@
 
 - Aucun push, merge distant, tag, déploiement, suppression, reset, clean ou rebase du worktree actif DA30-009.
 - Les commits locaux sont récupérables par leurs hashes; une fusion/rebase interrompue est arrêtée puis documentée, sans reset destructif.
+
+## Résultat observé
+
+- État canonique versionné sur `staging` : `4166cb2bf` (`docs(workflow): persist sprint state and promotion convention`).
+- Candidate Sprint 3 fusionnée localement : `948a99387` (`merge: integrate Sprint 3 candidate`), après résolution déterministe de 15 conflits exclusivement documentaires en conservant l'état canonique plus récent.
+- `s3-30-schema-manifest` et `s3-30-apex-cycle` réalignés propres sur `948a99387` ; leurs commits avaient déjà été appliqués dans la candidate.
+- `s3-30-cost-metrics` : rebase interrompu puis annulé sans perte. Son commit `70e6bf` diverge de la révision métriques intégrée `7374a3e`; six conflits API/SDK générés auraient exigé un choix non mécanique. Propriétaire : future tâche de réconciliation métriques, à créer seulement après cadrage MT/APEX.
+- Restent sans tentative de rebase : `s3-30-mt-apex-authority`, `s3-10-task-pilot-authority`, `s3-integration`; le worktree actif DA30-009 reste exclu.
+- Limite de contrôle : `git diff --check HEAD^..HEAD` signale des whitespaces dans des logs/patches de preuve historiques importés; ils sont conservés intacts pour leur valeur probante.

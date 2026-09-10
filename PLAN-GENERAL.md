@@ -1,14 +1,14 @@
 # Daidalon — plan général
 
-Mis à jour le 2026-09-08. Projet MT DA ; branche source staging, sans Build produit. [Index sprints](/Users/leanbot/Documents/40_Daidalon/Daidalon/sprint.md).
+Mis à jour le 2026-09-10. Projet MT DA ; branche source `staging` à `948a99387`, sans Build produit direct. [Index sprints](/Users/leanbot/Documents/40_Daidalon/Daidalon/sprint.md).
 
 ## Travail courant
 
-Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`), 29 SP planifiés. DA40-016 et DA30-009 sont `in_progress`; les quatre autres enfants restent `todo`. Objectif : piloter deux tâches successives sans parallélisme, en gardant MT/APEX/session/worktree/métriques isolés. DA30-009 est en Analyze seul dans son worktree task-owned; le [STATE parent](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/tasks/DA40-016-orchestration-sprint-4/STATE.md) porte la preuve.
+Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`), 29 SP planifiés. DA40-016 et DA30-009 sont `in_progress`; les quatre autres enfants restent `todo`. Objectif : piloter deux tâches successives sans parallélisme, en gardant MT/APEX/session/worktree/métriques isolés. DA30-009 exécute B1 dans son worktree task-owned; le [STATE parent](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/tasks/DA40-016-orchestration-sprint-4/STATE.md) porte la preuve.
 
 | Carte | Résultat attendu | SP | Dépendances | État |
 |---|---|---:|---|---|
-| DA30-009 | File séquentielle et autorité MT/APEX par tâche | 8 | candidate Sprint 3 | in_progress / Analyze — [scope](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/scope.md) |
+| DA30-009 | File séquentielle et autorité MT/APEX par tâche | 8 | candidate Sprint 3 intégrée dans `staging` | in_progress / Build B1 — [plan](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/plan.md) |
 | DA20-004 | Ownership et reprise sûrs lors du passage A → B | 5 | DA30-009 | todo — [scope](../features/20-workspace-git/.project/tasks/DA20-004-ownership-reprise-passage-taches/scope.md) |
 | DA10-005 | Vue Sprint de deux tâches et chat existant ciblé | 5 | DA30-009, DA20-004 | todo — [scope](../features/10-product-ui/.project/tasks/DA10-005-vue-sprint-deux-taches/scope.md) |
 | DA30-010 | Métriques Sprint par tâche, avec provenance honnête | 5 | DA30-009 | todo — [scope](../features/30-agent-runtime/.project/tasks/DA30-010-metriques-sprint-par-tache/scope.md) |
@@ -17,7 +17,7 @@ Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c
 
 ## Historique
 
-- Sprint 3 completed : 7 cartes, 34 SP acceptés, candidate locale `57da5e0d`; autorité MT/APEX explicite, fraîche et fail-closed; [bilan](docs/product/sprints/sprint-3.md) ; [plan sortant](.project/archives/sprint-3/plan-sortant.md).
+- Sprint 3 completed : 7 cartes, 34 SP acceptés, candidate `57da5e0d` intégrée localement dans `staging` au merge `948a99387`; autorité MT/APEX explicite, fraîche et fail-closed; [bilan](docs/product/sprints/sprint-3.md) ; [journal de promotion](.project/journals/OP-DA40-016-sprint-3-promotion-rotation.md).
 
 - Sprint 2 completed : 5 cartes, 29 SP acceptés, candidate locale `10e1234b3`; smoke technique et visuel parent verts. [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-2.md) ; [plan sortant](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/sprint-2/plan-sortant.md).
 
@@ -31,7 +31,7 @@ Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c
 
 ## Suite
 
-Sprint 4 est actif; DA30-009 est en Analyze et reste le seul enfant actif selon la [routine permanente](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/workflow/suivi-sprints.md). [Briefing validé](docs/product/sprints/sprint-4-proposal.md).
+Sprint 4 est actif; DA30-009 exécute B1 et reste le seul enfant actif selon la [routine permanente](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/workflow/suivi-sprints.md). Un Sprint suivant ne sera cadré et créé qu'après sa clôture. [Briefing validé](docs/product/sprints/sprint-4-proposal.md).
 
 ## Besoin produit à cadrer
 

@@ -6,7 +6,7 @@ Statut : completed le 2026-09-08. ID MT : `415b28cf-2d9c-4162-9be7-f6502a453b8e`
 
 Achever la candidate locale 0.1 : depuis une vue Sprint, suivre une tâche APEX, constater son worktree, son chat et son coût, puis piloter sa prochaine action à partir d’une autorité locale fraîche et concordante.
 
-La candidate acceptée est `features/s3-integration`, branche `sprint3-integration`, HEAD local `57da5e0d156c1b6f73c2c4528b502d6b764d9891`. Aucun push, tag, déploiement, publication ou suppression de worktree n’a été effectué.
+La candidate acceptée est `features/s3-integration`, branche `sprint3-integration`, HEAD local `57da5e0d156c1b6f73c2c4528b502d6b764d9891`. Le 2026-09-10, elle a été intégrée localement dans `staging` par le merge `948a99387`, après commit de l'état canonique `4166cb2bf`; aucun push, tag, déploiement, publication ou suppression de worktree n’a été effectué. La préflight et la rotation sont consignées dans le [journal de promotion](../../../.project/journals/OP-DA40-016-sprint-3-promotion-rotation.md).
 
 | Carte | Résultat accepté | SP | Commit / preuve |
 |---|---|---:|---|
