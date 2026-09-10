@@ -1,21 +1,21 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `13`
-- Updated: `2026-09-10T07:22:01+02:00`
+- Generation: `15`
+- Updated: `2026-09-10T07:37:56+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `5`
 - Parent thread: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Parent context: `active`
-- Active children: `1`
+- Active children: `0`
 - Capacity target: `1`
-- Under-capacity reason: `none` — séquentialité imposée pendant l'analyse de DA30-009.
+- Under-capacity reason: `review topology conflict` — DA30-009 vérifié en code mais review UI finale dépend d'une intégration elle-même dépendante de DA30-009.
 - Pending remittances: `0`
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA30-009:7:parent-visual-smoke`
+- Next event: `user-decision:DA30-009-review-or-topology`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -24,7 +24,7 @@
 
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
-| DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 7 | `checkpoint / B2 complete` | `none` | Preuves B1+B2 acceptées; smoke visuel parent requis avant review MT. |
+| DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `verify complete / blocked` | `none` | Arbitrage : review code avec smoke UI différé, ou révision de la topologie. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
 | DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
@@ -48,6 +48,8 @@
 - Remise `DA30-009:4:B1-checks-blocked` reçue : implémentation B1 limitée au pathset prévu, transpilation et whitespace verts, mais tests/typechecks bloqués par dépendances workspace absentes et `tsgo` indisponible. Aucun succès B1 ni B2 n'est déclaré.
 - Remise `DA30-009:5:B1-validated` reçue après installation locale verrouillée : tests 9/9, typechecks Schema/Core et `git diff --check` PASS. B2 Luna/medium a été demandé; toute observation de modèle reste informative.
 - Remise `DA30-009:7:B2-complete` acceptée : 23 tests/117 assertions, smoke SQLite A→B, typechecks Schema/Core, lint ciblé et whitespace PASS; le pathset B1+B2 est conforme au plan. Smoke visuel/intégration parent encore requis; aucune transition MT ni commit enfant.
+- Remise `DA30-009:8:smoke-partial` acceptée : shell stable aux deux tailles, mais vue Sprint A/B volontairement non intégrée et backend absent. La réception UI est reportée à l'intégration DA10-005/DA40-015; la frontière code VERIFY est relancée sans masquer cette limite.
+- Remise `DA30-009:9:verify-complete` acceptée : preuves code complètes, mais la règle qui exige DA10-005/DA40-015 avant review entre en cycle avec leurs dépendances sur DA30-009. Aucun changement MT n'est effectué sans arbitrage.
 
 ## Blockers and decisions
 
@@ -57,7 +59,7 @@
 
 ## Next action
 
-Exécuter et consigner le smoke visuel parent de DA30-009 aux deux tailles depuis son worktree; n'avancer vers review MT et DA20-004 qu'après résultat suffisant.
+Attendre l'arbitrage utilisateur : autoriser la review code DA30-009 avec réception UI différée à DA40-015, ou modifier les dépendances/critères. Ne lancer aucun enfant produit entre-temps.
 
 ## Resume
 

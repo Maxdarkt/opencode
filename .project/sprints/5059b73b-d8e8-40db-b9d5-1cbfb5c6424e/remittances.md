@@ -2,7 +2,7 @@
 
 - Schema: `sprint-event-ledger/v1`
 - Sprint: `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`
-- Updated: `2026-09-10T07:22:01+02:00`
+- Updated: `2026-09-10T07:37:56+02:00`
 - Open queue depth: `0`
 
 ## Events
@@ -61,3 +61,25 @@
 - Decision: aucune décision utilisateur requise; le mandat couvre le smoke parent non mutatif.
 - Recommendation / next instruction: exécuter et consigner le smoke visuel/intégration depuis le worktree task-owned; ne passer MT en review qu'après preuve suffisante.
 - Git: HEAD `57da5e0d`, dirty attendu dans le pathset B1+B2 et artefacts APEX; aucune erreur whitespace.
+
+### DA30-009:8:smoke-partial
+
+- State: `accepted / verify-dispatched`
+- Objective / position: smoke de shell non mutatif achevé à `SMOKE → parent-controlled VERIFY`.
+- Effects and evidence: shell local stable à `1440×900` et `1024×768`; la vue Sprint A/B est absente de cette candidate et le backend 4096 n'était pas lancé. [rapport smoke](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/smoke-report.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/STATE.md).
+- Checks: lancement/arrêt Vite propres; `git diff --check` toujours PASS. Playwright indisponible faute de Chromium; navigateur intégré utilisé.
+- Problems / impact: la réception visuelle intégrée est explicitement différée à DA10-005/DA40-015; ce n'est pas un échec B1/B2 et ne requiert pas de décision utilisateur.
+- Decision: la vérification porte maintenant sur l'acceptation du code et de la limite de smoke; elle ne déclare pas la réception UI finale.
+- Recommendation / next instruction: même chat, Luna/medium demandé, consigne la frontière VERIFY sans code ni mutation MT; le parent réconciliera ensuite MT vers review et rendra DA20-004 éligible.
+- Git: HEAD `57da5e0d`, dirty attendu strictement B1+B2/artefacts, aucun commit/push/rebase.
+
+### DA30-009:9:verify-complete
+
+- State: `blocked / user decision required`
+- Objective / position: vérification code complète à `VERIFY → parent-controlled review`.
+- Effects and evidence: pathset fonctionnel exact de sept fichiers Schema/Core/tests, artefacts APEX isolés, et toutes les preuves B1/B2 sont relues. [vérification](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/verify.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/STATE.md).
+- Checks: B1 9 pass; B2/régressions 23 pass/117 assertions; typechecks Schema/Core/OpenCode PASS; lint 0/0; whitespace PASS; lockfile inchangé.
+- Problems / impact: le contrat de Sprint interdit DA20-004/DA30-010 avant la clôture DA30-009, mais la consigne VERIFY interdit la carte `review` avant DA10-005/DA40-015. Or DA10-005 dépend de DA20-004 et DA40-015 dépend de toutes les tâches : cycle de réception UI impossible sans modification de topologie ou exception explicite.
+- Decision: arbitrage utilisateur requis : autoriser `DA30-009 → review` pour réception code avec smoke UI final différé à DA40-015, ou réviser les dépendances Sprint/critères de review.
+- Recommendation / next instruction: conserver aucune tâche produit active jusqu'à l'arbitrage; ne pas muter MT ni lancer les dépendants.
+- Git: HEAD `57da5e0d`, dirty attendu strictement dans le pathset validé, aucun commit/push/rebase.
