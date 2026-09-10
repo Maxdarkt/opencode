@@ -1,11 +1,11 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `10`
-- Updated: `2026-09-10T07:09:00+02:00`
+- Generation: `13`
+- Updated: `2026-09-10T07:22:01+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
-- Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `4`
+- Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `5`
 - Parent thread: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Parent context: `active`
 - Active children: `1`
@@ -15,7 +15,7 @@
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA30-009:4:B1-checks-rerun`
+- Next event: `DA30-009:7:parent-visual-smoke`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -24,7 +24,7 @@
 
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
-| DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 4 | `in_progress / dependency checks dispatched` | `none` | Luna/medium restaure les dépendances isolées et rejoue B1; B2 interdit. |
+| DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 7 | `checkpoint / B2 complete` | `none` | Preuves B1+B2 acceptées; smoke visuel parent requis avant review MT. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
 | DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
@@ -36,7 +36,7 @@
 
 ## Git and checks
 
-- Canonique staging : branche `staging`, HEAD `702bf7dcd7468638c17fd95b110deb38bd253e9a`; 30 entrées déjà modifiées/non suivies, préservées et hors périmètre.
+- Canonique staging : branche `staging`, HEAD `eff1f0eef81ccf9bda86e29e1f7b3e4b354330dc`; uniquement les artefacts parent Sprint 4 non commités, préservés et hors Build.
 - Baseline candidate : `/Users/leanbot/Documents/40_Daidalon/features/s3-integration`, branche `sprint3-integration`, HEAD `57da5e0d156c1b6f73c2c4528b502d6b764d9891`, propre.
 - Worktrees métier observés, sans Build : `10-product-ui` `e22d723895e3a8537f9bf21d5d6e4561ff630de1`; `20-workspace-git` `2d973aeaf6a289ba1f343663a758d7c70b1bcc11`; `30-agent-runtime` `702bf7dcd7468638c17fd95b110deb38bd253e9a`; `40-tooling` `b7111b6e973d7200e70990c6f32a1a4d4b4a64de`.
 - Registre commun corrigé : `DA` résout le source, le profil APEX tracked est accepté et le worktree task-owned DA30-009 est enregistré; 17 tests registre et 9 tests profil passent.
@@ -46,6 +46,8 @@
 - Remise `DA30-009:2:plan-complete` reçue : B1 et B2 sont séparés, avec paquet B1 borné et checks nommés. Aucun blocage ni décision métier. Ledger écrit avant délégation Build.
 - B1 a été délégué au même chat, Luna/medium demandé. Les métadonnées exécutantes ne sont pas observées et ne bloquent pas; Build reste confiné au worktree task-owned.
 - Remise `DA30-009:4:B1-checks-blocked` reçue : implémentation B1 limitée au pathset prévu, transpilation et whitespace verts, mais tests/typechecks bloqués par dépendances workspace absentes et `tsgo` indisponible. Aucun succès B1 ni B2 n'est déclaré.
+- Remise `DA30-009:5:B1-validated` reçue après installation locale verrouillée : tests 9/9, typechecks Schema/Core et `git diff --check` PASS. B2 Luna/medium a été demandé; toute observation de modèle reste informative.
+- Remise `DA30-009:7:B2-complete` acceptée : 23 tests/117 assertions, smoke SQLite A→B, typechecks Schema/Core, lint ciblé et whitespace PASS; le pathset B1+B2 est conforme au plan. Smoke visuel/intégration parent encore requis; aucune transition MT ni commit enfant.
 
 ## Blockers and decisions
 
@@ -55,7 +57,7 @@
 
 ## Next action
 
-Attendre `DA30-009:4:B1-checks-rerun`, accepter B1 seulement sur preuves complètes et ne router B2 qu'après réception.
+Exécuter et consigner le smoke visuel parent de DA30-009 aux deux tailles depuis son worktree; n'avancer vers review MT et DA20-004 qu'après résultat suffisant.
 
 ## Resume
 
