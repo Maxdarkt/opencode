@@ -39,4 +39,8 @@ Mémoire durable de projet : conception DA40-005, intégration au skill DA40-008
 
 ### Backlog validé
 
-Aucune carte produit n’est engagée par cette clôture. La dette de compaction desktop reste portée par la tâche APEX-only globale `desktop-compaction-transport` dans `codex-workflow-config`; elle ne devient pas une carte produit Daidalon.
+| Carte | Résultat attendu | État | Référence |
+|---|---|---|---|
+| DA30-011 | Réconcilier le worktree métriques Sprint 3 avec la révision intégrée avant réalignement | todo, hors Sprint 4 | [scope](.project/tasks/DA30-DA30-011-reconcilier-divergence-metriques-sprint3/scope.md) |
+
+La dette de compaction desktop reste portée par la tâche APEX-only globale `desktop-compaction-transport` dans `codex-workflow-config`; elle ne devient pas une carte produit Daidalon.
