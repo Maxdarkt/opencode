@@ -1,0 +1,73 @@
+{
+  "ok": true,
+  "action": "list",
+  "request_id": "23ed4f60-8fed-49cf-9cf4-6588ce0d1366",
+  "board": "human",
+  "project": "DA",
+  "scope": "project",
+  "count": 5,
+  "limit": 20,
+  "truncated": false,
+  "tasks": [
+    {
+      "display_id": "DA40-004",
+      "title": "Orchestrer et réceptionner le Sprint 1 — Projet et environnement fiables",
+      "status": "todo",
+      "priority": "medium",
+      "priority_level": 3,
+      "assignee": "codex",
+      "external_ref": ".project/tasks/DA40-004-orchestration-sprint-1",
+      "sprint_id": "a3fac11a-49ed-455f-9d7c-dcd213467b6a",
+      "sprint_ref": "da-release-0.1-sprint-1",
+      "worktree_code": "40"
+    },
+    {
+      "display_id": "DA10-002",
+      "title": "Ouvrir explicitement le bon projet et afficher son contexte réel",
+      "status": "todo",
+      "priority": "medium",
+      "priority_level": 3,
+      "assignee": "codex",
+      "external_ref": ".project/tasks/DA10-002-ouverture-projet-explicite",
+      "sprint_id": "a3fac11a-49ed-455f-9d7c-dcd213467b6a",
+      "sprint_ref": "da-release-0.1-sprint-1",
+      "worktree_code": "10"
+    },
+    {
+      "display_id": "DA20-002",
+      "title": "Exposer un contexte local et Git vérifiable en lecture seule",
+      "status": "todo",
+      "priority": "medium",
+      "priority_level": 3,
+      "assignee": "codex",
+      "external_ref": ".project/tasks/DA20-002-contexte-local-verifiable",
+      "sprint_id": "a3fac11a-49ed-455f-9d7c-dcd213467b6a",
+      "sprint_ref": "da-release-0.1-sprint-1",
+      "worktree_code": "20"
+    },
+    {
+      "display_id": "DA30-003",
+      "title": "Qualifier le parcours runtime et les points de contrôle du placement",
+      "status": "todo",
+      "priority": "medium",
+      "priority_level": 3,
+      "assignee": "codex",
+      "external_ref": ".project/tasks/DA30-003-qualification-parcours-runtime",
+      "sprint_id": "a3fac11a-49ed-455f-9d7c-dcd213467b6a",
+      "sprint_ref": "da-release-0.1-sprint-1",
+      "worktree_code": "30"
+    },
+    {
+      "display_id": "DA40-003",
+      "title": "Établir un environnement local reproductible et les checks de référence",
+      "status": "todo",
+      "priority": "medium",
+      "priority_level": 3,
+      "assignee": "codex",
+      "external_ref": ".project/tasks/DA40-003-socle-local-reproductible",
+      "sprint_id": "a3fac11a-49ed-455f-9d7c-dcd213467b6a",
+      "sprint_ref": "da-release-0.1-sprint-1",
+      "worktree_code": "40"
+    }
+  ]
+}

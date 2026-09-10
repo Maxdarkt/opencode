@@ -9,7 +9,7 @@
 
 - Projet renommé : `Daidalon` (`DA`).
 - Sprint créé et activé : `M0 — Audit et validation`, 17 SP dont 2 SP d'orchestration.
-- Cartes historiques supprimées : `OC-0001` et `OC-0002`; `OC-0003` reste la trace du raccordement initial.
+- Cartes historiques supprimées : `OC-0001` et `OC-0002`; `OC-0003`, trace du raccordement initial déjà réalisé, a été réconciliée puis archivée le 2026-09-07 sous le domaine `40-tooling`.
 - Worktrees métier MT Tasks activés : `10 product-ui`, `20 workspace-git`, `30 agent-runtime`, `40 tooling`.
 - Connecteur vérifié après redémarrage : `DA` est routé, les quatre codes sont actifs et aucune route orpheline ne subsiste.
 - Cartes M0 matérialisées : `DA40-002` pour l'orchestration, puis `DA10-001`, `DA20-001`, `DA30-001`, `DA30-002` et `DA40-001` pour les audits et la décision.

@@ -58,3 +58,13 @@ DA40-001  tooling
 ```
 
 Chaque carte suivie doit pointer vers un dossier canonique sous `.project/tasks/` et conserver la même référence dans MT Tasks, le plan général et l'état APEX.
+
+## Projections documentaires
+
+`/Users/leanbot/Documents/40_Daidalon/Daidalon` est la racine documentaire
+canonique. Les `PLAN-GENERAL.md` et `sprint.md` des quatre worktrees sont des
+projections read-only conservées pour le contexte local; le [registre
+canonique](../../.project/runtime/canonical-projections.md) porte leur
+`canonical_ref`, date, revision et fraîcheur. Aucun worktree ne publie le canonique
+en modifiant sa copie. Les dossiers APEX restent, eux, dans leur worktree métier
+attitré et conservent leur `external_ref` stable.

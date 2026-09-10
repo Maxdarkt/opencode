@@ -1,8 +1,5 @@
-# STATE — DA20-001
+# STATE — DA20-001 (projection)
 
-- Phase : Scope
-- Statut : prêt pour Analyze
-- Synchronisation : vérifiée — MT Tasks `DA20-001`, plan général et dossier APEX concordent
-- Prochaine action : lancer APEX Analyze dans `/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git`
-- Dette : aucune identifiée au cadrage
-- Reprise : lire `scope.md`, la conception worktree/Git et le code concerné, puis produire `analyze.md` sans implémenter.
+Statut MT : archived ; résultat antérieur done, M0 completed.
+Dossier APEX effectif : [DA20-001](/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/.project/tasks/DA20-001-audit-workspace-git/STATE.md). Cette copie de cadrage ne porte pas une exécution indépendante.
+Historique local : [ancien état](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/m0/DA20-001-STATE-avant-archivage.md).

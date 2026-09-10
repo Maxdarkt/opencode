@@ -1,8 +1,5 @@
-# STATE — DA30-002
+# STATE — DA30-002 (projection)
 
-- Phase : Scope
-- Statut : en attente des audits M0
-- Synchronisation : vérifiée — MT Tasks `DA30-002`, plan général et dossier APEX concordent
-- Prochaine action : attendre `DA10-001`, `DA20-001` et `DA30-001`, puis lancer APEX Analyze
-- Dette : aucune identifiée au cadrage
-- Reprise : relire les trois audits amont, `scope.md` et la conception, puis produire `analyze.md` sans implémenter.
+Statut MT : archived ; résultat antérieur done, M0 completed.
+Dossier APEX effectif : [DA30-002](/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime/.project/tasks/DA30-002-modele-apex-sprint/STATE.md). Cette copie de cadrage ne porte pas une exécution indépendante.
+Historique local : [ancien état](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/m0/DA30-002-STATE-avant-archivage.md).

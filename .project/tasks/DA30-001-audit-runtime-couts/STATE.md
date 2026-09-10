@@ -1,8 +1,5 @@
-# STATE — DA30-001
+# STATE — DA30-001 (projection)
 
-- Phase : Scope
-- Statut : prêt pour Analyze
-- Synchronisation : vérifiée — MT Tasks `DA30-001`, plan général et dossier APEX concordent
-- Prochaine action : lancer APEX Analyze dans `/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime`
-- Dette : aucune identifiée au cadrage
-- Reprise : lire `scope.md`, la vision économique et le runtime concerné, puis produire `analyze.md` sans implémenter.
+Statut MT : archived ; résultat antérieur done, M0 completed.
+Dossier APEX effectif : [DA30-001](/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime/.project/tasks/DA30-001-audit-runtime-couts/STATE.md). Cette copie de cadrage ne porte pas une exécution indépendante.
+Historique local : [ancien état](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/m0/DA30-001-STATE-avant-archivage.md).

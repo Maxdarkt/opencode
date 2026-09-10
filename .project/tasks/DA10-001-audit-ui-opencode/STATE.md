@@ -1,8 +1,5 @@
-# STATE — DA10-001
+# STATE — DA10-001 (projection)
 
-- Phase : Scope
-- Statut : prêt pour Analyze
-- Synchronisation : vérifiée — MT Tasks `DA10-001`, plan général et dossier APEX concordent
-- Prochaine action : lancer APEX Analyze dans `/Users/leanbot/Documents/40_Daidalon/features/10-product-ui`
-- Dette : aucune identifiée au cadrage
-- Reprise : lire `scope.md`, la vision produit, la conception, le code UI concerné et produire `analyze.md` sans implémenter.
+Statut MT : archived ; résultat antérieur done, M0 completed.
+Dossier APEX effectif : [DA10-001](/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-001-audit-ui-opencode/STATE.md). Cette copie de cadrage ne porte pas une exécution indépendante.
+Historique local : [ancien état](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/archives/m0/DA10-001-STATE-avant-archivage.md).

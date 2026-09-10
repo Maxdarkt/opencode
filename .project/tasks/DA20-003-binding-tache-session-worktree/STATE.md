@@ -1,0 +1,23 @@
+# STATE — DA20-003
+
+- schema: `apex-state/v2`
+- generation: `12`
+- updated_at: `2026-09-07T13:23:32+02:00`
+- phase: `DONE`
+- status: `complete`
+- tracking: `tracked`
+- MT: `DA20-003` / `done`; réception parent et mutation `0a2682ac-8664-4dc7-b38e-75bae1bfbb4c`, relue via `cfc2ff24-268b-45e0-b5f0-e59b3240b0ba`.
+- Sprint: `da-release-0.1-sprint-2` (`ddc01132-b26a-446a-85a0-04d2d37a0a01`).
+- Git: branche `task-session-binding`; base `9ba850b68b49bd20e2e40d24ceba39dd5fb19af2`; HEAD/commit borné `a70bf26adc4ece7645e3654452c0f034f78d05ac` (1 commit d'avance); dirty restant = ce checkpoint/handoff final et projections Sprint préexistantes, aucun code métier.
+- Worktree: `/Users/leanbot/Documents/40_Daidalon/features/s2-20-binding`; staging exclu.
+- Session enfant: `01a07b7a-fde8-76f0-ae19-64a99c75fd32`.
+- active_block: `null`
+- completed_blocks: `[analyze, plan, B1-contract-persistence, B2-resume-conflicts, technical-smoke, verify-handoff, parent-validation]`
+- Routage: requested_model=`gpt-5.6-sol`, requested_effort=`high`; observed_model=`gpt-5.6-sol`, observed_effort=`high`; source=`attestation parent explicite après création faute de métadonnées runtime observables, API acceptée sans signal de substitution`; attesté à `2026-09-07T12:53:00+02:00`; divergence=`aucune observée`.
+- Décisions: mandat Sprint exécuté; réception parent PASS sur commit/pathset, 30 tests/123 assertions, typechecks Schema/Core et migration check; DA30-004 réveillée avec le commit exact. Aucun push/merge/rebase/promotion/reset/nettoyage destructif/suppression de worktree.
+- read_set: `verify.md`, `smoke-report.md`, `problems.md` et pathset métier @commit `a70bf26ad`; `AGENTS.md@bd335285`; `.project/apex.json@fb3a85bf`; registre canonique `canonical-projections.md@observation-2026-09-07T12:24:38+0200`.
+- checks: réception parent PASS; commit/pathset relus; 30 tests/123 assertions, typechecks Schema/Core et migration check rejoués avec succès. Suite Schema = 13 PASS / 2 FAIL préexistants reproduits sur baseline `9ba850b68`.
+- blockers: aucun.
+- debts: `problems.md#DEBT-SCHEMA-EVENT-MANIFEST` (hors périmètre, préexistant, aucun doublon MT trouvé, à arbitrer/scoper par le parent); ownership/lease et UI sont des sorties dépendantes déjà portées par DA30-004 et DA10-003.
+- next_action: aucune pour DA20-003; le parent poursuit DA30-004 et la synchronisation/clôture du Sprint.
+- resume: DA20-003 génération 12 est complète et MT `done`; ne pas relancer, recréer, retransiter ni committer. La dette event-manifest reste hors périmètre dans `problems.md`.

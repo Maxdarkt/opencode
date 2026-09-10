@@ -1,0 +1,30 @@
+{
+  "observedAt": "2026-09-06T13:03:19.652113+00:00",
+  "worktrees": {
+    "/Users/leanbot/Documents/40_Daidalon/Daidalon": {
+      "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+      "branch": "staging",
+      "dirty": "M .project/tasks/DA10-001-audit-ui-opencode/STATE.md\n M .project/tasks/DA20-001-audit-workspace-git/STATE.md\n M .project/tasks/DA30-001-audit-runtime-couts/STATE.md\n M .project/tasks/DA30-002-modele-apex-sprint/STATE.md\n M .project/tasks/DA40-001-gap-analysis-m0/STATE.md\n M .project/tasks/DA40-002-orchestration-m0/STATE.md\n M AGENTS.md\n M PLAN-GENERAL.md\n?? .project/archives/\n?? .project/tasks/DA40-002-orchestration-m0/decision-finale.md\n?? .project/tasks/DA40-002-orchestration-m0/reconciliation-parent.md\n?? .project/tasks/DA40-004-orchestration-sprint-1/\n?? docs/product/memoire-projet.md\n?? docs/product/releases/\n?? docs/product/sprints/\n?? docs/workflow/\n?? sprint.md"
+    },
+    "/Users/leanbot/Documents/40_Daidalon/features/10-product-ui": {
+      "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+      "branch": "10-product-ui",
+      "dirty": "M .project/tasks/DA10-001-audit-ui-opencode/STATE.md\n M .project/tasks/DA20-001-audit-workspace-git/STATE.md\n M .project/tasks/DA30-001-audit-runtime-couts/STATE.md\n M .project/tasks/DA30-002-modele-apex-sprint/STATE.md\n M .project/tasks/DA40-001-gap-analysis-m0/STATE.md\n M .project/tasks/DA40-002-orchestration-m0/STATE.md\n M AGENTS.md\n M PLAN-GENERAL.md\n?? .project/archives/\n?? .project/tasks/DA10-001-audit-ui-opencode/analyze.md\n?? .project/tasks/DA10-001-audit-ui-opencode/audit-ui.md\n?? .project/tasks/DA10-001-audit-ui-opencode/blocs/\n?? .project/tasks/DA10-001-audit-ui-opencode/debts.md\n?? .project/tasks/DA10-001-audit-ui-opencode/evidence/\n?? .project/tasks/DA10-001-audit-ui-opencode/plan.md\n?? .project/tasks/DA10-001-audit-ui-opencode/smoke-report.md\n?? .project/tasks/DA10-002-ouverture-projet-explicite/\n?? sprint.md"
+    },
+    "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git": {
+      "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+      "branch": "20-workspace-git",
+      "dirty": "M .project/tasks/DA10-001-audit-ui-opencode/STATE.md\n M .project/tasks/DA20-001-audit-workspace-git/STATE.md\n M .project/tasks/DA30-001-audit-runtime-couts/STATE.md\n M .project/tasks/DA30-002-modele-apex-sprint/STATE.md\n M .project/tasks/DA40-001-gap-analysis-m0/STATE.md\n M .project/tasks/DA40-002-orchestration-m0/STATE.md\n M AGENTS.md\n M PLAN-GENERAL.md\n?? .project/archives/\n?? .project/tasks/DA20-001-audit-workspace-git/analyze.md\n?? .project/tasks/DA20-001-audit-workspace-git/audit.md\n?? .project/tasks/DA20-001-audit-workspace-git/blocs/\n?? .project/tasks/DA20-001-audit-workspace-git/evidence/\n?? .project/tasks/DA20-001-audit-workspace-git/plan.md\n?? .project/tasks/DA20-001-audit-workspace-git/smoke-report.md\n?? .project/tasks/DA20-002-contexte-local-verifiable/\n?? sprint.md"
+    },
+    "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime": {
+      "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+      "branch": "30-agent-runtime",
+      "dirty": "M .project/tasks/DA10-001-audit-ui-opencode/STATE.md\n M .project/tasks/DA20-001-audit-workspace-git/STATE.md\n M .project/tasks/DA30-001-audit-runtime-couts/STATE.md\n M .project/tasks/DA30-002-modele-apex-sprint/STATE.md\n M .project/tasks/DA40-001-gap-analysis-m0/STATE.md\n M .project/tasks/DA40-002-orchestration-m0/STATE.md\n M AGENTS.md\n M PLAN-GENERAL.md\n?? .project/archives/\n?? .project/tasks/DA30-001-audit-runtime-couts/analyze.md\n?? .project/tasks/DA30-001-audit-runtime-couts/audit-runtime.md\n?? .project/tasks/DA30-001-audit-runtime-couts/blocs/\n?? .project/tasks/DA30-001-audit-runtime-couts/evidence/\n?? .project/tasks/DA30-001-audit-runtime-couts/handoff.md\n?? .project/tasks/DA30-001-audit-runtime-couts/plan.md\n?? .project/tasks/DA30-001-audit-runtime-couts/protocole-economique.md\n?? .project/tasks/DA30-001-audit-runtime-couts/smoke-report.md\n?? .project/tasks/DA30-002-modele-apex-sprint/analyze.md\n?? .project/tasks/DA30-002-modele-apex-sprint/blocs/\n?? .project/tasks/DA30-002-modele-apex-sprint/budgets-reconciliation.md\n?? .project/tasks/DA30-002-modele-apex-sprint/evidence/\n?? .project/tasks/DA30-002-modele-apex-sprint/handoff.md\n?? .project/tasks/DA30-002-modele-apex-sprint/machine-etats.md\n?? .project/tasks/DA30-002-modele-apex-sprint/modele-donnees.md\n?? .project/tasks/DA30-002-modele-apex-sprint/plan.md\n?? .project/tasks/DA30-002-modele-apex-sprint/scenario-papier.md\n?? .project/tasks/DA30-002-modele-apex-sprint/smoke-report.md\n?? .project/tasks/DA30-002-modele-apex-sprint/sources.md\n?? .project/tasks/DA30-003-qualification-parcours-runtime/\n?? sprint.md"
+    },
+    "/Users/leanbot/Documents/40_Daidalon/features/40-tooling": {
+      "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+      "branch": "40-tooling",
+      "dirty": "M .project/tasks/DA10-001-audit-ui-opencode/STATE.md\n M .project/tasks/DA20-001-audit-workspace-git/STATE.md\n M .project/tasks/DA30-001-audit-runtime-couts/STATE.md\n M .project/tasks/DA30-002-modele-apex-sprint/STATE.md\n M .project/tasks/DA40-001-gap-analysis-m0/STATE.md\n M .project/tasks/DA40-002-orchestration-m0/STATE.md\n M AGENTS.md\n M PLAN-GENERAL.md\n?? .project/archives/\n?? .project/tasks/DA40-001-gap-analysis-m0/analyze.md\n?? .project/tasks/DA40-001-gap-analysis-m0/blocs/\n?? .project/tasks/DA40-001-gap-analysis-m0/debts.md\n?? .project/tasks/DA40-001-gap-analysis-m0/decision-m0.md\n?? .project/tasks/DA40-001-gap-analysis-m0/evidence/\n?? .project/tasks/DA40-001-gap-analysis-m0/gap-analysis.md\n?? .project/tasks/DA40-001-gap-analysis-m0/plan.md\n?? .project/tasks/DA40-001-gap-analysis-m0/smoke-report.md\n?? .project/tasks/DA40-001-gap-analysis-m0/sprint-1.md\n?? .project/tasks/DA40-003-socle-local-reproductible/\n?? .project/tasks/DA40-005-memoire-durable-markdown-mt/\n?? sprint.md"
+    }
+  }
+}
