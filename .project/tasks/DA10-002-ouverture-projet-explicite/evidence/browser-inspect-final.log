@@ -1,0 +1,73 @@
+REQ http://127.0.0.1:4150/global/health
+REQ http://127.0.0.1:4150/api/health
+REQ http://127.0.0.1:4150/api/session?limit=5000&order=desc
+REQ http://127.0.0.1:4150/global/config
+REQ http://127.0.0.1:4150/provider
+REQ http://127.0.0.1:4150/path
+REQ http://127.0.0.1:4150/session/status
+REQ http://127.0.0.1:4150/project
+REQ http://127.0.0.1:4150/global/event
+LOADED DEV
+NAV
+N/A
+FPS
+22
+FRAME
+45
+JANK
+1
+LONG
+54/2
+DELAY
+N/A
+INP
+N/A
+CLS
+0.00
+MEM
+1%
+DIR
+LTR
+TIMEOUT DEV
+Projets
+Ajouter un projet
+Paramètres
+Aide
+Rien ici pour l'instant
+
+Créez une session pour commencer
+
+NAV
+N/A
+FPS
+22
+FRAME
+45
+JANK
+1
+LONG
+54/2
+DELAY
+N/A
+INP
+N/A
+CLS
+0.00
+MEM
+1%
+DIR
+LTR
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+locator.waitFor: Error: strict mode violation: getByRole('button', { name: /^(Add project|Ajouter un projet)$/ }) resolved to 2 elements:
+    1) <button type="button" data-size="large" data-variant="ghost-muted" data-action="home-add-project" aria-label="Ajouter un projet" data-component="icon-button-v2" icon="function () { [native code] }" class="titlebar-icon [&_[data-slot=icon-svg]]:text-v2-icon-icon-muted">…</button> aka getByLabel('Ajouter un projet')
+    2) <button type="button" data-action="home-add-project-row" class="↵        flex h-7 min-w-0 w-full shrink-0 cursor-default items-center gap-2 rounded-[6px] bg-transparent px-1.5 text-left↵        text-v2-text-text-muted [font-weight:440] transition-[background-color,color,box-shadow] duration-[120ms] ease-in-out↵        hover:bg-v2-background-bg-layer-01 hover:text-v2-text-text-base↵        data-[selected]:bg-v2-background-bg-layer-03 data-[selected]:text-v2-text-text-base↵        data-[selected]:hover:…>…</button> aka locator('button').filter({ hasText: 'Ajouter un projet' })
+
+Call log:
+[2m  - waiting for getByRole('button', { name: /^(Add project|Ajouter un projet)$/ }) to be visible[22m
+
+    at /Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/DA10-002-ouverture-projet-explicite/evidence/browser-inspect.mjs:10:86
+
+Node.js v25.8.2

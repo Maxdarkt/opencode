@@ -1,0 +1,11 @@
+bun test v1.3.14 (0d9b296a)
+
+test/endpoint.test.ts:
+(pass) Endpoint > appends a static path to the model's baseURL [39.10ms]
+(pass) Endpoint > endpoint query params are appended to the rendered URL [5.22ms]
+(pass) Endpoint > path may be a function of the validated body [1.71ms]
+
+ 3 pass
+ 0 fail
+ 3 expect() calls
+Ran 3 tests across 1 file. [1471.00ms]

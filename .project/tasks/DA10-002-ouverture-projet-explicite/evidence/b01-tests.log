@@ -1,0 +1,32 @@
+bun test v1.3.14 (0d9b296a)
+
+src/components/directory-picker-domain.test.ts:
+(pass) maps server directory entries into Pierre paths [0.66ms]
+(pass) maps Pierre paths back to the selected server root [0.35ms]
+(pass) includes files only when the picker selects files [0.07ms]
+(pass) includes files in file autocomplete while preserving directory navigation [0.16ms]
+(pass) centralizes file and directory selection policy [1.13ms]
+(pass) accepts mutations only from the active navigation [0.05ms]
+(pass) preserves POSIX case while matching Windows drives case-insensitively [0.19ms]
+(pass) displays paths using the selected server path format [0.09ms]
+(pass) treats the server share prefix as the UNC root [0.09ms]
+(pass) resolves relative input against the current picker root [0.10ms]
+(pass) exposes autocomplete results only for their source query [0.02ms]
+(pass) scopes file autocomplete to the current browser root [0.03ms]
+(pass) resolves directory autocomplete from the current browser root [1.47ms]
+(pass) keeps indexed directory results for servers that support empty search [0.45ms]
+(pass) lists the default directory when empty search is unsupported [0.75ms]
+(pass) matches the default directory listing when typed search is unsupported [0.70ms]
+(pass) searches from an absolute root without a default base [0.33ms]
+(pass) identifies the next directory level to preload [0.03ms]
+(pass) advances preloading once for every expanded directory [0.05ms]
+(pass) limits background tasks and prioritizes newly requested work [0.38ms]
+(pass) clamps bridged tree wheel scrolling [0.02ms]
+(pass) wraps autocomplete keyboard navigation [0.02ms]
+(pass) returns absolute directories and relative files [0.25ms]
+(pass) requires navigation of edited paths before directory confirmation [0.06ms]
+
+ 24 pass
+ 0 fail
+ 85 expect() calls
+Ran 24 tests across 1 file. [247.00ms]

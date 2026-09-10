@@ -1,0 +1,24 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+  "command": [
+    "bun",
+    "x",
+    "--no-install",
+    "prettier",
+    "--check",
+    "packages/core/src/local-context.ts",
+    "packages/core/test/local-context.test.ts",
+    "packages/opencode/src/server/routes/instance/httpapi/groups/global.ts",
+    "packages/opencode/src/server/routes/instance/httpapi/handlers/global.ts",
+    "packages/opencode/src/server/routes/instance/httpapi/server.ts",
+    "packages/opencode/test/server/httpapi-control-plane.test.ts",
+    "packages/opencode/test/server/httpapi-exercise/index.ts",
+    "packages/opencode/test/server/httpapi-global.test.ts",
+    "packages/opencode/test/server/httpapi-local-context.test.ts",
+    "packages/schema/src/local-context.ts",
+    "packages/sdk/js/src/v2/gen/sdk.gen.ts",
+    "packages/sdk/js/src/v2/gen/types.gen.ts",
+    "packages/sdk/js/test/local-context.test.ts"
+  ],
+  "exit": 0
+}

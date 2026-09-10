@@ -1,0 +1,9 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+  "command": [
+    "bun",
+    "typecheck"
+  ],
+  "exit": 2,
+  "seconds": 25.04
+}

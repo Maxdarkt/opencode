@@ -91,9 +91,12 @@ function matchLegacyOpenApi(input: Record<string, unknown>) {
 
   // Effect's Schema.optional emits `anyOf: [T, {type:"null"}]` in OpenAPI,
   // but the legacy SDK expected plain `T` for optional fields. Strip null
-  // from all component schemas so both request and response types match.
+  // from legacy component schemas so both request and response types match.
   for (const [name, schema] of Object.entries(spec.components?.schemas ?? {})) {
-    spec.components!.schemas![name] = stripOptionalNull(structuredClone(schema))
+    // LocalContext is a new contract with required nullable observations, not legacy optional fields.
+    // Preserve its canonical schema, including the nested nullable Git object, for SDK generation.
+    spec.components!.schemas![name] =
+      name === "LocalContext.Info" ? structuredClone(schema) : stripOptionalNull(structuredClone(schema))
   }
   normalizeComponentNames(spec)
   collapseDuplicateComponents(spec)

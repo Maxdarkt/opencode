@@ -1,0 +1,5 @@
+$ tsgo --noEmit
+test/server/httpapi-public-openapi.test.ts(371,65): error TS2322: Type 'Info' is not assignable to type 'LocalContextInfo'.
+  Types of property 'canonical_directory' are incompatible.
+    Type 'string | null' is not assignable to type 'string'.
+      Type 'null' is not assignable to type 'string'.

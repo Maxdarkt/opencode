@@ -1,0 +1,27 @@
+bun test v1.3.14 (0d9b296a)
+
+src/components/project-context-state.test.ts:
+(pass) clears old data on a new observation and ignores late responses [2.11ms]
+(pass) cancellation aborts transport and suppresses late failures [0.25ms]
+(pass) rejects data for a different requested directory [0.08ms]
+(pass) preserves unavailable and session mismatch diagnostics without substituting paths [0.06ms]
+(pass) uses the authenticated legacy context route and explicit query, not the default directory [2.70ms]
+64 |   for (const [status, kind] of [[401, "auth"], [403, "auth"], [500, "server"]] as const) {
+65 |     const client = createOpencodeClient({ baseUrl: "http://localhost", fetch: async () => new Response(null, { status }) })
+66 |     await expect(readProjectContext({ protocol: Promise.resolve("v1"), client }, { directory: "/repo" })).rejects.toEqual(new ContextRequestError(kind))
+67 |   }
+68 |   const client = createOpencodeClient({ baseUrl: "http://localhost", fetch: async () => { throw new Error("offline") } })
+69 |   await expect(readProjectContext({ protocol: Promise.resolve("v1"), client }, { directory: "/repo" })).rejects.toEqual(new ContextRequestError("network"))
+                                                                                                                     ^
+error: expect(received).toEqual(expected)
+
+Expected: [ContextRequestError: network]
+Received: [TypeError: undefined is not an object (evaluating 'response.response.status')]
+
+      at <anonymous> (/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/packages/app/src/components/project-context-state.test.ts:69:113)
+(fail) distinguishes auth, network, server and unsupported protocol failures [3.59ms]
+
+ 5 pass
+ 1 fail
+ 14 expect() calls
+Ran 6 tests across 1 file. [268.00ms]

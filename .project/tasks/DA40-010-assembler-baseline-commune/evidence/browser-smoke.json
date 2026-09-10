@@ -1,0 +1,134 @@
+{
+  "pass": true,
+  "url": "http://127.0.0.1:4450/",
+  "candidate": "/Users/leanbot/Documents/40_Daidalon/features/50-integration",
+  "fixture": "/var/folders/pz/2l1p3_8n7m30pt509cjjcq8w0000gn/T/da40-010-browser-HT4Zu8",
+  "no_dot_git": true,
+  "requests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/global/health"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/api/health"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/api/session?limit=5000&order=desc"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/global/config"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/provider"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/path"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/session/status"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/project"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/global/event"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/path"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2F"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2Fvar%2Ffolders%2Fpz%2F2l1p3_8n7m30pt509cjjcq8w0000gn%2FT%2Fda40-010-browser-HT4Zu8"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/global/context?directory=%2Fvar%2Ffolders%2Fpz%2F2l1p3_8n7m30pt509cjjcq8w0000gn%2FT%2Fda40-010-browser-HT4Zu8"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/global/context?directory=%2Fvar%2Ffolders%2Fpz%2F2l1p3_8n7m30pt509cjjcq8w0000gn%2FT%2Fda40-010-browser-HT4Zu8%2Fmissing"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2Fvar%2Ffolders%2Fpz%2F2l1p3_8n7m30pt509cjjcq8w0000gn%2FT%2Fda40-010-browser-HT4Zu8%2Fmissing"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2FUsers%2Fleanbot"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/global/context?directory=%2FUsers%2Fleanbot"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2F"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2FUsers"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/global/context?directory=%2FUsers%2Fleanbot%2FDocuments%2F40_Daidalon%2Ffeatures%2F50-integration"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2FUsers%2Fleanbot%2FDocuments%2F40_Daidalon%2Ffeatures%2F50-integration"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2FUsers%2Fleanbot"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/global/context?directory=%2FUsers%2Fleanbot%2FDocuments%2F40_Daidalon%2Ffeatures%2F50-integration"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2FUsers%2Fleanbot%2FDocuments"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/project/current?directory=%2FUsers%2Fleanbot%2FDocuments%2F40_Daidalon%2Ffeatures%2F50-integration"
+    },
+    {
+      "method": "PATCH",
+      "url": "http://127.0.0.1:4150/project/22f4eb5c773c99a9890aae1bbd0d271af5f4f5d4?directory=%2FUsers%2Fleanbot%2FDocuments%2F40_Daidalon%2Ffeatures%2F50-integration"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/global/context?directory=%2FUsers%2Fleanbot%2FDocuments%2F40_Daidalon%2Ffeatures%2F50-integration"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2FUsers%2Fleanbot%2FDocuments%2F40_Daidalon"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/global/context?directory=%2FUsers%2Fleanbot%2FDocuments%2F40_Daidalon%2Ffeatures%2F50-integration&base_ref=HEAD"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2FUsers%2Fleanbot%2FDocuments%2F40_Daidalon%2Ffeatures"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4150/file?path=&directory=%2FUsers%2Fleanbot%2FDocuments%2F40_Daidalon%2Ffeatures%2F50-integration"
+    }
+  ],
+  "pageerrors": []
+}

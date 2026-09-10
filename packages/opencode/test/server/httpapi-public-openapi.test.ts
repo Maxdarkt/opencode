@@ -1,3 +1,5 @@
+import { LocalContext } from "@opencode-ai/schema/local-context"
+import type { LocalContextInfo } from "@opencode-ai/sdk/v2"
 import { describe, expect, test } from "bun:test"
 import { OpenApi } from "effect/unstable/httpapi"
 import { PublicApi } from "../../src/server/routes/instance/httpapi/public"
@@ -33,6 +35,12 @@ type OpenApiSpec = {
   readonly paths: Record<string, OpenApiPathItem>
   readonly components: { readonly schemas: Record<string, OpenApiSchema> }
 }
+
+type NormalizeArrayMutability<T> = T extends readonly (infer Item)[]
+  ? ReadonlyArray<NormalizeArrayMutability<Item>>
+  : T extends object
+    ? { [Key in keyof T]: NormalizeArrayMutability<T[Key]> }
+    : T
 
 const methods = ["get", "post", "put", "delete", "patch"] as const
 
@@ -347,4 +355,48 @@ describe("PublicApi OpenAPI v2 errors", () => {
       "ProjectNotFoundError",
     )
   })
+})
+
+test("preserves required nullability in the local context OpenAPI and SDK", () => {
+  const spec = OpenApi.fromApi(PublicApi) as OpenApiSpec
+  const context = spec.components.schemas.LocalContextInfo
+  const fields = ["canonical_directory", "session_directory", "session_canonical_directory", "git"]
+  for (const field of fields) {
+    expect(context.required).toContain(field)
+    expect(context.properties?.[field]?.anyOf).toContainEqual({ type: "null" })
+  }
+  const git = context.properties?.git?.anyOf?.find((item) => item.type === "object")
+  expect(git).toBeDefined()
+  for (const field of [
+    "top_level",
+    "git_directory",
+    "common_directory",
+    "branch",
+    "head",
+    "base_ref",
+    "base_oid",
+    "dirty",
+    "conflicts",
+  ]) {
+    expect(git?.required).toContain(field)
+    expect(git?.properties?.[field]?.anyOf).toContainEqual({ type: "null" })
+  }
+  // Codegen emits mutable arrays while Effect Schema exposes readonly arrays. Normalize only that
+  // distinction; the two assignments still reject lost keys, optionality, and null unions.
+  const toSdk = (value: NormalizeArrayMutability<LocalContext.Info>): NormalizeArrayMutability<LocalContextInfo> =>
+    value
+  const toSchema = (value: NormalizeArrayMutability<LocalContextInfo>): NormalizeArrayMutability<LocalContext.Info> =>
+    value
+  const absent: LocalContext.Info = {
+    requested_directory: "/absent",
+    canonical_directory: null,
+    availability: "absent",
+    session_directory: null,
+    session_canonical_directory: null,
+    session_status: "not_requested",
+    concordance: "not_applicable",
+    git: null,
+    task: null,
+  }
+  expect(toSchema(toSdk(absent))).toEqual(absent)
 })

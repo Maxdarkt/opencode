@@ -1,0 +1,10 @@
+{
+  "packages/app/src/i18n/desktop-native.ts": {
+    "current": "095c83e0ae475e2773a478813bb83282030ff4a2cd26cba3f5ee89245923a7de",
+    "head": "095c83e0ae475e2773a478813bb83282030ff4a2cd26cba3f5ee89245923a7de"
+  },
+  "packages/app/src/i18n/desktop-native.test.ts": {
+    "current": "93de472f9832cbeba9741e669bfc19d2f3b0db510ef0fdcda60e9a025a54b518",
+    "head": "93de472f9832cbeba9741e669bfc19d2f3b0db510ef0fdcda60e9a025a54b518"
+  }
+}

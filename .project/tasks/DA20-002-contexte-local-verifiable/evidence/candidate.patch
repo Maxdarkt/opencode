@@ -1,0 +1,934 @@
+diff --git a/packages/opencode/src/server/routes/instance/httpapi/groups/global.ts b/packages/opencode/src/server/routes/instance/httpapi/groups/global.ts
+index 5dded3acf..c7b419444 100644
+--- a/packages/opencode/src/server/routes/instance/httpapi/groups/global.ts
++++ b/packages/opencode/src/server/routes/instance/httpapi/groups/global.ts
+@@ -1,3 +1,5 @@
++import { LocalContext } from "@opencode-ai/schema/local-context"
++import { SessionID } from "@/session/schema"
+ import { ConfigV1 } from "@opencode-ai/core/v1/config/config"
+ import { EventV2 } from "@opencode-ai/core/event"
+ import { EventManifest } from "@/event-manifest"
+@@ -67,6 +69,7 @@ const GlobalUpgradeResult = Schema.Union([
+ 
+ export const GlobalPaths = {
+   health: "/global/health",
++  context: "/global/context",
+   event: "/global/event",
+   config: "/global/config",
+   dispose: "/global/dispose",
+@@ -76,6 +79,21 @@ export const GlobalPaths = {
+ export const GlobalApi = HttpApi.make("global").add(
+   HttpApiGroup.make("global")
+     .add(
++      HttpApiEndpoint.get("context", GlobalPaths.context, {
++        query: Schema.Struct({
++          directory: Schema.String,
++          base_ref: Schema.optional(Schema.String),
++          session_id: Schema.optional(SessionID),
++        }),
++        success: LocalContext.Info,
++      }).annotateMerge(
++        OpenApi.annotations({
++          identifier: "global.context",
++          summary: "Inspect local directory context",
++          description:
++            "Read an explicit local directory and optional persisted session placement without initializing a project. This observation is not a lease.",
++        }),
++      ),
+       HttpApiEndpoint.get("health", GlobalPaths.health, {
+         success: described(GlobalHealth, "Health information"),
+       }).annotateMerge(
+diff --git a/packages/opencode/src/server/routes/instance/httpapi/handlers/global.ts b/packages/opencode/src/server/routes/instance/httpapi/handlers/global.ts
+index ac909032f..918979194 100644
+--- a/packages/opencode/src/server/routes/instance/httpapi/handlers/global.ts
++++ b/packages/opencode/src/server/routes/instance/httpapi/handlers/global.ts
+@@ -1,3 +1,6 @@
++import { LocalContext } from "@opencode-ai/core/local-context"
++import { Session } from "@/session/session"
++import { SessionID } from "@/session/schema"
+ import { Config } from "@/config/config"
+ import { GlobalBus, type GlobalEvent as GlobalBusEvent } from "@/bus/global"
+ import { EffectBridge } from "@/effect/bridge"
+@@ -59,6 +62,8 @@ function eventResponse() {
+ 
+ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handlers) =>
+   Effect.gen(function* () {
++    const localContext = yield* LocalContext.Service
++    const sessions = yield* Session.Service
+     const config = yield* Config.Service
+     const installation = yield* Installation.Service
+     const bridge = yield* EffectBridge.make()
+@@ -115,7 +120,24 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
+       return HttpServerResponse.jsonUnsafe(result)
+     })
+ 
++    const context = Effect.fn("GlobalHttpApi.context")(function* (ctx: {
++      query: { directory: string; base_ref?: string; session_id?: SessionID }
++    }) {
++      const session = ctx.query.session_id
++        ? yield* sessions.get(ctx.query.session_id).pipe(
++            Effect.map((value) => ({
++              status: value.workspaceID ? ("workspace" as const) : ("found" as const),
++              directory: value.directory,
++            })),
++            Effect.catch(() => Effect.succeed({ status: "missing" as const })),
++            Effect.catchDefect(() => Effect.succeed({ status: "unavailable" as const })),
++          )
++        : undefined
++      return yield* localContext.inspect({ directory: ctx.query.directory, base_ref: ctx.query.base_ref, session })
++    })
++
+     return handlers
++      .handle("context", context)
+       .handle("health", health)
+       .handleRaw("event", event)
+       .handle("configGet", configGet)
+diff --git a/packages/opencode/src/server/routes/instance/httpapi/public.ts b/packages/opencode/src/server/routes/instance/httpapi/public.ts
+index 2a7266c51..552a79bba 100644
+--- a/packages/opencode/src/server/routes/instance/httpapi/public.ts
++++ b/packages/opencode/src/server/routes/instance/httpapi/public.ts
+@@ -91,9 +91,12 @@ function matchLegacyOpenApi(input: Record<string, unknown>) {
+ 
+   // Effect's Schema.optional emits `anyOf: [T, {type:"null"}]` in OpenAPI,
+   // but the legacy SDK expected plain `T` for optional fields. Strip null
+-  // from all component schemas so both request and response types match.
++  // from legacy component schemas so both request and response types match.
+   for (const [name, schema] of Object.entries(spec.components?.schemas ?? {})) {
+-    spec.components!.schemas![name] = stripOptionalNull(structuredClone(schema))
++    // LocalContext is a new contract with required nullable observations, not legacy optional fields.
++    // Preserve its canonical schema, including the nested nullable Git object, for SDK generation.
++    spec.components!.schemas![name] =
++      name === "LocalContext.Info" ? structuredClone(schema) : stripOptionalNull(structuredClone(schema))
+   }
+   normalizeComponentNames(spec)
+   collapseDuplicateComponents(spec)
+diff --git a/packages/opencode/src/server/routes/instance/httpapi/server.ts b/packages/opencode/src/server/routes/instance/httpapi/server.ts
+index fb9d2db65..9e737eba1 100644
+--- a/packages/opencode/src/server/routes/instance/httpapi/server.ts
++++ b/packages/opencode/src/server/routes/instance/httpapi/server.ts
+@@ -1,3 +1,4 @@
++import { LocalContext } from "@opencode-ai/core/local-context"
+ import { Config as EffectConfig, Context, Effect, Layer } from "effect"
+ import { HttpApiBuilder, OpenApi } from "effect/unstable/httpapi"
+ import { HttpClient, HttpMiddleware, HttpRouter, HttpServer, HttpServerResponse } from "effect/unstable/http"
+@@ -212,6 +213,7 @@ type RouteRequirements =
+ const app = LayerNode.group([
+   Npm.node,
+   FSUtil.node,
++  LocalContext.node,
+   Database.node,
+   Auth.node,
+   Account.node,
+diff --git a/packages/opencode/test/server/httpapi-control-plane.test.ts b/packages/opencode/test/server/httpapi-control-plane.test.ts
+index b837bf755..82ea6a171 100644
+--- a/packages/opencode/test/server/httpapi-control-plane.test.ts
++++ b/packages/opencode/test/server/httpapi-control-plane.test.ts
+@@ -1,3 +1,5 @@
++import { LocalContext } from "@opencode-ai/core/local-context"
++import { Session } from "@/session/session"
+ import { NodeHttpServer } from "@effect/platform-node"
+ import { describe, expect } from "bun:test"
+ import { Context, Effect, Layer, Option, Ref } from "effect"
+@@ -38,6 +40,8 @@ const apiLayer = HttpRouter.serve(
+   Layer.provideMerge(NodeHttpServer.layerTest),
+   Layer.provide(Layer.mock(Auth.Service)({})),
+   Layer.provide(Layer.mock(Config.Service)({})),
++  Layer.provide(Layer.mock(LocalContext.Service)({})),
++  Layer.provide(Layer.mock(Session.Service)({})),
+   Layer.provide(Layer.mock(Installation.Service)({})),
+   Layer.provide(
+     Layer.mock(MoveSession.Service)({
+diff --git a/packages/opencode/test/server/httpapi-exercise/index.ts b/packages/opencode/test/server/httpapi-exercise/index.ts
+index c8e11ea84..7c1b0a0be 100644
+--- a/packages/opencode/test/server/httpapi-exercise/index.ts
++++ b/packages/opencode/test/server/httpapi-exercise/index.ts
+@@ -58,6 +58,16 @@ function locationData(validate: (value: any) => void) {
+ }
+ 
+ const scenarios: Scenario[] = [
++  http.protected
++    .get("/global/context", "global.context")
++    .global()
++    .at(() => ({ path: `/global/context?${new URLSearchParams({ directory: exerciseGlobalRoot })}` }))
++    .json(200, (body) => {
++      object(body)
++      check(body.requested_directory === exerciseGlobalRoot, "context should preserve the explicit directory")
++      check(body.availability === "available", "context should observe the local directory")
++      check(body.session_status === "not_requested", "context should not invent a session binding")
++    }),
+   http.protected
+     .get("/global/health", "global.health")
+     .global()
+diff --git a/packages/opencode/test/server/httpapi-global.test.ts b/packages/opencode/test/server/httpapi-global.test.ts
+index 55bdcff4f..49bca156f 100644
+--- a/packages/opencode/test/server/httpapi-global.test.ts
++++ b/packages/opencode/test/server/httpapi-global.test.ts
+@@ -1,3 +1,5 @@
++import { LocalContext } from "@opencode-ai/core/local-context"
++import { Session } from "@/session/session"
+ import { NodeHttpServer } from "@effect/platform-node"
+ import { describe, expect } from "bun:test"
+ import { Context, Effect, Layer, Option } from "effect"
+@@ -30,6 +32,8 @@ const apiLayer = HttpRouter.serve(
+   Layer.provideMerge(NodeHttpServer.layerTest),
+   Layer.provide(Layer.mock(Auth.Service)({})),
+   Layer.provide(Layer.mock(Config.Service)({})),
++  Layer.provide(Layer.mock(LocalContext.Service)({})),
++  Layer.provide(Layer.mock(Session.Service)({})),
+   Layer.provide(Layer.mock(MoveSession.Service)({})),
+   Layer.provide(
+     Layer.mock(Installation.Service)({
+diff --git a/packages/opencode/test/server/httpapi-public-openapi.test.ts b/packages/opencode/test/server/httpapi-public-openapi.test.ts
+index 310ebae59..ea18c0481 100644
+--- a/packages/opencode/test/server/httpapi-public-openapi.test.ts
++++ b/packages/opencode/test/server/httpapi-public-openapi.test.ts
+@@ -1,3 +1,5 @@
++import { LocalContext } from "@opencode-ai/schema/local-context"
++import type { LocalContextInfo } from "@opencode-ai/sdk/v2"
+ import { describe, expect, test } from "bun:test"
+ import { OpenApi } from "effect/unstable/httpapi"
+ import { PublicApi } from "../../src/server/routes/instance/httpapi/public"
+@@ -348,3 +350,44 @@ describe("PublicApi OpenAPI v2 errors", () => {
+     )
+   })
+ })
++
++test("preserves required nullability in the local context OpenAPI and SDK", () => {
++  const spec = OpenApi.fromApi(PublicApi) as OpenApiSpec
++  const context = spec.components.schemas.LocalContextInfo
++  const fields = ["canonical_directory", "session_directory", "session_canonical_directory", "git"]
++  for (const field of fields) {
++    expect(context.required).toContain(field)
++    expect(context.properties?.[field]?.anyOf).toContainEqual({ type: "null" })
++  }
++  const git = context.properties?.git?.anyOf?.find((item) => item.type === "object")
++  expect(git).toBeDefined()
++  for (const field of [
++    "top_level",
++    "git_directory",
++    "common_directory",
++    "branch",
++    "head",
++    "base_ref",
++    "base_oid",
++    "dirty",
++    "conflicts",
++  ]) {
++    expect(git?.required).toContain(field)
++    expect(git?.properties?.[field]?.anyOf).toContainEqual({ type: "null" })
++  }
++  // Both assignments are checked by opencode's typecheck (SDK tests are outside its tsconfig).
++  // This rejects lost null unions as well as required properties made optional by codegen.
++  const toSdk = (value: LocalContext.Info): LocalContextInfo => value
++  const toSchema = (value: LocalContextInfo): LocalContext.Info => value
++  const absent: LocalContext.Info = {
++    requested_directory: "/absent",
++    canonical_directory: null,
++    availability: "absent",
++    session_directory: null,
++    session_canonical_directory: null,
++    session_status: "not_requested",
++    concordance: "not_applicable",
++    git: null,
++  }
++  expect(toSchema(toSdk(absent))).toEqual(absent)
++})
+diff --git a/packages/sdk/js/src/v2/gen/sdk.gen.ts b/packages/sdk/js/src/v2/gen/sdk.gen.ts
+index a2bcd4252..524e3c530 100644
+--- a/packages/sdk/js/src/v2/gen/sdk.gen.ts
++++ b/packages/sdk/js/src/v2/gen/sdk.gen.ts
+@@ -80,6 +80,8 @@ import type {
+   GlobalConfigGetResponses,
+   GlobalConfigUpdateErrors,
+   GlobalConfigUpdateResponses,
++  GlobalContextErrors,
++  GlobalContextResponses,
+   GlobalDisposeErrors,
+   GlobalDisposeResponses,
+   GlobalEventErrors,
+@@ -1316,6 +1318,38 @@ export class Config extends HeyApiClient {
+ }
+ 
+ export class Global extends HeyApiClient {
++  /**
++   * Inspect local directory context
++   *
++   * Read an explicit local directory and optional persisted session placement without initializing a project. This observation is not a lease.
++   */
++  public context<ThrowOnError extends boolean = false>(
++    parameters: {
++      directory: string
++      base_ref?: string
++      session_id?: string
++    },
++    options?: Options<never, ThrowOnError>,
++  ) {
++    const params = buildClientParams(
++      [parameters],
++      [
++        {
++          args: [
++            { in: "query", key: "directory" },
++            { in: "query", key: "base_ref" },
++            { in: "query", key: "session_id" },
++          ],
++        },
++      ],
++    )
++    return (options?.client ?? this.client).get<GlobalContextResponses, GlobalContextErrors, ThrowOnError>({
++      url: "/global/context",
++      ...options,
++      ...params,
++    })
++  }
++
+   /**
+    * Get health
+    *
+diff --git a/packages/sdk/js/src/v2/gen/types.gen.ts b/packages/sdk/js/src/v2/gen/types.gen.ts
+index f06c20cc4..577d14128 100644
+--- a/packages/sdk/js/src/v2/gen/types.gen.ts
++++ b/packages/sdk/js/src/v2/gen/types.gen.ts
+@@ -3038,6 +3038,31 @@ export type MoveSessionDestination = {
+   directory: string
+ }
+ 
++export type LocalContextInfo = {
++  requested_directory: string
++  canonical_directory: string | null
++  availability: "available" | "absent" | "inaccessible" | "not_directory" | "invalid"
++  session_directory: string | null
++  session_canonical_directory: string | null
++  session_status: "not_requested" | "found" | "missing" | "unavailable" | "workspace"
++  concordance: "not_applicable" | "matches" | "mismatch" | "unknown"
++  git: {
++    status: "available" | "non_git" | "unavailable"
++    top_level: string | null
++    git_directory: string | null
++    common_directory: string | null
++    branch: string | null
++    head: string | null
++    head_status: "branch" | "detached" | "unborn" | "unknown"
++    base_ref: string | null
++    base_oid: string | null
++    base_status: "not_requested" | "resolved" | "unresolved"
++    dirty: boolean | null
++    conflicts: boolean | null
++    review: "clean" | "changed" | "conflicts" | "incomplete"
++  } | null
++}
++
+ export type ModelRef = {
+   id: string
+   providerID: string
+@@ -7226,6 +7251,35 @@ export type ExperimentalControlPlaneMoveSessionResponses = {
+ export type ExperimentalControlPlaneMoveSessionResponse =
+   ExperimentalControlPlaneMoveSessionResponses[keyof ExperimentalControlPlaneMoveSessionResponses]
+ 
++export type GlobalContextData = {
++  body?: never
++  path?: never
++  query: {
++    directory: string
++    base_ref?: string
++    session_id?: string
++  }
++  url: "/global/context"
++}
++
++export type GlobalContextErrors = {
++  /**
++   * Bad request
++   */
++  400: BadRequestError
++}
++
++export type GlobalContextError = GlobalContextErrors[keyof GlobalContextErrors]
++
++export type GlobalContextResponses = {
++  /**
++   * LocalContext.Info
++   */
++  200: LocalContextInfo
++}
++
++export type GlobalContextResponse = GlobalContextResponses[keyof GlobalContextResponses]
++
+ export type GlobalHealthData = {
+   body?: never
+   path?: never
+diff --git a/packages/core/src/local-context.ts b/packages/core/src/local-context.ts
+new file mode 100644
+index 000000000..d87b100ac
+--- /dev/null
++++ b/packages/core/src/local-context.ts
+@@ -0,0 +1,204 @@
++import path from "path"
++import { Context, Effect, Layer } from "effect"
++import { ChildProcess } from "effect/unstable/process"
++import { LocalContext } from "@opencode-ai/schema/local-context"
++import { FSUtil } from "./fs-util"
++import { AppProcess } from "./process"
++import { makeGlobalNode } from "./effect/app-node"
++
++export interface Input {
++  readonly directory: string
++  readonly base_ref?: string
++  readonly session?: { readonly status: LocalContext.Info["session_status"]; readonly directory?: string }
++}
++
++export class Service extends Context.Service<
++  Service,
++  {
++    readonly inspect: (input: Input) => Effect.Effect<LocalContext.Info>
++  }
++>()("@opencode/LocalContext") {}
++
++const layer = Layer.effect(
++  Service,
++  Effect.gen(function* () {
++    const fs = yield* FSUtil.Service
++    const proc = yield* AppProcess.Service
++
++    const inspect = Effect.fn("LocalContext.inspect")(function* (input: Input) {
++      const initial: LocalContext.Info = {
++        requested_directory: input.directory,
++        canonical_directory: null,
++        availability: "invalid",
++        session_directory: input.session?.directory ?? null,
++        session_canonical_directory: null,
++        session_status: input.session?.status ?? "not_requested",
++        concordance: input.session ? "unknown" : "not_applicable",
++        git: null,
++      }
++      if (!path.isAbsolute(input.directory) || input.directory.includes("\0")) return initial
++      const observed = yield* fs.realPath(input.directory).pipe(
++        Effect.flatMap((directory) => fs.stat(directory).pipe(Effect.map((stat) => ({ directory, stat })))),
++        Effect.map((value) => ({ value, availability: "available" as const })),
++        Effect.catchReason("PlatformError", "NotFound", () =>
++          Effect.succeed({ value: undefined, availability: "absent" as const }),
++        ),
++        Effect.catch(() => Effect.succeed({ value: undefined, availability: "inaccessible" as const })),
++      )
++      if (!observed.value) return { ...initial, availability: observed.availability }
++      if (observed.value.stat.type !== "Directory")
++        return { ...initial, availability: "not_directory" as const, canonical_directory: observed.value.directory }
++      const directory = observed.value.directory
++      const accessible = yield* fs.access(directory, { readable: true }).pipe(
++        Effect.as(true),
++        Effect.catch(() => Effect.succeed(false)),
++      )
++      if (!accessible) return { ...initial, canonical_directory: directory, availability: "inaccessible" as const }
++      const persisted = input.session?.directory
++        ? yield* fs.realPath(input.session.directory).pipe(Effect.catch(() => Effect.succeed(null)))
++        : null
++      const result: LocalContext.Info = {
++        ...initial,
++        availability: "available",
++        canonical_directory: directory,
++        session_canonical_directory: persisted,
++        concordance:
++          input.session?.status === "found" && persisted
++            ? persisted === directory
++              ? "matches"
++              : "mismatch"
++            : initial.concordance,
++      }
++      // Disable optional index refresh and external fsmonitor helpers on this read-only observation.
++      const git = (args: string[]) =>
++        proc
++          .run(
++            ChildProcess.make("git", ["--no-optional-locks", "-c", "core.fsmonitor=false", ...args], {
++              cwd: directory,
++              extendEnv: false,
++              stdin: "ignore",
++              env: Object.fromEntries(
++                Object.entries(process.env).flatMap(([key, value]) =>
++                  key.startsWith("GIT_") || value === undefined ? [] : [[key, value]],
++                ),
++              ),
++            }),
++            { timeout: "5 seconds", maxOutputBytes: 1024 * 1024, maxErrorBytes: 4096 },
++          )
++          .pipe(
++            Effect.map((value) => ({
++              code: value.exitCode,
++              text: value.stdout.toString("utf8").replace(/[\r\n]+$/, ""),
++              truncated: value.stdoutTruncated,
++            })),
++            Effect.catch(() => Effect.succeed({ code: -1, text: "", truncated: true })),
++          )
++      const empty: NonNullable<LocalContext.Info["git"]> = {
++        status: "unavailable",
++        top_level: null,
++        git_directory: null,
++        common_directory: null,
++        branch: null,
++        head: null,
++        head_status: "unknown",
++        base_ref: input.base_ref ?? null,
++        base_oid: null,
++        base_status: input.base_ref === undefined ? "not_requested" : "unresolved",
++        dirty: null,
++        conflicts: null,
++        review: "incomplete",
++      }
++      const top = yield* git(["rev-parse", "--show-toplevel"])
++      if (top.code !== 0) {
++        // A .git marker with failed discovery is damaged/inaccessible, never a confirmed non-Git folder.
++        const markers = yield* fs
++          .up({ targets: [".git"], start: directory })
++          .pipe(Effect.catch(() => Effect.succeed(undefined)))
++        return {
++          ...result,
++          git: {
++            ...empty,
++            status: top.code > 0 && markers?.length === 0 ? ("non_git" as const) : ("unavailable" as const),
++          },
++        }
++      }
++      const [gitDir, commonDir, branch, head, status, base] = yield* Effect.all(
++        [
++          git(["rev-parse", "--absolute-git-dir"]),
++          git(["rev-parse", "--path-format=absolute", "--git-common-dir"]),
++          git(["symbolic-ref", "--quiet", "--short", "HEAD"]),
++          git(["rev-parse", "--verify", "HEAD^{commit}"]),
++          git(["status", "--porcelain=v1", "-z", "--untracked-files=normal", "--ignore-submodules=none"]),
++          input.base_ref === undefined
++            ? Effect.succeed({ code: 1, text: "", truncated: false })
++            : git(["rev-parse", "--verify", "--end-of-options", `${input.base_ref}^{commit}`]),
++        ],
++        { concurrency: 6 },
++      )
++      const unborn =
++        head.code !== 0 && branch.code === 0
++          ? (yield* git(["show-ref", "--verify", "--quiet", `refs/heads/${branch.text}`])).code === 1
++          : false
++      const baseOID = base.code === 0 && !base.truncated ? base.text : null
++      const comparison = baseOID
++        ? yield* git(["diff", "--quiet", "--no-ext-diff", "--no-textconv", baseOID, "--"])
++        : null
++      const statusFlags = status.text.split("\0").reduce(
++        (acc, entry) =>
++          acc.skip
++            ? { ...acc, skip: false }
++            : {
++                skip: /^[RC]|^.[RC]/.test(entry),
++                conflicts: acc.conflicts || ["DD", "AU", "UD", "UA", "DU", "AA", "UU"].includes(entry.slice(0, 2)),
++              },
++        { skip: false, conflicts: false },
++      )
++      const complete = status.code === 0 && !status.truncated
++      const conflicts = complete ? statusFlags.conflicts : null
++      const dirty = complete ? status.text.length > 0 : null
++      return {
++        ...result,
++        git: {
++          ...empty,
++          status: "available" as const,
++          top_level: top.text,
++          git_directory: gitDir.code === 0 ? gitDir.text : null,
++          common_directory: commonDir.code === 0 ? commonDir.text : null,
++          branch: branch.code === 0 ? branch.text : null,
++          head: head.code === 0 ? head.text : null,
++          head_status:
++            head.code === 0
++              ? branch.code === 0
++                ? ("branch" as const)
++                : branch.code === 1
++                  ? ("detached" as const)
++                  : ("unknown" as const)
++              : unborn
++                ? ("unborn" as const)
++                : ("unknown" as const),
++          base_oid: baseOID,
++          base_status: baseOID ? ("resolved" as const) : empty.base_status,
++          dirty,
++          conflicts,
++          review: conflicts
++            ? ("conflicts" as const)
++            : !complete ||
++                !comparison ||
++                ![0, 1].includes(comparison.code) ||
++                head.code !== 0 ||
++                gitDir.code !== 0 ||
++                commonDir.code !== 0 ||
++                ![0, 1].includes(branch.code)
++              ? ("incomplete" as const)
++              : dirty || comparison.code === 1
++                ? ("changed" as const)
++                : ("clean" as const),
++        },
++      }
++    })
++    return Service.of({ inspect })
++  }),
++)
++
++export const node = makeGlobalNode({ service: Service, layer, deps: [FSUtil.node, AppProcess.node] })
++export * as LocalContext from "./local-context"
+diff --git a/packages/core/test/local-context.test.ts b/packages/core/test/local-context.test.ts
+new file mode 100644
+index 000000000..eb5e561f6
+--- /dev/null
++++ b/packages/core/test/local-context.test.ts
+@@ -0,0 +1,202 @@
++import { expect } from "bun:test"
++import { $ } from "bun"
++import fs from "fs/promises"
++import path from "path"
++import { Effect } from "effect"
++import { LayerNode } from "@opencode-ai/core/effect/layer-node"
++import { LocalContext } from "@opencode-ai/core/local-context"
++import { tmpdir } from "./fixture/tmpdir"
++import { testEffect } from "./lib/effect"
++
++const it = testEffect(LayerNode.compile(LocalContext.node))
++const fixture = () =>
++  Effect.acquireRelease(Effect.promise(tmpdir), (dir) => Effect.promise(() => dir[Symbol.asyncDispose]()))
++async function init(directory: string) {
++  await $`git init -b main ${directory}`.quiet()
++  await $`git -C ${directory} -c user.name=Test -c user.email=test@example.com -c commit.gpgsign=false commit --allow-empty -m initial`.quiet()
++}
++
++it.live("reports absent, file, relative, non-Git and symlink without creating a repository", () =>
++  Effect.gen(function* () {
++    const root = yield* fixture()
++    const svc = yield* LocalContext.Service
++    expect((yield* svc.inspect({ directory: path.join(root.path, "missing") })).availability).toBe("absent")
++    expect((yield* svc.inspect({ directory: "." })).availability).toBe("invalid")
++    yield* Effect.promise(() => fs.writeFile(path.join(root.path, "file"), "text"))
++    expect((yield* svc.inspect({ directory: path.join(root.path, "file") })).availability).toBe("not_directory")
++    yield* Effect.promise(() => fs.symlink(root.path, path.join(root.path, "alias")))
++    const info = yield* svc.inspect({ directory: path.join(root.path, "alias") })
++    expect(info.canonical_directory).toBe(root.path)
++    expect(info.git?.status).toBe("non_git")
++    expect(info.git?.review).toBe("incomplete")
++    expect(
++      yield* Effect.promise(() =>
++        fs.access(path.join(root.path, ".git")).then(
++          () => true,
++          () => false,
++        ),
++      ),
++    ).toBe(false)
++  }),
++)
++
++it.live("distinguishes requested, canonical and persisted session paths", () =>
++  Effect.gen(function* () {
++    const root = yield* fixture()
++    const svc = yield* LocalContext.Service
++    yield* Effect.promise(() => fs.symlink(root.path, path.join(root.path, "alias")))
++    const info = yield* svc.inspect({
++      directory: root.path,
++      session: { status: "found", directory: path.join(root.path, "alias") },
++    })
++    expect(info.concordance).toBe("matches")
++    expect(info.session_directory).not.toBe(info.canonical_directory)
++    expect(
++      (yield* svc.inspect({ directory: root.path, session: { status: "found", directory: path.dirname(root.path) } }))
++        .concordance,
++    ).toBe("mismatch")
++    expect((yield* svc.inspect({ directory: root.path, session: { status: "missing" } })).concordance).toBe("unknown")
++    expect(
++      (yield* svc.inspect({ directory: root.path, session: { status: "workspace", directory: root.path } }))
++        .concordance,
++    ).toBe("unknown")
++  }),
++)
++
++it.live("reports base resolution and dirty without changing index, HEAD or refs", () =>
++  Effect.gen(function* () {
++    const root = yield* fixture()
++    yield* Effect.promise(() => init(root.path))
++    yield* Effect.promise(async () => {
++      await fs.writeFile(path.join(root.path, "tracked"), "one")
++      await $`git -C ${root.path} add tracked`.quiet()
++      await $`git -C ${root.path} -c user.name=Test -c user.email=test@example.com -c commit.gpgsign=false commit -m tracked`.quiet()
++    })
++    const before = yield* Effect.promise(() => snapshot(root.path))
++    const svc = yield* LocalContext.Service
++    const clean = yield* svc.inspect({ directory: root.path, base_ref: "HEAD" })
++    expect(clean.git).toMatchObject({
++      status: "available",
++      head_status: "branch",
++      branch: "main",
++      base_status: "resolved",
++      review: "clean",
++      dirty: false,
++    })
++    expect(clean.git?.head).toBe(clean.git?.base_oid)
++    expect((yield* svc.inspect({ directory: root.path })).git?.review).toBe("incomplete")
++    expect((yield* svc.inspect({ directory: root.path, base_ref: "does-not-exist" })).git).toMatchObject({
++      base_status: "unresolved",
++      base_oid: null,
++      review: "incomplete",
++    })
++    expect((yield* svc.inspect({ directory: root.path, base_ref: "--help" })).git?.base_status).toBe("unresolved")
++    expect(yield* Effect.promise(() => snapshot(root.path))).toEqual(before)
++    yield* Effect.promise(() => fs.writeFile(path.join(root.path, "untracked"), "new"))
++    expect((yield* svc.inspect({ directory: root.path, base_ref: "HEAD" })).git).toMatchObject({
++      dirty: true,
++      review: "changed",
++      conflicts: false,
++    })
++  }),
++)
++
++it.live("keeps two clones with the same origin distinct and recognizes detached and unborn", () =>
++  Effect.gen(function* () {
++    const root = yield* fixture()
++    const source = path.join(root.path, "source")
++    yield* Effect.promise(() => init(source))
++    const a = path.join(root.path, "a")
++    const b = path.join(root.path, "b")
++    yield* Effect.promise(async () => {
++      await $`git clone ${source} ${a}`.quiet()
++      await $`git clone ${source} ${b}`.quiet()
++      await $`git -C ${b} checkout --detach`.quiet()
++    })
++    const svc = yield* LocalContext.Service
++    const first = yield* svc.inspect({ directory: a, base_ref: "HEAD" })
++    const second = yield* svc.inspect({ directory: b, base_ref: "HEAD" })
++    expect(first.git?.head).toBe(second.git?.head)
++    expect(first.git?.top_level).toBe(a)
++    expect(second.git?.top_level).toBe(b)
++    expect(second.git).toMatchObject({ head_status: "detached", branch: null })
++    const unborn = path.join(root.path, "unborn")
++    yield* Effect.promise(async () => {
++      await $`git init -b main ${unborn}`.quiet()
++    })
++    expect((yield* svc.inspect({ directory: unborn, base_ref: "HEAD" })).git).toMatchObject({
++      head_status: "unborn",
++      head: null,
++      review: "incomplete",
++    })
++  }),
++)
++
++it.live("reports inaccessible directories and damaged Git as unavailable", () =>
++  Effect.gen(function* () {
++    const root = yield* fixture()
++    const locked = path.join(root.path, "locked")
++    yield* Effect.promise(() => fs.mkdir(locked))
++    yield* Effect.promise(() => fs.chmod(locked, 0))
++    yield* Effect.addFinalizer(() => Effect.promise(() => fs.chmod(locked, 0o700)))
++    const svc = yield* LocalContext.Service
++    expect((yield* svc.inspect({ directory: path.join(locked, "child") })).availability).toBe("inaccessible")
++    expect((yield* svc.inspect({ directory: locked })).availability).toBe("inaccessible")
++    yield* Effect.promise(() => fs.writeFile(path.join(root.path, ".git"), "gitdir: /missing-git-dir\n"))
++    expect((yield* svc.inspect({ directory: root.path })).git?.status).toBe("unavailable")
++  }),
++)
++
++async function snapshot(directory: string) {
++  return {
++    index: (await fs.readFile(path.join(directory, ".git/index"))).toString("hex"),
++    head: await fs.readFile(path.join(directory, ".git/HEAD"), "utf8"),
++    refs: await $`git -C ${directory} show-ref`.text(),
++  }
++}
++
++it.live("exposes conflicts from the real index and preserves it", () =>
++  Effect.gen(function* () {
++    const root = yield* fixture()
++    yield* Effect.promise(() => init(root.path))
++    yield* Effect.promise(async () => {
++      await fs.writeFile(path.join(root.path, "conflict"), "value\n")
++      const oid = (await $`git -C ${root.path} hash-object -w conflict`.text()).trim()
++      const entries = `100644 ${oid} 1\tconflict\n100644 ${oid} 2\tconflict\n100644 ${oid} 3\tconflict\n`
++      await $`git -C ${root.path} update-index --index-info < ${new Blob([entries])}`.quiet()
++    })
++    const before = yield* Effect.promise(() => snapshot(root.path))
++    const svc = yield* LocalContext.Service
++    expect((yield* svc.inspect({ directory: root.path, base_ref: "HEAD" })).git).toMatchObject({
++      conflicts: true,
++      dirty: true,
++      review: "conflicts",
++    })
++    expect(yield* Effect.promise(() => snapshot(root.path))).toEqual(before)
++  }),
++)
++
++it.live("observes linked worktree identity and a committed difference from an explicit base", () =>
++  Effect.gen(function* () {
++    const root = yield* fixture()
++    const source = path.join(root.path, "source")
++    const linked = path.join(root.path, "linked")
++    yield* Effect.promise(async () => {
++      await init(source)
++      await fs.writeFile(path.join(source, "new"), "value\n")
++      await $`git -C ${source} add new`.quiet()
++      await $`git -C ${source} -c user.name=Test -c user.email=test@example.com -c commit.gpgsign=false commit -m second`.quiet()
++      await $`git -C ${source} worktree add --detach ${linked}`.quiet()
++    })
++    const svc = yield* LocalContext.Service
++    const info = yield* svc.inspect({ directory: linked, base_ref: "HEAD~1" })
++    expect(info.git).toMatchObject({
++      top_level: linked,
++      head_status: "detached",
++      dirty: false,
++      review: "changed",
++      common_directory: path.join(source, ".git"),
++    })
++    expect(info.git?.git_directory).not.toBe(info.git?.common_directory)
++  }),
++)
+diff --git a/packages/opencode/test/server/httpapi-local-context.test.ts b/packages/opencode/test/server/httpapi-local-context.test.ts
+new file mode 100644
+index 000000000..868077fca
+--- /dev/null
++++ b/packages/opencode/test/server/httpapi-local-context.test.ts
+@@ -0,0 +1,87 @@
++import { RootHttpApi } from "../../src/server/routes/instance/httpapi/api"
++import { Authorization } from "../../src/server/routes/instance/httpapi/middleware/authorization"
++import { InstanceContextMiddleware } from "../../src/server/routes/instance/httpapi/middleware/instance-context"
++import { WorkspaceRoutingMiddleware } from "../../src/server/routes/instance/httpapi/middleware/workspace-routing"
++import { expect } from "bun:test"
++import { NodeHttpServer, NodeServices } from "@effect/platform-node"
++import { Config, ConfigProvider, Effect, Layer, Schema } from "effect"
++import { HttpClient, HttpClientRequest, HttpRouter, HttpServer } from "effect/unstable/http"
++import { LocalContext } from "@opencode-ai/schema/local-context"
++import { HttpApiApp } from "../../src/server/routes/instance/httpapi/server"
++import { tmpdirScoped } from "../fixture/fixture"
++import { testEffect } from "../lib/effect"
++import fs from "fs/promises"
++import path from "path"
++
++const served: Layer.Layer<never, Config.ConfigError, HttpServer.HttpServer> = HttpRouter.serve(HttpApiApp.routes, {
++  disableListenLog: true,
++  disableLogger: true,
++})
++const http = served.pipe(
++  Layer.provide(ConfigProvider.layer(ConfigProvider.fromUnknown({ OPENCODE_SERVER_PASSWORD: "context-test" }))),
++  Layer.provideMerge(NodeHttpServer.layerTest),
++  Layer.provideMerge(NodeServices.layer),
++)
++const it = testEffect(http)
++const auth = HttpClientRequest.setHeader("authorization", `Basic ${btoa("opencode:context-test")}`)
++
++it.live("authenticates and requires an explicit directory without initializing the target", () =>
++  Effect.gen(function* () {
++    const dir = yield* tmpdirScoped()
++    const client = yield* HttpClient.HttpClient
++    expect((yield* client.get(`/global/context?directory=${encodeURIComponent(dir)}`)).status).toBe(401)
++    expect((yield* client.execute(HttpClientRequest.get("/global/context").pipe(auth))).status).toBe(400)
++    const middlewares = Array.from(RootHttpApi.groups.global.endpoints.context.middlewares, (value) => value.key)
++    expect(middlewares).toContain(Authorization.key)
++    expect(middlewares).not.toContain(InstanceContextMiddleware.key)
++    expect(middlewares).not.toContain(WorkspaceRoutingMiddleware.key)
++    const before = yield* Effect.promise(() => fs.readdir(dir))
++    const response = yield* client.execute(
++      HttpClientRequest.get(`/global/context?directory=${encodeURIComponent(dir)}`).pipe(auth),
++    )
++    expect(response.status).toBe(200)
++    const info = Schema.decodeUnknownSync(LocalContext.Info)(yield* response.json)
++    expect(info.git?.status).toBe("non_git")
++    expect(info.session_status).toBe("not_requested")
++    expect(yield* Effect.promise(() => fs.readdir(dir))).toEqual(before)
++    const missing = yield* client.execute(
++      HttpClientRequest.get(`/global/context?directory=${encodeURIComponent(path.join(dir, "absent"))}`).pipe(auth),
++    )
++    expect(Schema.decodeUnknownSync(LocalContext.Info)(yield* missing.json).availability).toBe("absent")
++    expect(yield* Effect.promise(() => fs.readdir(dir))).toEqual(before)
++  }),
++)
++
++it.live("compares the persisted session placement rather than substituting the requested directory", () =>
++  Effect.gen(function* () {
++    const dir = yield* tmpdirScoped({ git: true, config: { formatter: false, lsp: false } })
++    const other = yield* tmpdirScoped()
++    const client = yield* HttpClient.HttpClient
++    const created = yield* client.execute(
++      HttpClientRequest.post(`/session?directory=${encodeURIComponent(dir)}`).pipe(
++        auth,
++        HttpClientRequest.bodyJsonUnsafe({}),
++      ),
++    )
++    expect(created.status).toBe(200)
++    const session = Schema.decodeUnknownSync(Schema.Struct({ id: Schema.String, directory: Schema.String }))(
++      yield* created.json,
++    )
++    const response = yield* client.execute(
++      HttpClientRequest.get(
++        `/global/context?directory=${encodeURIComponent(other)}&session_id=${session.id}&base_ref=HEAD`,
++      ).pipe(auth),
++    )
++    expect(response.status).toBe(200)
++    const info = Schema.decodeUnknownSync(LocalContext.Info)(yield* response.json)
++    expect(info.requested_directory).toBe(other)
++    expect(info.canonical_directory).toBe(other)
++    expect(info.session_directory).toBe(session.directory)
++    expect(info.session_status).toBe("found")
++    expect(info.concordance).toBe("mismatch")
++    const missing = yield* client.execute(
++      HttpClientRequest.get(`/global/context?directory=${encodeURIComponent(other)}&session_id=ses_missing`).pipe(auth),
++    )
++    expect(Schema.decodeUnknownSync(LocalContext.Info)(yield* missing.json).session_status).toBe("missing")
++  }),
++)
+diff --git a/packages/schema/src/local-context.ts b/packages/schema/src/local-context.ts
+new file mode 100644
+index 000000000..09e9e9f6c
+--- /dev/null
++++ b/packages/schema/src/local-context.ts
+@@ -0,0 +1,31 @@
++import { Schema } from "effect"
++
++export const Info = Schema.Struct({
++  requested_directory: Schema.String,
++  canonical_directory: Schema.NullOr(Schema.String),
++  availability: Schema.Literals(["available", "absent", "inaccessible", "not_directory", "invalid"]),
++  session_directory: Schema.NullOr(Schema.String),
++  session_canonical_directory: Schema.NullOr(Schema.String),
++  session_status: Schema.Literals(["not_requested", "found", "missing", "unavailable", "workspace"]),
++  concordance: Schema.Literals(["not_applicable", "matches", "mismatch", "unknown"]),
++  git: Schema.NullOr(
++    Schema.Struct({
++      status: Schema.Literals(["available", "non_git", "unavailable"]),
++      top_level: Schema.NullOr(Schema.String),
++      git_directory: Schema.NullOr(Schema.String),
++      common_directory: Schema.NullOr(Schema.String),
++      branch: Schema.NullOr(Schema.String),
++      head: Schema.NullOr(Schema.String),
++      head_status: Schema.Literals(["branch", "detached", "unborn", "unknown"]),
++      base_ref: Schema.NullOr(Schema.String),
++      base_oid: Schema.NullOr(Schema.String),
++      base_status: Schema.Literals(["not_requested", "resolved", "unresolved"]),
++      dirty: Schema.NullOr(Schema.Boolean),
++      conflicts: Schema.NullOr(Schema.Boolean),
++      review: Schema.Literals(["clean", "changed", "conflicts", "incomplete"]),
++    }),
++  ),
++}).annotate({ identifier: "LocalContext.Info" })
++export interface Info extends Schema.Schema.Type<typeof Info> {}
++
++export * as LocalContext from "./local-context"
+diff --git a/packages/sdk/js/test/local-context.test.ts b/packages/sdk/js/test/local-context.test.ts
+new file mode 100644
+index 000000000..bd8435332
+--- /dev/null
++++ b/packages/sdk/js/test/local-context.test.ts
+@@ -0,0 +1,21 @@
++import { expect, test } from "bun:test"
++import { createOpencodeClient } from "../src/v2/client"
++
++test("sends the explicit inspected directory even when the SDK has another default directory", async () => {
++  const requests: Request[] = []
++  const client = createOpencodeClient({
++    baseUrl: "http://localhost:1234",
++    directory: "/default",
++    fetch: async (request) => {
++      requests.push(request instanceof Request ? request : new Request(request))
++      return Response.json({ requested_directory: "/target with spaces" })
++    },
++  })
++  await client.global.context({ directory: "/target with spaces", base_ref: "refs/heads/main", session_id: "ses_test" })
++  const url = new URL(requests[0].url)
++  expect(requests[0].method).toBe("GET")
++  expect(url.pathname).toBe("/global/context")
++  expect(url.searchParams.get("directory")).toBe("/target with spaces")
++  expect(url.searchParams.get("base_ref")).toBe("refs/heads/main")
++  expect(url.searchParams.get("session_id")).toBe("ses_test")
++})

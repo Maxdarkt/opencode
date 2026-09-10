@@ -1,3 +1,4 @@
+import { LocalContext } from "@opencode-ai/core/local-context"
 import { Config as EffectConfig, Context, Effect, Layer } from "effect"
 import { HttpApiBuilder, OpenApi } from "effect/unstable/httpapi"
 import { HttpClient, HttpMiddleware, HttpRouter, HttpServer, HttpServerResponse } from "effect/unstable/http"
@@ -51,6 +52,8 @@ import { Worktree } from "@/worktree"
 import { RuntimeFlags } from "@/effect/runtime-flags"
 import { MoveSession } from "@opencode-ai/core/control-plane/move-session"
 import { Database } from "@opencode-ai/core/database/database"
+import { TaskMetrics } from "@opencode-ai/core/task-metrics"
+import { TaskAuthority } from "@opencode-ai/core/task-authority"
 import { AppNodeBuilderV1 } from "@/effect/app-node-builder-v1"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { httpClient } from "@opencode-ai/core/effect/app-node-platform"
@@ -212,7 +215,10 @@ type RouteRequirements =
 const app = LayerNode.group([
   Npm.node,
   FSUtil.node,
+  LocalContext.node,
   Database.node,
+  TaskMetrics.node,
+  TaskAuthority.node,
   Auth.node,
   Account.node,
   Config.node,

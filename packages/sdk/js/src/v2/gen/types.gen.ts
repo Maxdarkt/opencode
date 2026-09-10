@@ -3038,10 +3038,194 @@ export type MoveSessionDestination = {
   directory: string
 }
 
+export type TaskMetricsRequest =
+  | {
+      type: "task"
+      taskID: string
+    }
+  | {
+      type: "sprint"
+      sprintID: string
+      taskIDs: Array<string>
+    }
+
 export type ModelRef = {
   id: string
   providerID: string
   variant?: string
+}
+
+export type TaskMetricsModels =
+  | {
+      state: "measured"
+      value: Array<ModelRef>
+      provenance: Array<string>
+    }
+  | {
+      state: "estimated"
+      value: Array<ModelRef>
+      provenance: Array<string>
+    }
+  | {
+      state: "partial"
+      value?: Array<ModelRef>
+      provenance: Array<string>
+    }
+  | {
+      state: "unknown"
+      provenance: Array<string>
+    }
+
+export type TaskMetricsTokenValue = {
+  input: number
+  output: number
+  reasoning: number
+  cache: {
+    read: number
+    write: number
+  }
+}
+
+export type TaskMetricsTokens =
+  | {
+      state: "measured"
+      value: TaskMetricsTokenValue
+      provenance: Array<string>
+    }
+  | {
+      state: "estimated"
+      value: TaskMetricsTokenValue
+      provenance: Array<string>
+    }
+  | {
+      state: "partial"
+      value?: TaskMetricsTokenValue
+      provenance: Array<string>
+    }
+  | {
+      state: "unknown"
+      provenance: Array<string>
+    }
+
+export type TaskMetricsNumeric =
+  | {
+      state: "measured"
+      value: number
+      provenance: Array<string>
+    }
+  | {
+      state: "estimated"
+      value: number
+      provenance: Array<string>
+    }
+  | {
+      state: "partial"
+      value?: number
+      provenance: Array<string>
+    }
+  | {
+      state: "unknown"
+      provenance: Array<string>
+    }
+
+export type TaskMetricsTask = {
+  taskID: string
+  sessionID?: string
+  models: TaskMetricsModels
+  tokens: TaskMetricsTokens
+  cost: TaskMetricsNumeric
+  latency: TaskMetricsNumeric
+}
+
+export type TaskMetricsSprint = {
+  sprintID: string
+  taskIDs: Array<string>
+  duplicateTaskIDs: Array<string>
+  tasks: Array<TaskMetricsTask>
+  models: TaskMetricsModels
+  tokens: TaskMetricsTokens
+  cost: TaskMetricsNumeric
+  latency: TaskMetricsNumeric
+}
+
+export type TaskMetricsResponse =
+  | {
+      type: "task"
+      metrics: TaskMetricsTask
+    }
+  | {
+      type: "sprint"
+      metrics: TaskMetricsSprint
+    }
+
+export type TaskPilotMtStatus = "todo" | "in_progress" | "review" | "done" | "blocked"
+
+export type TaskPilotApexPhase = "analyze" | "plan" | "build" | "smoke" | "verify"
+
+export type TaskAuthorityObservation = {
+  state: "available" | "absent" | "inaccessible" | "invalid" | "expired" | "divergent"
+  provenance: "runtime_snapshot"
+  observedAt?: string
+  expiresAt?: string
+  generation?: number
+  mtStatus?: TaskPilotMtStatus
+  apexPhase?: TaskPilotApexPhase
+}
+
+export type LocalContextInfo = {
+  requested_directory: string
+  canonical_directory: string | null
+  availability: "available" | "absent" | "inaccessible" | "not_directory" | "invalid"
+  session_directory: string | null
+  session_canonical_directory: string | null
+  session_status: "not_requested" | "found" | "missing" | "unavailable" | "workspace"
+  concordance: "not_applicable" | "matches" | "mismatch" | "unknown"
+  git: {
+    status: "available" | "non_git" | "unavailable"
+    top_level: string | null
+    git_directory: string | null
+    common_directory: string | null
+    branch: string | null
+    head: string | null
+    head_status: "branch" | "detached" | "unborn" | "unknown"
+    base_ref: string | null
+    base_oid: string | null
+    base_status: "not_requested" | "resolved" | "unresolved"
+    dirty: boolean | null
+    conflicts: boolean | null
+    review: "clean" | "changed" | "conflicts" | "incomplete"
+  } | null
+  task?: {
+    binding: {
+      mtTaskID: string
+      apexExternalRef: string
+      sessionID: string
+      projectID: string
+      location: {
+        directory: string
+        workspaceID?: string | null | null
+      }
+      checkout: {
+        repository: string
+        branch: string
+        worktree: string
+        head: string
+      }
+      version: 1
+    }
+    execution: {
+      mtTaskID: string
+      sessionID: string
+      worktree: string
+      ownerID: string
+      generation: number
+      effects: Array<{
+        effectID: string
+        state: "pending" | "confirmed"
+      }>
+    } | null
+    authority?: TaskAuthorityObservation | null | null
+  } | null | null
 }
 
 export type LocationRef = {
@@ -7225,6 +7409,60 @@ export type ExperimentalControlPlaneMoveSessionResponses = {
 
 export type ExperimentalControlPlaneMoveSessionResponse =
   ExperimentalControlPlaneMoveSessionResponses[keyof ExperimentalControlPlaneMoveSessionResponses]
+
+export type GlobalMetricsData = {
+  body?: TaskMetricsRequest
+  path?: never
+  query?: never
+  url: "/global/metrics"
+}
+
+export type GlobalMetricsErrors = {
+  /**
+   * Bad request
+   */
+  400: BadRequestError
+}
+
+export type GlobalMetricsError = GlobalMetricsErrors[keyof GlobalMetricsErrors]
+
+export type GlobalMetricsResponses = {
+  /**
+   * TaskMetrics.Response
+   */
+  200: TaskMetricsResponse
+}
+
+export type GlobalMetricsResponse = GlobalMetricsResponses[keyof GlobalMetricsResponses]
+
+export type GlobalContextData = {
+  body?: never
+  path?: never
+  query: {
+    directory: string
+    base_ref?: string
+    session_id?: string
+  }
+  url: "/global/context"
+}
+
+export type GlobalContextErrors = {
+  /**
+   * Bad request
+   */
+  400: BadRequestError
+}
+
+export type GlobalContextError = GlobalContextErrors[keyof GlobalContextErrors]
+
+export type GlobalContextResponses = {
+  /**
+   * LocalContext.Info
+   */
+  200: LocalContextInfo
+}
+
+export type GlobalContextResponse = GlobalContextResponses[keyof GlobalContextResponses]
 
 export type GlobalHealthData = {
   body?: never

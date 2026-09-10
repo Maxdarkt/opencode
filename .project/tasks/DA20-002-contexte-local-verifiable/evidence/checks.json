@@ -1,0 +1,321 @@
+{
+  "whitespace": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "packages"
+    ],
+    "exit": 0,
+    "seconds": 0.04
+  },
+  "b05-opencode-check": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+    "command": [
+      "bun",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 45.89
+  },
+  "b05-sdk-tests": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/sdk/js",
+    "command": [
+      "bun",
+      "test",
+      "test/local-context.test.ts",
+      "test/session-history.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 0.09
+  },
+  "route-smoke": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+    "command": [
+      "bun",
+      "run",
+      "script/httpapi-exercise.ts",
+      "--mode",
+      "effect",
+      "--include",
+      "global.context",
+      "--fail-on-missing",
+      "--fail-on-skip"
+    ],
+    "exit": 0,
+    "seconds": 3.4
+  },
+  "b05-openapi": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+    "command": [
+      "bun",
+      "test",
+      "test/server/httpapi-public-openapi.test.ts",
+      "test/server/httpapi-local-context.test.ts",
+      "--timeout",
+      "30000"
+    ],
+    "exit": 0,
+    "seconds": 5.48
+  },
+  "b05-lint": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+    "command": [
+      "bun",
+      "run",
+      "lint",
+      "packages/opencode/src/server/routes/instance/httpapi/public.ts",
+      "packages/opencode/test/server/httpapi-public-openapi.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 9.05
+  },
+  "b05-sdk-generation": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/sdk/js",
+    "command": [
+      "bun",
+      "run",
+      "script/build.ts"
+    ],
+    "exit": 0,
+    "seconds": 9.22
+  },
+  "core-tests": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/core",
+    "command": [
+      "bun",
+      "test",
+      "test/local-context.test.ts",
+      "test/git.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 5.44
+  },
+  "b05-client-generation": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/client",
+    "command": [
+      "bun",
+      "run",
+      "generate"
+    ],
+    "exit": 0,
+    "seconds": 3.87
+  },
+  "sdk-check": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/sdk/js",
+    "command": [
+      "bun",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 0.46
+  },
+  "b05-red-openapi": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+    "command": [
+      "bun",
+      "test",
+      "test/server/httpapi-public-openapi.test.ts",
+      "-t",
+      "preserves required nullability",
+      "--timeout",
+      "30000"
+    ],
+    "exit": 1,
+    "seconds": 7.53,
+    "expected_failure": true,
+    "purpose": "D\u00e9monstration avant correction B05 ; remplac\u00e9 par contr\u00f4les verts b05-openapi/b05-opencode-check."
+  },
+  "client-generation": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/client",
+    "command": [
+      "bun",
+      "run",
+      "generate"
+    ],
+    "exit": 0,
+    "seconds": 2.52
+  },
+  "route-auth": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+    "command": [
+      "bun",
+      "run",
+      "script/httpapi-exercise.ts",
+      "--mode",
+      "auth",
+      "--include",
+      "global.context",
+      "--fail-on-missing",
+      "--fail-on-skip"
+    ],
+    "exit": 0,
+    "seconds": 5.06
+  },
+  "opencode-check": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+    "command": [
+      "bun",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 46.93
+  },
+  "lint": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+    "command": [
+      "bun",
+      "run",
+      "lint",
+      "packages/schema/src/local-context.ts",
+      "packages/core/src/local-context.ts",
+      "packages/core/test/local-context.test.ts",
+      "packages/opencode/src/server/routes/instance/httpapi/groups/global.ts",
+      "packages/opencode/src/server/routes/instance/httpapi/handlers/global.ts",
+      "packages/opencode/src/server/routes/instance/httpapi/server.ts",
+      "packages/opencode/test/server/httpapi-local-context.test.ts",
+      "packages/opencode/test/server/httpapi-global.test.ts",
+      "packages/opencode/test/server/httpapi-control-plane.test.ts",
+      "packages/sdk/js/test/local-context.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 44.24
+  },
+  "http-tests": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+    "command": [
+      "bun",
+      "test",
+      "test/server/httpapi-local-context.test.ts",
+      "test/server/httpapi-global.test.ts",
+      "test/server/httpapi-control-plane.test.ts",
+      "test/server/httpapi-public-openapi.test.ts",
+      "--timeout",
+      "30000"
+    ],
+    "exit": 0,
+    "seconds": 4.53
+  },
+  "b05-format": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+    "command": [
+      "bun",
+      "x",
+      "--no-install",
+      "prettier",
+      "--check",
+      "packages/opencode/src/server/routes/instance/httpapi/public.ts",
+      "packages/opencode/test/server/httpapi-public-openapi.test.ts",
+      "packages/sdk/js/src/v2/gen/types.gen.ts"
+    ],
+    "exit": 0,
+    "seconds": 0.61
+  },
+  "b05-whitespace": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+    "command": [
+      "git",
+      "diff",
+      "--check",
+      "--",
+      "packages"
+    ],
+    "exit": 0,
+    "seconds": 0.02
+  },
+  "schema-check": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/schema",
+    "command": [
+      "bun",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 1.55
+  },
+  "b05-sdk-check": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/sdk/js",
+    "command": [
+      "bun",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 1.13
+  },
+  "checkout-smoke": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/core",
+    "command": [
+      "bun",
+      "-e",
+      "import { Effect } from \"effect\"; import { LocalContext } from \"./src/local-context\"; import { LayerNode } from \"./src/effect/layer-node\"; const result = await Effect.runPromise(Effect.gen(function* () { const service = yield* LocalContext.Service; return yield* service.inspect({ directory: \"/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git\", base_ref: \"HEAD\" }); }).pipe(Effect.provide(LayerNode.compile(LocalContext.node)))); console.log(JSON.stringify(result, null, 2));"
+    ],
+    "exit": 0,
+    "seconds": 0.39
+  },
+  "b05-red-types": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/opencode",
+    "command": [
+      "bun",
+      "typecheck"
+    ],
+    "exit": 2,
+    "seconds": 25.04,
+    "expected_failure": true,
+    "purpose": "D\u00e9monstration avant correction B05 ; remplac\u00e9 par contr\u00f4les verts b05-openapi/b05-opencode-check."
+  },
+  "sdk-generation": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/sdk/js",
+    "command": [
+      "bun",
+      "run",
+      "script/build.ts"
+    ],
+    "exit": 0,
+    "seconds": 9.11
+  },
+  "sdk-tests": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/sdk/js",
+    "command": [
+      "bun",
+      "test",
+      "test/local-context.test.ts",
+      "test/session-history.test.ts"
+    ],
+    "exit": 0,
+    "seconds": 0.03
+  },
+  "format": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+    "command": [
+      "bun",
+      "x",
+      "--no-install",
+      "prettier",
+      "--check",
+      "packages/core/src/local-context.ts",
+      "packages/core/test/local-context.test.ts",
+      "packages/opencode/src/server/routes/instance/httpapi/groups/global.ts",
+      "packages/opencode/src/server/routes/instance/httpapi/handlers/global.ts",
+      "packages/opencode/src/server/routes/instance/httpapi/server.ts",
+      "packages/opencode/test/server/httpapi-control-plane.test.ts",
+      "packages/opencode/test/server/httpapi-exercise/index.ts",
+      "packages/opencode/test/server/httpapi-global.test.ts",
+      "packages/opencode/test/server/httpapi-local-context.test.ts",
+      "packages/schema/src/local-context.ts",
+      "packages/sdk/js/src/v2/gen/sdk.gen.ts",
+      "packages/sdk/js/src/v2/gen/types.gen.ts",
+      "packages/sdk/js/test/local-context.test.ts"
+    ],
+    "exit": 0
+  },
+  "core-check": {
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/core",
+    "command": [
+      "bun",
+      "typecheck"
+    ],
+    "exit": 0,
+    "seconds": 32.51
+  }
+}

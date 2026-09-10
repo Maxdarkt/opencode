@@ -1,0 +1,12 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+  "command": [
+    "bun",
+    "run",
+    "lint",
+    "packages/opencode/src/server/routes/instance/httpapi/public.ts",
+    "packages/opencode/test/server/httpapi-public-openapi.test.ts"
+  ],
+  "exit": 0,
+  "seconds": 9.05
+}

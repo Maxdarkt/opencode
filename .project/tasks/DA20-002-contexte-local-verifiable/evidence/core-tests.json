@@ -1,0 +1,11 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/core",
+  "command": [
+    "bun",
+    "test",
+    "test/local-context.test.ts",
+    "test/git.test.ts"
+  ],
+  "exit": 0,
+  "seconds": 5.44
+}

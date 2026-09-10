@@ -1,0 +1,24 @@
+{
+  "requested_directory": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+  "canonical_directory": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+  "availability": "available",
+  "session_directory": null,
+  "session_canonical_directory": null,
+  "session_status": "not_requested",
+  "concordance": "not_applicable",
+  "git": {
+    "status": "available",
+    "top_level": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+    "git_directory": "/Users/leanbot/Documents/40_Daidalon/Daidalon/.git/worktrees/20-workspace-git",
+    "common_directory": "/Users/leanbot/Documents/40_Daidalon/Daidalon/.git",
+    "branch": "20-workspace-git",
+    "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+    "head_status": "branch",
+    "base_ref": "HEAD",
+    "base_oid": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+    "base_status": "resolved",
+    "dirty": true,
+    "conflicts": false,
+    "review": "changed"
+  }
+}

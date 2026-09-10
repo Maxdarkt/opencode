@@ -1,0 +1,31 @@
+bun test v1.3.14 (0d9b296a)
+
+test/server/httpapi-public-openapi.test.ts:
+(pass) PublicApi OpenAPI v2 errors > includes plugin-facing core schemas [838.80ms]
+(pass) PublicApi OpenAPI v2 errors > documents nested legacy global sync events [0.82ms]
+(pass) PublicApi OpenAPI v2 errors > names the v2 event union without the SSE string wrapper collision [0.79ms]
+(pass) PublicApi OpenAPI v2 errors > preserves /api auth responses [0.88ms]
+(pass) PublicApi OpenAPI v2 errors > documents references separately from filesystem routes [0.29ms]
+(pass) PublicApi OpenAPI v2 errors > preserves required request bodies for v2 mutations [0.19ms]
+(pass) PublicApi OpenAPI v2 errors > documents integration discovery and connection routes [0.06ms]
+(pass) PublicApi OpenAPI v2 errors > does not rewrite /api endpoint errors to legacy error components [0.40ms]
+(pass) PublicApi OpenAPI v2 errors > new /api endpoint errors cannot use built-in components without an explicit allowlist [0.58ms]
+(pass) PublicApi OpenAPI v2 errors > documents v2 provider and model catalog errors [0.13ms]
+(pass) PublicApi OpenAPI v2 errors > documents v2 session not-found errors [0.23ms]
+(pass) PublicApi OpenAPI v2 errors > documents v2 unfinished session mutation errors [0.06ms]
+(pass) PublicApi OpenAPI v2 errors > documents v2 session read data errors [0.09ms]
+(pass) PublicApi OpenAPI v2 errors > documents session busy errors [0.05ms]
+(pass) PublicApi OpenAPI v2 errors > documents permission and question not-found errors [0.09ms]
+(pass) PublicApi OpenAPI v2 errors > documents MCP server not-found errors [0.15ms]
+(pass) PublicApi OpenAPI v2 errors > documents PTY resource and ticket errors [0.47ms]
+(pass) PublicApi OpenAPI v2 errors > documents project not-found errors [0.05ms]
+(pass) preserves required nullability in the local context OpenAPI and SDK [0.25ms]
+
+test/server/httpapi-local-context.test.ts:
+(pass) authenticates and requires an explicit directory without initializing the target [441.57ms]
+(pass) compares the persisted session placement rather than substituting the requested directory [1825.85ms]
+
+ 21 pass
+ 0 fail
+ 226 expect() calls
+Ran 21 tests across 2 files. [5.44s]

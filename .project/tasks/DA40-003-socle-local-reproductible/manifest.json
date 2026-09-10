@@ -1,0 +1,27 @@
+{
+  "root": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling",
+  "branch": "40-tooling",
+  "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+  "os": "macOS-15.5-arm64-arm-64bit",
+  "bun": "1.3.14 (0d9b296a)",
+  "bun_sha256": "e0c90ec15d33363e6b70713d56bc3b2c7585c17f40a0fe0f8fd9305901d4e233",
+  "lockfile_sha256": "dfd3eb5187a4211c3c4eb5b24f6a8980a86e74c47b3369346daa1ee0ed30c385",
+  "client": "packages/app Vite 7.1.4, source locale ; pas proxy distant",
+  "ui_url": "http://127.0.0.1:4440",
+  "backend_url": "http://127.0.0.1:4140",
+  "dirty_baseline": "evidence/initial-dirty.json",
+  "processes": "evidence/processes.json",
+  "http": "evidence/http-smoke.json",
+  "node": "v25.8.2",
+  "source_sha256": {
+    "packages/app/src/entry.tsx": "8091f6ad325f5f76af0b977344bf874085192e497ba4080247e8fb4c4ea37bcb",
+    "packages/app/vite.config.ts": "fdb989c1f40c70e9914693c60c7e43dfb7f5748f5d201da5330aed0a1426b84d",
+    "packages/opencode/src/index.ts": "bddea4eb640adb6fe72193f292c1ae75526ff1bf5bc507ff7c539e4e93825dbc",
+    "packages/opencode/src/cli/cmd/serve.ts": "4cdec5fb55b58a3215aec3d58c6e15a3ef0db75dd6f613180c901214be67983f",
+    "package.json": "d05714a1572795feca1cc2723ec12b7b341b0a96a82031a8ef40d4af0e120acf"
+  },
+  "listener_pids": {
+    "backend": 27514,
+    "client": 27516
+  }
+}

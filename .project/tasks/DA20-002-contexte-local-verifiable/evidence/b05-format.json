@@ -1,0 +1,15 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git",
+  "command": [
+    "bun",
+    "x",
+    "--no-install",
+    "prettier",
+    "--check",
+    "packages/opencode/src/server/routes/instance/httpapi/public.ts",
+    "packages/opencode/test/server/httpapi-public-openapi.test.ts",
+    "packages/sdk/js/src/v2/gen/types.gen.ts"
+  ],
+  "exit": 0,
+  "seconds": 0.61
+}

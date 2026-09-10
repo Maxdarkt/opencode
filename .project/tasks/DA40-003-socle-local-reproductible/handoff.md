@@ -1,0 +1,8 @@
+# Handoff DA40-003 → parent courant
+Parent : 01a076a4-b458-72a3-8e2b-bf975091a840. Enfant : 01a076cc-de9e-7682-9d68-77ba9d0b57d7.
+Livraison : dépendances exactes Bun 1.3.14 installées frozen sans scripts, client/backend isolés, manifest, baseline et procédure de recette interbranches.
+Fichiers : dossier DA40-003 (analyze, plan, blocs B01-B03, evidence, manifest, baseline, runbook, debts, smoke-report, STATE, handoff, .gitignore), cellule DA40-003 du PLAN-GENERAL local et comptage sprint local. Aucun code produit ni package.json/bun.lock modifié.
+Checks : 41 tests ciblés / 4 typechecks exit 0. Smoke HTTP 3×200. Préservation : seuls STATE propre, plan et sprint changés parmi fichiers hérités ; zéro changement inattendu, index vide. Branche 40-tooling, HEAD 702bf7dcd7468638c17fd95b110deb38bd253e9a, dirty intentionnel conservé. Aucun commit.
+Pass B complet dans smoke-report.md, route http://127.0.0.1:4440 → API4140. PID backend27514 / Node27516, lanceur27515. Serveurs laissés actifs pour le parent, aucun redémarrage autorisé. Backend health version local ; confirmer provenance avec manifest/cwd/empreintes. Runtime/cache reconstructible ignoré mais conservé sur disque.
+Limites : sélection de tests ciblée, pas de modèle exécuté ; desktop/PTY non qualifiés ; aucun assemblage interbranches. Dettes D1-D3 remises pour décision parent, aucune carte additionnelle créée sans cadrage.
+Prochaine action parent : relire MT/APEX/Git puis Pass B, verdict ou correction bornée. Lui seul peut done/archived et synchroniser les projections canoniques hors 40-tooling. Reprise enfant : STATE → bloc correctif nouveau en conservant processus/héritage ; ne pas reprendre installation ou restart aveuglément.

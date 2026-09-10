@@ -1,0 +1,12 @@
+bun test v1.3.14 (0d9b296a)
+
+test/session-history.test.ts:
+(pass) uses numeric Session history positions [0.75ms]
+
+test/local-context.test.ts:
+(pass) sends the explicit inspected directory even when the SDK has another default directory [5.67ms]
+
+ 2 pass
+ 0 fail
+ 6 expect() calls
+Ran 2 tests across 2 files. [79.00ms]

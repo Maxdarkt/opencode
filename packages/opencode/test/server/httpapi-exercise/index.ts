@@ -59,6 +59,16 @@ function locationData(validate: (value: any) => void) {
 
 const scenarios: Scenario[] = [
   http.protected
+    .get("/global/context", "global.context")
+    .global()
+    .at(() => ({ path: `/global/context?${new URLSearchParams({ directory: exerciseGlobalRoot })}` }))
+    .json(200, (body) => {
+      object(body)
+      check(body.requested_directory === exerciseGlobalRoot, "context should preserve the explicit directory")
+      check(body.availability === "available", "context should observe the local directory")
+      check(body.session_status === "not_requested", "context should not invent a session binding")
+    }),
+  http.protected
     .get("/global/health", "global.health")
     .global()
     .json(200, (body) => {

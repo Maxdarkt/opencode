@@ -1,0 +1,6 @@
+$ tsgo -b
+src/components/active-project-context.tsx(40,137): error TS2769: No overload matches this call.
+  The last overload gave the following error.
+    Type '() => JSX.Element' is not assignable to type 'Element'.
+src/components/dialog-select-directory-v2.tsx(237,155): error TS18048: 'context.data' is possibly 'undefined'.
+error: script "typecheck" exited with code 1

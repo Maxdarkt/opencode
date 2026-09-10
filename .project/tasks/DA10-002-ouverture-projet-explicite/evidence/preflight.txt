@@ -1,0 +1,22 @@
+ M .project/tasks/DA10-001-audit-ui-opencode/STATE.md
+ M .project/tasks/DA20-001-audit-workspace-git/STATE.md
+ M .project/tasks/DA30-001-audit-runtime-couts/STATE.md
+ M .project/tasks/DA30-002-modele-apex-sprint/STATE.md
+ M .project/tasks/DA40-001-gap-analysis-m0/STATE.md
+ M .project/tasks/DA40-002-orchestration-m0/STATE.md
+ M AGENTS.md
+ M PLAN-GENERAL.md
+?? .project/archives/
+?? .project/tasks/DA10-001-audit-ui-opencode/analyze.md
+?? .project/tasks/DA10-001-audit-ui-opencode/audit-ui.md
+?? .project/tasks/DA10-001-audit-ui-opencode/blocs/
+?? .project/tasks/DA10-001-audit-ui-opencode/debts.md
+?? .project/tasks/DA10-001-audit-ui-opencode/evidence/
+?? .project/tasks/DA10-001-audit-ui-opencode/plan.md
+?? .project/tasks/DA10-001-audit-ui-opencode/smoke-report.md
+?? .project/tasks/DA10-002-ouverture-projet-explicite/
+?? sprint.md
+
+HEAD 702bf7dcd7468638c17fd95b110deb38bd253e9a
+BRANCH 10-product-ui
+INDEX

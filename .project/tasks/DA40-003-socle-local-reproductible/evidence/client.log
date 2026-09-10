@@ -1,0 +1,5 @@
+$ vite --host "127.0.0.1" --port "4440" --strictPort
+
+  VITE v7.1.4  ready in 4309 ms
+
+  ➜  Local:   http://127.0.0.1:4440/

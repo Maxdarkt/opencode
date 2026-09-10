@@ -97,11 +97,12 @@
 }
 
 .directory-picker-v2-selection {
-  overflow: hidden;
+  max-height: 220px;
+  overflow: auto;
   flex-shrink: 0;
   color: var(--v2-text-text-muted);
   font-size: 12px;
   line-height: 16px;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
 }

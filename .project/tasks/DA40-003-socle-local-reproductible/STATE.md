@@ -1,0 +1,15 @@
+# STATE — DA40-003
+- Phase : terminée après Verify et Pass B parent.
+- Statut : done dans MT après réception parent acceptée le 2026-09-06 ; clôture `3b07d579-0820-4eff-9c67-39a9e6429c5c`.
+- Sprint : a3fac11a-49ed-455f-9d7c-dcd213467b6a, active ; projet DA.
+- Racine unique : /Users/leanbot/Documents/40_Daidalon/features/40-tooling ; branche 40-tooling.
+- HEAD mesuré : 702bf7dcd7468638c17fd95b110deb38bd253e9a ; index vide ; dirty M0/Sprint1 protégé, zéro changement inattendu (evidence/preservation.json).
+- Enfant : 01a076cc-de9e-7682-9d68-77ba9d0b57d7 ; parent courant mandatant : 01a076a4-b458-72a3-8e2b-bf975091a840. Ancien parent alloué 01a076cd-6258-7052-9a4d-d094c793477e non retenu pour ce handoff.
+- Gates : scope et démarrage autorisés ; Analyze/Plan validés autonomement selon mandat et sprint-child-handoff. Aucune dépendance de lancement.
+- Résultats : Bun1.3.14 exact privé ; frozen-lockfile ignore-scripts exit0, 4687 paquets ; 41 tests pass ; typecheck app/core/llm/opencode exit0 ; GET health/index/entry 200 ; git diff --check exit0.
+- Commandes/cwd/logs : evidence/checks.json, install.log, processes.json, http-smoke.json ; procédure runbook.md ; identité manifest.json.
+- Serveurs actifs réservés : backend PID27514 port4140, UI launcher27515 / Node27516 port4440. Pas de restart/arrêt ; propriétaire DA40-003 remis au parent pour réception.
+- Fichiers : dossier tâche + cellule plan DA40-003 et sprint.md local. Aucun fichier produit, lockfile ni héritage M0 altéré.
+- Blocage : aucun technique dans scope. Dettes D1 version local, D2 desktop/PTY hors qualification, D3 assemblage interbranches non effectué ; voir debts.md.
+- Commit local borné créé sur `40-tooling` ; parent synchronise les projections puis déclenche DA30-003.
+- Reprise : relire AGENTS/config/scope/STATE/mandat et Git dans worktree explicite ; mesurer processus existants et empreintes, puis nouveau bloc correctif seulement sur retour parent. Ne pas refaire installation, démarrer doublon ou toucher staging.

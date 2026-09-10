@@ -1,0 +1,10 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/client",
+  "command": [
+    "bun",
+    "run",
+    "generate"
+  ],
+  "exit": 0,
+  "seconds": 3.87
+}

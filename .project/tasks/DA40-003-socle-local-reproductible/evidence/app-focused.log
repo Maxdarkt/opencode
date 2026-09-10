@@ -1,0 +1,49 @@
+bun test v1.3.14 (0d9b296a)
+
+src/utils/server-health.test.ts:
+(pass) checkServerHealth > returns healthy response with version [6.00ms]
+(pass) checkServerHealth > falls back to the V1 health endpoint [4.60ms]
+(pass) checkServerHealth > falls back when the current health response is malformed [0.93ms]
+(pass) checkServerHealth > allows slow servers thirty seconds by default [0.65ms]
+(pass) checkServerHealth > returns unhealthy when request fails [307.15ms]
+(pass) checkServerHealth > uses timeout fallback when AbortSignal.timeout is unavailable [11.81ms]
+(pass) checkServerHealth > uses provided abort signal [0.71ms]
+(pass) checkServerHealth > retries transient failures and eventually succeeds [1.71ms]
+(pass) checkServerHealth > returns unhealthy when retries are exhausted [6.19ms]
+
+src/utils/worktree.test.ts:
+(pass) Worktree > normalizes trailing slashes [5.39ms]
+(pass) Worktree > pending does not overwrite a terminal state [0.13ms]
+(pass) Worktree > wait resolves shared pending waiter when ready [0.24ms]
+(pass) Worktree > wait resolves with failure message [0.13ms]
+(pass) Worktree > isolates identical directories by server scope [0.06ms]
+
+src/components/directory-picker-domain.test.ts:
+(pass) maps server directory entries into Pierre paths [0.26ms]
+(pass) maps Pierre paths back to the selected server root [0.21ms]
+(pass) includes files only when the picker selects files [0.10ms]
+(pass) includes files in file autocomplete while preserving directory navigation [0.12ms]
+(pass) centralizes file and directory selection policy [5.84ms]
+(pass) accepts mutations only from the active navigation [0.05ms]
+(pass) preserves POSIX case while matching Windows drives case-insensitively [0.43ms]
+(pass) displays paths using the selected server path format [0.15ms]
+(pass) treats the server share prefix as the UNC root [1.35ms]
+(pass) resolves relative input against the current picker root [0.36ms]
+(pass) exposes autocomplete results only for their source query [0.12ms]
+(pass) scopes file autocomplete to the current browser root [0.12ms]
+(pass) resolves directory autocomplete from the current browser root [2.51ms]
+(pass) keeps indexed directory results for servers that support empty search [0.19ms]
+(pass) lists the default directory when empty search is unsupported [1.36ms]
+(pass) matches the default directory listing when typed search is unsupported [1.31ms]
+(pass) searches from an absolute root without a default base [1.48ms]
+(pass) identifies the next directory level to preload [0.19ms]
+(pass) advances preloading once for every expanded directory [0.13ms]
+(pass) limits background tasks and prioritizes newly requested work [0.69ms]
+(pass) clamps bridged tree wheel scrolling [0.02ms]
+(pass) wraps autocomplete keyboard navigation [0.04ms]
+(pass) returns absolute directories and relative files [0.06ms]
+
+ 37 pass
+ 0 fail
+ 102 expect() calls
+Ran 37 tests across 3 files. [2.29s]

@@ -1,3 +1,4 @@
+import { ActiveProjectContext } from "@/components/active-project-context"
 import {
   createEffect,
   createMemo,
@@ -2356,6 +2357,7 @@ export default function LegacyLayout(props: ParentProps) {
                 }}
               >
                 <Show when={!autoselecting.loading} fallback={<div class="size-full" />}>
+                  <ActiveProjectContext />
                   {props.children}
                 </Show>
               </main>

@@ -1,0 +1,10 @@
+{
+  "cwd": "/Users/leanbot/Documents/40_Daidalon/features/20-workspace-git/packages/sdk/js",
+  "command": [
+    "bun",
+    "run",
+    "script/build.ts"
+  ],
+  "exit": 0,
+  "seconds": 9.11
+}

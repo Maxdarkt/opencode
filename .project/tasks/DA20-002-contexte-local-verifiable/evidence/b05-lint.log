@@ -1,0 +1,3 @@
+$ oxlint packages/opencode/src/server/routes/instance/httpapi/public.ts packages/opencode/test/server/httpapi-public-openapi.test.ts
+Found 0 warnings and 0 errors.
+Finished in 8.7s on 2 files with 130 rules using 10 threads.

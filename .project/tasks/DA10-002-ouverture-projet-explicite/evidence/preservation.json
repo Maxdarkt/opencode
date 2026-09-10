@@ -1,0 +1,10 @@
+{
+  "baseline_files": 33,
+  "changed": [
+    ".project/tasks/DA10-002-ouverture-projet-explicite/STATE.md",
+    "PLAN-GENERAL.md"
+  ],
+  "unexpected": [],
+  "index": [],
+  "lockfile_matches_head": true
+}

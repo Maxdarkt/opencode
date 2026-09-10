@@ -1,6 +1,6 @@
 import { beforeAll, beforeEach, describe, expect, mock, test } from "bun:test"
 import { createStore } from "solid-js/store"
-import type { Prompt, PromptStore } from "@/context/prompt"
+import type { ContextItem, Prompt, PromptStore } from "@/context/prompt"
 import type { ModelSelection } from "@/context/local"
 
 let createPromptSubmit: typeof import("./submit").createPromptSubmit
@@ -40,8 +40,11 @@ let selected = "/repo/worktree-a"
 let variant: string | undefined
 let permissionServer = "server-a"
 let createSessionGate: Promise<void> | undefined
+let activeTaskEffects: Array<{ effectID: string; state: "pending" | "confirmed" }> = []
+let trackPromptState = false
 
 let promptValue: Prompt = [{ type: "text", content: "ls", start: 0, end: 2 }]
+let promptContext: (ContextItem & { key: string })[] = []
 const [promptStore, setPromptStore] = createStore<PromptStore>({
   prompt: promptValue,
   cursor: 0,
@@ -57,15 +60,28 @@ const prompt = {
     current: () => undefined,
     set: () => undefined,
   },
-  reset: () => undefined,
-  set: () => undefined,
+  reset: () => {
+    if (!trackPromptState) return
+    promptValue = []
+    promptContext = []
+  },
+  set: (value: Prompt) => {
+    if (!trackPromptState) return
+    promptValue = value
+  },
   context: {
-    add: () => undefined,
-    remove: () => undefined,
+    add: (item: ContextItem) => {
+      if (!trackPromptState) return
+      promptContext.push({ ...item, key: `context-${promptContext.length + 1}` })
+    },
+    remove: (key: string) => {
+      if (!trackPromptState) return
+      promptContext = promptContext.filter((item) => item.key !== key)
+    },
     removeComment: () => undefined,
     updateComment: () => undefined,
     replaceComments: () => undefined,
-    items: () => [],
+    items: () => promptContext,
   },
   capture: () => prompt,
 }
@@ -73,6 +89,59 @@ const prompt = {
 const clientFor = (directory: string) => {
   createdClients.push(directory)
   return {
+    global: {
+      context: async (input: { directory: string; session_id?: string }) => ({
+        response: { status: 200, ok: true },
+        data: {
+          requested_directory: input.directory,
+          canonical_directory: input.directory,
+          availability: "available",
+          session_directory: input.directory,
+          session_canonical_directory: input.directory,
+          session_status: "found",
+          concordance: "matches",
+          git: {
+            status: "available",
+            top_level: input.directory,
+            git_directory: `${input.directory}/.git`,
+            common_directory: `${input.directory}/.git`,
+            branch: "active-context-ui",
+            head: "abc123",
+            head_status: "branch",
+            base_ref: null,
+            base_oid: null,
+            base_status: "not_requested",
+            dirty: false,
+            conflicts: false,
+            review: "clean",
+          },
+          task: {
+            binding: {
+              mtTaskID: "DA10-003",
+              apexExternalRef: ".project/tasks/DA10-003-contexte-actif-interface",
+              sessionID: input.session_id ?? "session-1",
+              projectID: "project",
+              location: { directory: input.directory },
+              checkout: {
+                repository: input.directory,
+                worktree: input.directory,
+                branch: "active-context-ui",
+                head: "abc123",
+              },
+              version: 1,
+            },
+            execution: {
+              mtTaskID: "DA10-003",
+              sessionID: input.session_id ?? "session-1",
+              worktree: input.directory,
+              ownerID: "owner-a",
+              generation: 1,
+              effects: activeTaskEffects,
+            },
+          },
+        },
+      }),
+    },
     api: {
       session: {
         create: async (input: (typeof sessionCreateInputs)[number]) => {
@@ -135,6 +204,7 @@ beforeAll(async () => {
   mock.module("@opencode-ai/ui/toast", () => ({
     Toast: { Region: () => null },
     showToast: () => 0,
+    toaster: { dismiss: () => undefined },
   }))
 
   mock.module("@opencode-ai/core/util/encode", () => ({
@@ -196,6 +266,7 @@ beforeAll(async () => {
     useSDK: () => {
       const sdk = {
         scope: "local",
+        protocol: Promise.resolve("v1"),
         directory: "/repo/main",
         client: rootClient,
         api: rootClient.api,
@@ -292,6 +363,7 @@ beforeEach(() => {
   sentCommands.length = 0
   commands.length = 0
   promptValue = [{ type: "text", content: "ls", start: 0, end: 2 }]
+  promptContext = []
   params = {}
   search = {}
   sentShell.length = 0
@@ -300,6 +372,8 @@ beforeEach(() => {
   variant = undefined
   permissionServer = "server-a"
   createSessionGate = undefined
+  activeTaskEffects = []
+  trackPromptState = false
   serverSessionSyncs = 0
   for (const key of Object.keys(storedSessions)) delete storedSessions[key]
 })
@@ -494,6 +568,53 @@ describe("prompt submit worktree selection", () => {
     ])
   })
 
+  test("restores the draft and context when the active task guard blocks a prompt", async () => {
+    params = { id: "session-1" }
+    trackPromptState = true
+    promptValue = [{ type: "text", content: "preserve this draft", start: 0, end: 19 }]
+    promptContext = [
+      {
+        key: "context-1",
+        type: "file",
+        path: "src/guarded.ts",
+        comment: "keep this context",
+        preview: "guarded source",
+      },
+    ]
+    activeTaskEffects = [{ effectID: "git-write", state: "pending" }]
+
+    const submit = createPromptSubmit({
+      prompt,
+      info: () => ({ id: "session-1" }),
+      imageAttachments: () => [],
+      commentCount: () => 1,
+      autoAccept: () => false,
+      mode: () => "normal",
+      working: () => false,
+      editor: () => undefined,
+      queueScroll: () => undefined,
+      promptLength: (value) => value.reduce((sum, part) => sum + ("content" in part ? part.content.length : 0), 0),
+      addToHistory: () => undefined,
+      resetHistoryNavigation: () => undefined,
+      setMode: () => undefined,
+      setPopover: () => undefined,
+    })
+
+    await submit.handleSubmit(new Event("submit"))
+    await Bun.sleep(0)
+
+    expect(sentPrompts).toEqual([])
+    expect(promptValue).toEqual([{ type: "text", content: "preserve this draft", start: 0, end: 19 }])
+    expect(promptContext).toEqual([
+      expect.objectContaining({
+        type: "file",
+        path: "src/guarded.ts",
+        comment: "keep this context",
+        preview: "guarded source",
+      }),
+    ])
+  })
+
   test("submits slash commands through the current session API", async () => {
     params = { id: "session-1" }
     variant = "high"
@@ -558,6 +679,7 @@ describe("prompt submit worktree selection", () => {
     })
 
     await submit.handleSubmit({ preventDefault: () => undefined } as unknown as Event)
+    await Bun.sleep(0)
 
     expect(optimistic[0]).toMatchObject({
       message: {
@@ -590,6 +712,7 @@ describe("prompt submit worktree selection", () => {
     const event = { preventDefault: () => undefined } as unknown as Event
 
     await submit.handleSubmit(event)
+    await Bun.sleep(0)
 
     expect(storedSessions["/repo/worktree-a"]).toHaveLength(1)
     expect(storedSessions["/repo/worktree-a"]?.[0]).toMatchObject({ id: "session-1", title: "New session 1" })

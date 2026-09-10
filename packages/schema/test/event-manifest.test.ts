@@ -9,8 +9,67 @@ import { WorkspaceEvent } from "../src/workspace-event"
 
 describe("public event manifest", () => {
   test("owns the complete public event surface", () => {
-    expect(EventManifest.ServerDefinitions.length).toBe(55)
-    expect(EventManifest.Definitions.length).toBe(85)
+    expect(EventManifest.ServerDefinitions.map((definition) => definition.type)).toEqual([
+      "models-dev.refreshed",
+      "integration.updated",
+      "integration.connection.updated",
+      "catalog.updated",
+      "session.created",
+      "session.updated",
+      "session.deleted",
+      "message.updated",
+      "message.removed",
+      "message.part.updated",
+      "message.part.removed",
+      "session.next.agent.switched",
+      "session.next.model.switched",
+      "session.next.moved",
+      "session.next.prompted",
+      "session.next.prompt.admitted",
+      "session.next.context.updated",
+      "session.next.synthetic",
+      "session.next.shell.started",
+      "session.next.shell.ended",
+      "session.next.step.started",
+      "session.next.step.ended",
+      "session.next.step.failed",
+      "session.next.text.started",
+      "session.next.text.delta",
+      "session.next.text.ended",
+      "session.next.reasoning.started",
+      "session.next.reasoning.delta",
+      "session.next.reasoning.ended",
+      "session.next.tool.input.started",
+      "session.next.tool.input.delta",
+      "session.next.tool.input.ended",
+      "session.next.tool.called",
+      "session.next.tool.progress",
+      "session.next.tool.success",
+      "session.next.tool.failed",
+      "session.next.retried",
+      "session.next.compaction.started",
+      "session.next.compaction.delta",
+      "session.next.compaction.ended",
+      "session.next.revert.staged",
+      "session.next.revert.cleared",
+      "session.next.revert.committed",
+      "file.edited",
+      "reference.updated",
+      "permission.v2.asked",
+      "permission.v2.replied",
+      "plugin.added",
+      "project.directories.updated",
+      "file.watcher.updated",
+      "pty.created",
+      "pty.updated",
+      "pty.exited",
+      "pty.deleted",
+      "question.v2.asked",
+      "question.v2.replied",
+      "question.v2.rejected",
+      "todo.updated",
+    ])
+    expect(EventManifest.Definitions.length).toBe(88)
     expect(SessionV1.Event.Definitions).toEqual([
       SessionV1.Event.Created,
       SessionV1.Event.Updated,
@@ -23,8 +82,8 @@ describe("public event manifest", () => {
       SessionV1.Event.Diff,
       SessionV1.Event.Error,
     ])
-    expect(EventManifest.Latest.size).toBe(85)
-    expect(EventManifest.Durable.size).toBe(32)
+    expect(EventManifest.Latest.size).toBe(88)
+    expect(EventManifest.Durable.size).toBe(35)
   })
 
   test("uses canonical definitions for current public events", () => {
@@ -42,7 +101,7 @@ describe("public event manifest", () => {
     expect(Reference.Event.Definitions).toEqual([Reference.Event.Updated])
     expect(EventManifest.Latest.has("ide.installed")).toBe(false)
     expect(IdeEvent.Definitions).toEqual([IdeEvent.Installed])
-    expect(EventManifest.Definitions.slice(40, 43)).toEqual([
+    expect(EventManifest.Definitions.slice(43, 46)).toEqual([
       SessionV1.Event.PartDelta,
       SessionV1.Event.Diff,
       SessionV1.Event.Error,

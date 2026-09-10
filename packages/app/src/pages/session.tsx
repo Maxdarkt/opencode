@@ -64,6 +64,8 @@ import { useSettingsCommand } from "@/components/settings-dialog"
 import { setCursorPosition } from "@/components/prompt-input/editor-dom"
 import { promptLength } from "@/components/prompt-input/history"
 import { type FollowupDraft, sendFollowupDraft } from "@/components/prompt-input/submit"
+import { createActiveTaskWriteGuard, type ActiveTaskWriteBlockReason } from "@/components/active-task-write-guard"
+import { readProjectContext } from "@/components/project-context-request"
 import {
   createPromptInputController,
   createSessionComposerController,
@@ -1692,6 +1694,14 @@ export default function Page() {
     })
   }
 
+  const notifyWriteBlocked = (reason: ActiveTaskWriteBlockReason) => {
+    showToast({
+      variant: "error",
+      title: language.t("project.context.task.writeBlocked.title"),
+      description: language.t(`project.context.task.writeBlocked.${reason}`),
+    })
+  }
+
   const merge = (next: NonNullable<ReturnType<typeof info>>, target = sync()) => target.session.remember(next)
 
   const roll = (sessionID: string, next: NonNullable<ReturnType<typeof info>>["revert"], target = sync()) => {
@@ -1729,6 +1739,11 @@ export default function Page() {
         serverSync: serverSync(),
         draft: item,
         optimisticBusy: item.sessionDirectory === sdk().directory,
+        before: createActiveTaskWriteGuard(
+          () => readProjectContext(sdk(), { directory: item.sessionDirectory, session_id: item.sessionID }),
+          item.sessionID,
+          notifyWriteBlocked,
+        ),
       }).catch((err) => {
         setFollowup("failed", input.sessionID, input.id)
         fail(err)

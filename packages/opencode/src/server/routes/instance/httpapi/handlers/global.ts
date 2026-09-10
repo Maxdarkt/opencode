@@ -1,3 +1,11 @@
+import { LocalContext } from "@opencode-ai/core/local-context"
+import { Database } from "@opencode-ai/core/database/database"
+import { TaskBindingTable } from "@opencode-ai/core/task-binding/sql"
+import { TaskExecutionEffectTable, TaskExecutionOwnershipTable } from "@opencode-ai/core/task-execution/sql"
+import { TaskMetrics } from "@opencode-ai/core/task-metrics"
+import { TaskAuthority } from "@opencode-ai/core/task-authority"
+import { Session } from "@/session/session"
+import { SessionID } from "@/session/schema"
 import { Config } from "@/config/config"
 import { GlobalBus, type GlobalEvent as GlobalBusEvent } from "@/bus/global"
 import { EffectBridge } from "@/effect/bridge"
@@ -6,6 +14,7 @@ import { Installation } from "@/installation"
 import { disposeAllInstancesAndEmitGlobalDisposed } from "@/server/global-lifecycle"
 import { InstallationVersion } from "@opencode-ai/core/installation/version"
 import { Effect, Queue } from "effect"
+import { asc, eq } from "drizzle-orm"
 import * as Stream from "effect/Stream"
 import { HttpServerResponse } from "effect/unstable/http"
 import { HttpApiBuilder } from "effect/unstable/httpapi"
@@ -59,8 +68,13 @@ function eventResponse() {
 
 export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handlers) =>
   Effect.gen(function* () {
+    const localContext = yield* LocalContext.Service
+    const { db } = yield* Database.Service
+    const sessions = yield* Session.Service
     const config = yield* Config.Service
     const installation = yield* Installation.Service
+    const metrics = yield* TaskMetrics.Service
+    const authority = yield* TaskAuthority.Service
     const bridge = yield* EffectBridge.make()
 
     const health = Effect.fn("GlobalHttpApi.health")(function* () {
@@ -84,6 +98,15 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
     const dispose = Effect.fn("GlobalHttpApi.dispose")(function* () {
       yield* disposeAllInstancesAndEmitGlobalDisposed()
       return true
+    })
+
+    const metricsRead = Effect.fn("GlobalHttpApi.metrics")(function* (ctx: { payload: TaskMetrics.Request }) {
+      if (ctx.payload.type === "task")
+        return { type: "task" as const, metrics: yield* metrics.task({ taskID: ctx.payload.taskID }) }
+      return {
+        type: "sprint" as const,
+        metrics: yield* metrics.sprint({ sprintID: ctx.payload.sprintID, taskIDs: [...ctx.payload.taskIDs] }),
+      }
     })
 
     const upgrade = Effect.fn("GlobalHttpApi.upgrade")(function* (ctx: { payload: typeof GlobalUpgradeInput.Type }) {
@@ -115,12 +138,106 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
       return HttpServerResponse.jsonUnsafe(result)
     })
 
+    const context = Effect.fn("GlobalHttpApi.context")(function* (ctx: {
+      query: { directory: string; base_ref?: string; session_id?: SessionID }
+    }) {
+      const session = ctx.query.session_id
+        ? yield* sessions.get(ctx.query.session_id).pipe(
+            Effect.map((value) => ({
+              status: value.workspaceID ? ("workspace" as const) : ("found" as const),
+              directory: value.directory,
+            })),
+            Effect.catch(() => Effect.succeed({ status: "missing" as const })),
+            Effect.catchDefect(() => Effect.succeed({ status: "unavailable" as const })),
+          )
+        : undefined
+      const task = ctx.query.session_id
+        ? yield* db
+            .select()
+            .from(TaskBindingTable)
+            .where(eq(TaskBindingTable.session_id, ctx.query.session_id))
+            .get()
+            .pipe(
+              Effect.orDie,
+              Effect.flatMap((binding) =>
+                binding
+                  ? Effect.all([
+                      db
+                        .select()
+                        .from(TaskExecutionOwnershipTable)
+                        .where(eq(TaskExecutionOwnershipTable.mt_task_id, binding.mt_task_id))
+                        .get()
+                        .pipe(Effect.orDie),
+                      db
+                        .select()
+                        .from(TaskExecutionEffectTable)
+                        .where(eq(TaskExecutionEffectTable.mt_task_id, binding.mt_task_id))
+                        .orderBy(asc(TaskExecutionEffectTable.effect_id))
+                        .all()
+                        .pipe(Effect.orDie),
+                    ]).pipe(
+                      Effect.flatMap(([execution, effects]) =>
+                        authority
+                          .observe({
+                            mtTaskID: binding.mt_task_id,
+                            worktree: binding.worktree,
+                            head: binding.head,
+                          })
+                          .pipe(
+                            Effect.map((observation) => ({
+                              binding: {
+                                mtTaskID: binding.mt_task_id,
+                                apexExternalRef: binding.apex_external_ref,
+                                sessionID: binding.session_id,
+                                projectID: binding.project_id,
+                                location: {
+                                  directory: binding.location_directory,
+                                  workspaceID: binding.location_workspace_id,
+                                },
+                                checkout: {
+                                  repository: binding.repository,
+                                  branch: binding.branch,
+                                  worktree: binding.worktree,
+                                  head: binding.head,
+                                },
+                                version: binding.version as 1,
+                              },
+                              execution: execution
+                                ? {
+                                    mtTaskID: execution.mt_task_id,
+                                    sessionID: execution.session_id,
+                                    worktree: execution.worktree,
+                                    ownerID: execution.owner_id,
+                                    generation: execution.generation,
+                                    effects: effects.map((effect) => ({
+                                      effectID: effect.effect_id,
+                                      state: effect.state,
+                                    })),
+                                  }
+                                : null,
+                              authority: observation,
+                            })),
+                          ),
+                      ),
+                    )
+                  : Effect.succeed(undefined),
+              ),
+            )
+        : undefined
+      return {
+        ...(yield* localContext.inspect({ directory: ctx.query.directory, base_ref: ctx.query.base_ref, session })),
+        task,
+      }
+    })
+
     return handlers
+      .handle("context", context)
       .handle("health", health)
       .handleRaw("event", event)
       .handle("configGet", configGet)
       .handle("configUpdate", configUpdate)
       .handle("dispose", dispose)
+      .handle("metrics", metricsRead)
       .handle("upgrade", upgrade)
   }),
 )

@@ -1,3 +1,6 @@
+import { LocalContext } from "@opencode-ai/schema/local-context"
+import { TaskMetrics } from "@opencode-ai/schema/task-metrics"
+import { SessionID } from "@/session/schema"
 import { ConfigV1 } from "@opencode-ai/core/v1/config/config"
 import { EventV2 } from "@opencode-ai/core/event"
 import { EventManifest } from "@/event-manifest"
@@ -67,15 +70,43 @@ const GlobalUpgradeResult = Schema.Union([
 
 export const GlobalPaths = {
   health: "/global/health",
+  context: "/global/context",
   event: "/global/event",
   config: "/global/config",
   dispose: "/global/dispose",
+  metrics: "/global/metrics",
   upgrade: "/global/upgrade",
 } as const
 
 export const GlobalApi = HttpApi.make("global").add(
   HttpApiGroup.make("global")
     .add(
+      HttpApiEndpoint.post("metrics", GlobalPaths.metrics, {
+        payload: TaskMetrics.Request,
+        success: TaskMetrics.Response,
+      }).annotateMerge(
+        OpenApi.annotations({
+          identifier: "global.metrics",
+          summary: "Read task or sprint metrics",
+          description:
+            "Read local task metrics from persisted session observations. Sprint membership is supplied by the caller; unknown values are not converted to zero.",
+        }),
+      ),
+      HttpApiEndpoint.get("context", GlobalPaths.context, {
+        query: Schema.Struct({
+          directory: Schema.String,
+          base_ref: Schema.optional(Schema.String),
+          session_id: Schema.optional(SessionID),
+        }),
+        success: LocalContext.Info,
+      }).annotateMerge(
+        OpenApi.annotations({
+          identifier: "global.context",
+          summary: "Inspect local directory context",
+          description:
+            "Read an explicit local directory and optional persisted session placement without initializing a project. This observation is not a lease.",
+        }),
+      ),
       HttpApiEndpoint.get("health", GlobalPaths.health, {
         success: described(GlobalHealth, "Health information"),
       }).annotateMerge(

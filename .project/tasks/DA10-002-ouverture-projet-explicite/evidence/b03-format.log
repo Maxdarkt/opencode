@@ -1,0 +1,11 @@
+packages/app/src/components/project-context-state.ts 46ms
+packages/app/src/components/project-context-state.test.ts 31ms
+packages/app/src/components/project-context-request.ts 5ms
+packages/app/src/components/use-project-context.ts 4ms (unchanged)
+packages/app/src/components/project-context-view.tsx 12ms
+packages/app/src/components/active-project-context.tsx 16ms
+packages/app/src/components/dialog-select-directory-v2.tsx 38ms
+packages/app/src/pages/home/home-controller.ts 16ms (unchanged)
+packages/app/src/pages/layout.tsx 158ms (unchanged)
+packages/app/src/pages/layout-new.tsx 5ms (unchanged)
+packages/app/src/i18n/en.ts 29ms (unchanged)

@@ -1,0 +1,21 @@
+bun test v1.3.14 (0d9b296a)
+
+test/local-context.test.ts:
+(pass) reports absent, file, relative, non-Git and symlink without creating a repository [49.77ms]
+(pass) distinguishes requested, canonical and persisted session paths [99.47ms]
+(pass) reports base resolution and dirty without changing index, HEAD or refs [510.63ms]
+(pass) keeps two clones with the same origin distinct and recognizes detached and unborn [744.79ms]
+(pass) reports inaccessible directories and damaged Git as unavailable [35.18ms]
+(pass) exposes conflicts from the real index and preserves it [333.88ms]
+(pass) observes linked worktree identity and a committed difference from an explicit base [274.54ms]
+
+test/git.test.ts:
+(pass) Git > clones a remote and reads checkout metadata [498.35ms]
+(pass) Git > fetches, checks out, and resets remote changes [919.59ms]
+(pass) Git worktrees > creates, lists, and removes linked worktrees [648.18ms]
+(pass) Git trees > captures, compares, previews, and restores scoped trees [794.76ms]
+
+ 11 pass
+ 0 fail
+ 54 expect() calls
+Ran 11 tests across 2 files. [5.43s]
