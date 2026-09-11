@@ -10,6 +10,7 @@ import { SessionSchema } from "@opencode-ai/core/session/schema"
 import { SessionMessageTable, SessionTable } from "@opencode-ai/core/session/sql"
 import { TaskMetrics } from "@opencode-ai/core/task-metrics"
 import { TaskBindingTable } from "@opencode-ai/core/task-binding/sql"
+import { TaskQueue } from "@opencode-ai/core/task-queue"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { AbsolutePath } from "@opencode-ai/core/schema"
 import { DateTime, Effect, Schema } from "effect"
@@ -142,6 +143,75 @@ describe("TaskMetrics", () => {
       expect(metrics.latency.state).toBe("partial")
       expect(metrics.cost.state).toBe("unknown")
       expect("value" in metrics.cost).toBe(false)
+    }),
+  )
+
+  it.effect("keeps A and B distinct and never invents sprint attention or a measured total from unknown", () =>
+    Effect.gen(function* () {
+      yield* seed({
+        taskID: "DA30-010-A",
+        message: assistant({
+          taskID: "DA30-010-A",
+          completed: 160,
+          cost: 0,
+          tokens: { input: 10, output: 1, reasoning: 0, cache: { read: 0, write: 0 } },
+        }),
+      })
+      yield* seed({
+        taskID: "DA30-010-B",
+        message: assistant({
+          taskID: "DA30-010-B",
+          completed: 180,
+          cost: 0,
+          tokens: { input: 4, output: 2, reasoning: 0, cache: { read: 0, write: 0 } },
+        }),
+      })
+      const service = yield* TaskMetrics.Service
+      const both = yield* service.sprint({ sprintID: "sprint-ab", taskIDs: ["DA30-010-A", "DA30-010-B"] })
+      expect(both.taskIDs).toEqual(["DA30-010-A", "DA30-010-B"])
+      expect(both.tasks.map((item) => item.taskID)).toEqual(["DA30-010-A", "DA30-010-B"])
+      expect(both.tasks[0].tokens).toMatchObject({ state: "measured", value: { input: 10, output: 1 } })
+      expect(both.tasks[1].tokens).toMatchObject({ state: "measured", value: { input: 4, output: 2 } })
+      expect(both.tokens).toMatchObject({ state: "measured", value: { input: 14, output: 3 } })
+      expect(both.cost.state).toBe("unknown")
+      expect("value" in both.cost).toBe(false)
+      expect(both.freshness.state).toBe("available")
+      expect(both.tasks[0].freshness.state).toBe("unknown")
+      expect(both.tasks[0].attention.state).toBe("unknown")
+      expect(both.tasks[1].attention.state).toBe("unknown")
+      expect("attention" in both).toBe(false)
+
+      const partial = yield* service.sprint({ sprintID: "sprint-ab", taskIDs: ["DA30-010-A", "missing-b"] })
+      expect(partial.taskIDs).toEqual(["DA30-010-A", "missing-b"])
+      expect(partial.tasks[1].taskID).toBe("missing-b")
+      expect(partial.tokens.state).not.toBe("measured")
+      expect(partial.cost.state).toBe("unknown")
+      expect("value" in partial.cost).toBe(false)
+    }),
+  )
+
+  it.effect("fails closed on a blocked queue without inventing sprint totals", () =>
+    Effect.gen(function* () {
+      yield* seed({
+        taskID: "DA30-010-Q",
+        message: assistant({
+          taskID: "DA30-010-Q",
+          completed: 160,
+          tokens: { input: 10, output: 0, reasoning: 0, cache: { read: 0, write: 0 } },
+        }),
+      })
+      const service = yield* TaskMetrics.Service
+      const error = yield* service
+        .sprint({
+          sprintID: "sprint-q",
+          taskIDs: ["DA30-010-Q", "DA30-010-R"],
+          queue: [
+            TaskQueue.Entry.make({ id: "DA30-010-Q", mtStatus: "todo", context: "concordant" }),
+            TaskQueue.Entry.make({ id: "DA30-010-Q", mtStatus: "todo", context: "concordant" }),
+          ],
+        })
+        .pipe(Effect.flip)
+      expect(error).toMatchObject({ _tag: "TaskMetrics.QueueBlocked", reason: "duplicate_task_id" })
     }),
   )
 })

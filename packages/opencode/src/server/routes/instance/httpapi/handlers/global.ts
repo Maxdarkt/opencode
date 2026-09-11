@@ -105,7 +105,11 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
         return { type: "task" as const, metrics: yield* metrics.task({ taskID: ctx.payload.taskID }) }
       return {
         type: "sprint" as const,
-        metrics: yield* metrics.sprint({ sprintID: ctx.payload.sprintID, taskIDs: [...ctx.payload.taskIDs] }),
+        metrics: yield* metrics.sprint({
+          sprintID: ctx.payload.sprintID,
+          taskIDs: [...ctx.payload.taskIDs],
+          ...(ctx.payload.queue ? { queue: ctx.payload.queue } : {}),
+        }),
       }
     })
 
