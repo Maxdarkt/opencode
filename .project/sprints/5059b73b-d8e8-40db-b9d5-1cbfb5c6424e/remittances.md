@@ -236,3 +236,14 @@
 - Decision: utilisateur a autorisé la correction; R1 déterministe est délégué Luna/medium.
 - Recommendation / next instruction: R1 seulement, typecheck/whitespace; aucune E2E, serveur, navigateur, R2 ou autorité réelle avant remise.
 - Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
+
+### DA10-006:18:runtime-isolation-R1-complete
+
+- State: `consumed / R2 dispatched`
+- Objective / position: R1 est validé à `BUILD/R1 → parent-controlled smoke R2`; la route prototype est découplée du bootstrap métier.
+- Effects and evidence: seul `entry.tsx` reconnaît `/prototype/sprint-cockpit` et monte `PlatformProvider → AppBaseProviders → SprintCockpitPrototype`; `AppInterface` demeure inchangé pour les routes métier. [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: `bun typecheck` App PASS; `git diff --check` PASS; aucun serveur, navigateur, E2E, client runtime ou autorité réelle n'a été exécuté.
+- Problems / impact: la preuve du découplage ne devient réelle qu'au smoke R2; elle doit compter les requêtes dès navigation aux deux formats.
+- Decision: R2 Luna/medium est autorisé comme smoke mécanique; le serveur local est une ressource de tâche, à arrêter après la preuve sauf relance utilisateur.
+- Recommendation / next instruction: R2 seul : E2E/observation réseau et smoke responsive, sans modifier la composition hors instrumentation autorisée.
+- Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
