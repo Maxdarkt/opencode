@@ -2,7 +2,7 @@
 
 ## Résultat
 
-Revue enfant prête pour réception code : B1–B4 et Smoke passent. Contrat lecture `TaskMetrics` : jamais un faux zéro ; file `QueueBlocked` 409 ; pas d’attention sprint. Pas de commit (mandat).
+Revue enfant close : B1–B4 et Smoke passent. Contrat lecture `TaskMetrics` : jamais un faux zéro ; file `QueueBlocked` 409 ; pas d’attention sprint. Commit local `91485d37b`. Pas de push/merge.
 
 ## Contrôles relus
 
@@ -25,8 +25,8 @@ Revue enfant prête pour réception code : B1–B4 et Smoke passent. Contrat lec
 
 Hors pathset : artefacts APEX `.project/tasks/DA30-010-metriques-sprint-par-tache/`.
 
-Branche `task/DA30-010-metriques-sprint` ; HEAD `7df15b2cd` ; dirty = pathset + APEX. Pas commit/push/merge/staging.
+Branche `task/DA30-010-metriques-sprint` ; HEAD `91485d37b` ; working tree clean après commit. Pas push/merge/staging.
 
 ## Limites, dette et suite
 
-Dette PLAN-GENERAL/sprint.md `todo` : parent DA40-016. Pas d’UI. Sprint support : réception + commit/PR si autorisé ; MT encore `in_progress`.
+Dette PLAN-GENERAL/sprint.md `todo` : parent DA40-016. Pas d’UI. Sprint : passer MT `done` sur cette remise.
