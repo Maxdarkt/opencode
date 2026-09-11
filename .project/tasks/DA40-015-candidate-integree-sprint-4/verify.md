@@ -25,4 +25,4 @@ Hors pathset : Schema/Core/HttpApi, `.make.env`, PLAN-GENERAL / sprint.md de ce 
 
 ## Commit
 
-SHA à reporter après `git commit` local. Pas de push/merge.
+SHA local : `e8af77134` (overlay) puis correction fixture (pas de gitlink). Pas de push/merge.
