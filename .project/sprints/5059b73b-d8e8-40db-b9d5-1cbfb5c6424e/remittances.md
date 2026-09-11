@@ -138,3 +138,14 @@
 - Decision: le mandat de maquette couvre B3, smoke visuel local sans backend métier ni effet.
 - Recommendation / next instruction: même chat Luna/medium lance la route locale, exécute le smoke 1440×900/1024×768 et produit captures/rapport; ne commit pas et ne raccorde aucune donnée réelle.
 - Git: HEAD `11cd3e5dc`, pathset B1+B2 et artefacts APEX non commités, whitespace vert.
+
+### DA10-006:10:B3-smoke-complete
+
+- State: `accepted / awaiting user UX validation`
+- Objective / position: smoke de la maquette achevé à la frontière `BUILD/B3 → parent review`; la maquette ne devient pas un cockpit réel par cette seule preuve.
+- Effects and evidence: le parcours local aux formats 1440×900 et 1024×768 est observé : pile Sprint, sélection, aperçu Git fixture, fermeture/réouverture du contexte et dialogue de confirmation simulé. [rapport de smoke](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/smoke-report.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: B1 5 tests / 15 assertions PASS; typecheck App PASS; `git diff --check` PASS; smoke CUA local PASS aux deux tailles. Playwright n'a pas démarré car Chromium est absent; aucun téléchargement ni effet réel n'a été produit.
+- Problems / impact: les captures CUA ont été observées inline et ne sont pas des PNG persistants; cette limite ne masque pas le smoke, mais interdit de prétendre à une preuve Playwright reproductible.
+- Decision: validation UX utilisateur requise : conserver, corriger ou écarter le modèle avant toute extension de DA10-005.
+- Recommendation / next instruction: relancer seulement un aperçu local temporaire afin que l'utilisateur teste la route; ne modifier ni code, MT, Git ou autorités réelles.
+- Git: HEAD `11cd3e5dc`, pathset B1+B2 + artefacts APEX non commités attendu; aucun commit/push/rebase.
