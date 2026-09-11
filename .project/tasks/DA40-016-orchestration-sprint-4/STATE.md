@@ -1,11 +1,11 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `15`
-- Updated: `2026-09-10T07:37:56+02:00`
+- Generation: `16`
+- Updated: `2026-09-11T08:11:25+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
-- Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `5`
+- Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `7`
 - Parent thread: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Parent context: `active`
 - Active children: `0`
@@ -16,8 +16,8 @@
 - Queue depth: `0`
 - In analysis: `none`
 - Next event: `user-decision:DA30-009-review-or-topology`
-- Watcher: `armed`
-- Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
+- Watcher: `not-required`
+- Watcher owner: `none`
 - Successor: `none`
 
 ## Children
@@ -36,7 +36,7 @@
 
 ## Git and checks
 
-- Canonique staging : branche `staging`, HEAD `eff1f0eef81ccf9bda86e29e1f7b3e4b354330dc`; uniquement les artefacts parent Sprint 4 non commités, préservés et hors Build.
+- Canonique staging : branche `staging`, HEAD `437a5c449fc204b79d30f77a4b1ed114edd9d69a`, propre; aucun Build produit sur staging.
 - Baseline candidate : `/Users/leanbot/Documents/40_Daidalon/features/s3-integration`, branche `sprint3-integration`, HEAD `57da5e0d156c1b6f73c2c4528b502d6b764d9891`, propre.
 - Worktrees métier observés, sans Build : `10-product-ui` `e22d723895e3a8537f9bf21d5d6e4561ff630de1`; `20-workspace-git` `2d973aeaf6a289ba1f343663a758d7c70b1bcc11`; `30-agent-runtime` `702bf7dcd7468638c17fd95b110deb38bd253e9a`; `40-tooling` `b7111b6e973d7200e70990c6f32a1a4d4b4a64de`.
 - Registre commun corrigé : `DA` résout le source, le profil APEX tracked est accepté et le worktree task-owned DA30-009 est enregistré; 17 tests registre et 9 tests profil passent.
@@ -50,6 +50,7 @@
 - Remise `DA30-009:7:B2-complete` acceptée : 23 tests/117 assertions, smoke SQLite A→B, typechecks Schema/Core, lint ciblé et whitespace PASS; le pathset B1+B2 est conforme au plan. Smoke visuel/intégration parent encore requis; aucune transition MT ni commit enfant.
 - Remise `DA30-009:8:smoke-partial` acceptée : shell stable aux deux tailles, mais vue Sprint A/B volontairement non intégrée et backend absent. La réception UI est reportée à l'intégration DA10-005/DA40-015; la frontière code VERIFY est relancée sans masquer cette limite.
 - Remise `DA30-009:9:verify-complete` acceptée : preuves code complètes, mais la règle qui exige DA10-005/DA40-015 avant review entre en cycle avec leurs dépendances sur DA30-009. Aucun changement MT n'est effectué sans arbitrage.
+- Reprise `2026-09-11` : MT confirme DA30-009 `in_progress` et quatre dépendants `todo`; STATE enfant génération 9 en VERIFY et pathset B1+B2 attendu, sans erreur whitespace. Runtime reconstruit; watcher précédent retiré car aucun enfant n'est actif.
 
 ## Blockers and decisions
 
