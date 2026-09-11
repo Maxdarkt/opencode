@@ -2,7 +2,7 @@
 
 - Schema: `sprint-event-ledger/v1`
 - Sprint: `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`
-- Updated: `2026-09-11T12:02:28+02:00`
+- Updated: `2026-09-11T12:08:45+02:00`
 - Open queue depth: `0`
 
 ## Events
@@ -94,3 +94,14 @@
 - Decision: le mandat utilisateur couvre la préparation du Plan de maquette; la validation de la maquette elle-même reste une décision future avant le cockpit réel.
 - Recommendation / next instruction: même chat relancé en Plan Terra/medium pour préciser le pathset, les fixtures, les interactions locales, tests et smoke; Build interdit.
 - Git: branche `sprint-cockpit-prototype`, HEAD `11cd3e5dc8a184ae2ca3fc2a1c5ccc4db19af152`, seulement deux artefacts APEX non suivis.
+
+### DA10-006:2:plan-complete
+
+- State: `relaunched / B1-dispatched`
+- Objective / position: Plan de maquette validé à `PLAN → parent-controlled BUILD/B1`.
+- Effects and evidence: pathset borné à fixtures constantes, contrôleur pur, test unitaire, puis route/vue/i18n et smoke séparés en B2/B3. La simulation n'importe aucune autorité ni surface d'exécution réelle. [plan](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/plan.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: `git diff --check` PASS; aucun code, test, serveur ou navigateur avant le Build autorisé.
+- Problems / impact: aucun blocage; B1 est strictement local et n'ouvre ni route ni surface réelle. B2/B3 restent interdits jusqu'à leur frontière.
+- Decision: le mandat utilisateur de maquette cliquable couvre B1 précis; la validation utilisateur du résultat reste requise avant le cockpit réel.
+- Recommendation / next instruction: même chat relancé Luna/medium pour B1 uniquement : fixtures, contrôleur pur et test; checks B1 sans route, serveur, navigateur ou autorité réelle.
+- Git: branche `sprint-cockpit-prototype`, HEAD `11cd3e5dc8a184ae2ca3fc2a1c5ccc4db19af152`, artefacts APEX non suivis seulement.
