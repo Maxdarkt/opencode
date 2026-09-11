@@ -181,3 +181,14 @@
 - Decision: le mandat utilisateur de mise à jour de la maquette couvre C1 précis; le parent délègue Luna/medium pour fixtures/état/tests déterministes.
 - Recommendation / next instruction: C1 seulement; ne lancer ni C2/C3, serveur, navigateur, action réelle, commit, merge ou rebase avant remise et checkpoint.
 - Git: HEAD `11cd3e5dc`, modifications existantes de prototype non commités, aucun commit/push/rebase.
+
+### DA10-006:13:ux-correction-C1-complete
+
+- State: `consumed / C2 dispatched`
+- Objective / position: C1 est validé à `BUILD/C1 → parent-controlled C2`; aucune composition visuelle n'a été avancée hors paquet.
+- Effects and evidence: fixtures configurables dépôt/branches/worktrees/merge target et métriques de divergence, indicateurs `isWorking`/`hasUnreadUpdate`, transitions canvas/panneau/drawer locales, et tests de non-effet sont en place. [rapport C1](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/blocs/C1.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: test ciblé PASS — 8 tests / 29 assertions; `bun typecheck` App PASS; `git diff --check` PASS; aucune occurrence de noms de branches réservés dans C1.
+- Problems / impact: l'aperçu local affiche encore la mise en page précédente tant que C2 n'est pas construit; c'est la frontière attendue, pas une régression.
+- Decision: C2 est autorisé par le mandat de correction UX et reste limité à composition TSX/i18n existants; C3, serveur, navigateur et smoke restent séparés.
+- Recommendation / next instruction: même chat Luna/medium pour C2 seulement, avec accessibilité et responsive définis; ne commit pas et ne raccorde aucune autorité réelle.
+- Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun push/rebase/merge.
