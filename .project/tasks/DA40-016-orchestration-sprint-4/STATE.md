@@ -1,8 +1,8 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `29`
-- Updated: `2026-09-11T13:04:00+02:00`
+- Generation: `30`
+- Updated: `2026-09-11T13:10:00+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
@@ -15,7 +15,7 @@
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA10-006:13:ux-correction-C2`
+- Next event: `DA10-006:14:ux-correction-C3`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -25,7 +25,7 @@
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
 | DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `review / code accepted` | `none` | Smoke UI intégré réservé à DA40-015; ne pas intégrer avant la recette Sprint. |
-| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 13 | `in_progress / UX correction C2` | `ready` | Luna/medium demandé : composer le rail/canevas/panneau droit, i18n et a11y; aucune surface runtime. |
+| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 14 | `in_progress / UX correction C3` | `ready` | Luna/medium demandé : smoke local responsive et preuves, sans effet réel. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
 | DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
@@ -63,6 +63,7 @@
 - Remise `DA10-006:11:ux-correction-analyze-complete` acceptée : contrat/patterns/pathset C1→C3 et responsive sont documentés; aucune surface réelle n'est reliée. Le Plan de correction Terra/medium est relancé sur le même worktree.
 - Remise `DA10-006:12:ux-correction-plan-complete` acceptée : C1/C2/C3, accessibilité, responsive et smoke fallback sont bornés; C1 Luna/medium est délégué sur fixtures/état/tests seulement.
 - Remise `DA10-006:13:ux-correction-C1-complete` acceptée : 8 tests/29 assertions, typecheck App et whitespace PASS; topologie/indicateurs restent fixtures locales. C2 Luna/medium est relancé pour l'affichage seulement.
+- Remise `DA10-006:14:ux-correction-C2-complete` acceptée : rail/canvas/panneau droit/topologie fixture composés; typecheck, tests C1 et whitespace PASS. C3 Luna/medium reçoit seul le smoke responsive.
 
 ## Blockers and decisions
 
@@ -72,7 +73,7 @@
 
 ## Next action
 
-Attendre la remise C2 de DA10-006, vérifier son pathset/checks puis déléguer C3 smoke seulement.
+Attendre la remise C3 de DA10-006, relire les preuves et rouvrir l'aperçu local pour validation utilisateur.
 
 ## Resume
 

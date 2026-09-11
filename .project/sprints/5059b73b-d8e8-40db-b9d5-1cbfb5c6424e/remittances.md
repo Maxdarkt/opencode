@@ -192,3 +192,14 @@
 - Decision: C2 est autorisé par le mandat de correction UX et reste limité à composition TSX/i18n existants; C3, serveur, navigateur et smoke restent séparés.
 - Recommendation / next instruction: même chat Luna/medium pour C2 seulement, avec accessibilité et responsive définis; ne commit pas et ne raccorde aucune autorité réelle.
 - Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun push/rebase/merge.
+
+### DA10-006:14:ux-correction-C2-complete
+
+- State: `consumed / C3 dispatched`
+- Objective / position: C2 est validé à `BUILD/C2 → parent-controlled smoke C3`; l'affichage UX est construit, sans smoke visuel encore exécuté.
+- Effects and evidence: le rail dissocie statut, spinner et remise à lire; le centre est un canvas à outils locaux; le panneau droit contient `Task status`, contexte vérifiable et topologie de fixtures avec route de réintégration/métriques. [rapport C2](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/blocs/C2.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: `bun typecheck` App PASS; test ciblé C1 PASS — 8 tests / 29 assertions; `git diff --check` et audit whitespace PASS.
+- Problems / impact: la seule preuve manquante est le smoke visuel aux deux viewports; Chromium n'est toujours pas à installer, CUA reste le fallback autorisé.
+- Decision: C3 est couvert par le mandat de maquette; il ne fait que démarrer la route locale, observer les parcours et produire les preuves, sans action réelle.
+- Recommendation / next instruction: même chat Luna/medium pour C3 seul; arrêt propre du serveur après smoke sauf aperçu utilisateur explicitement requis.
+- Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
