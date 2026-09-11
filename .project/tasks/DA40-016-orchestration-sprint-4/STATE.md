@@ -1,8 +1,8 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `23`
-- Updated: `2026-09-11T12:17:00+02:00`
+- Generation: `24`
+- Updated: `2026-09-11T12:27:45+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
@@ -15,7 +15,7 @@
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA10-006:6:B2-complete`
+- Next event: `DA10-006:8:B3-smoke`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -25,7 +25,7 @@
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
 | DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `review / code accepted` | `none` | Smoke UI intégré réservé à DA40-015; ne pas intégrer avant la recette Sprint. |
-| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 6 | `in_progress / B2 dispatched` | `none` | Luna/medium demandé : route locale, vue et i18n sans effet; B3 interdit. |
+| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 8 | `in_progress / B3 dispatched` | `none` | Luna/medium demandé : smoke deux tailles/captures, sans backend ni effet réel. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
 | DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
@@ -57,6 +57,7 @@
 - Remise `DA10-006:2:plan-complete` acceptée : B1/B2/B3 isolés, pathset et contrat « simulation sans effet » explicités. B1 Luna/medium est couvert; aucune métadonnée observée ne conditionne le lancement.
 - Remise `DA10-006:4:B1-checks-blocked` reçue : B1 est limité au pathset fixtures/contrôleur/test, mais Happy DOM est absent du worktree. L'installation verrouillée de dépendances est relancée sans modifier le lockfile; aucun succès B1/B2 n'est déclaré.
 - Remise `DA10-006:6:B1-validated` acceptée : installation verrouillée, 5 tests/15 assertions et whitespace PASS; B2 Luna/medium est couvert, sans observation de modèle bloquante.
+- Remise `DA10-006:8:B2-complete` acceptée : route, vue responsive et i18n locaux sont typés et sans effet; B3 reçoit seul le smoke visuel et le parcours cliquable.
 
 ## Blockers and decisions
 
@@ -66,7 +67,7 @@
 
 ## Next action
 
-Attendre la remise B2 de DA10-006; valider la route/vue/i18n locale et leurs checks avant de router B3 et son smoke visuel.
+Attendre la remise B3 de DA10-006; vérifier les captures et le rapport avant de demander la validation utilisateur de la maquette.
 
 ## Resume
 

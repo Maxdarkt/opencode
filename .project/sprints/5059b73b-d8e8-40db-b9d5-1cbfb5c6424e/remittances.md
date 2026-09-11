@@ -2,7 +2,7 @@
 
 - Schema: `sprint-event-ledger/v1`
 - Sprint: `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`
-- Updated: `2026-09-11T12:17:00+02:00`
+- Updated: `2026-09-11T12:27:45+02:00`
 - Open queue depth: `0`
 
 ## Events
@@ -127,3 +127,14 @@
 - Decision: le mandat de maquette couvre B2 précis : route locale, vue TSX et i18n sans autorité réelle.
 - Recommendation / next instruction: même chat Luna/medium exécute B2 seulement, puis checks ciblés; B3, serveur et Playwright restent interdits.
 - Git: HEAD `11cd3e5dc`, trois fichiers B1 et artefacts APEX non commités attendus.
+
+### DA10-006:8:B2-complete
+
+- State: `relaunched / B3-dispatched`
+- Objective / position: B2 validé à `BUILD/B2 → parent-controlled smoke B3`.
+- Effects and evidence: route statique `/prototype/sprint-cockpit`, vue responsive à trois zones, i18n et dialogue « simulation sans effet » ajoutés; toutes les données restent fixtures locales. [rapport B2](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/blocs/B2.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: typecheck App PASS; `git diff --check` PASS. Aucun serveur, navigateur, Playwright, réseau ou autorité réelle n'a été appelé.
+- Problems / impact: aucun blocage B2; la validation visuelle et du parcours aux deux tailles est exclusivement B3.
+- Decision: le mandat de maquette couvre B3, smoke visuel local sans backend métier ni effet.
+- Recommendation / next instruction: même chat Luna/medium lance la route locale, exécute le smoke 1440×900/1024×768 et produit captures/rapport; ne commit pas et ne raccorde aucune donnée réelle.
+- Git: HEAD `11cd3e5dc`, pathset B1+B2 et artefacts APEX non commités, whitespace vert.
