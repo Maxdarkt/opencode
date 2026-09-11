@@ -2,7 +2,7 @@
 
 - Schema: `sprint-event-ledger/v1`
 - Sprint: `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`
-- Updated: `2026-09-11T12:08:45+02:00`
+- Updated: `2026-09-11T12:15:30+02:00`
 - Open queue depth: `0`
 
 ## Events
@@ -105,3 +105,14 @@
 - Decision: le mandat utilisateur de maquette cliquable couvre B1 précis; la validation utilisateur du résultat reste requise avant le cockpit réel.
 - Recommendation / next instruction: même chat relancé Luna/medium pour B1 uniquement : fixtures, contrôleur pur et test; checks B1 sans route, serveur, navigateur ou autorité réelle.
 - Git: branche `sprint-cockpit-prototype`, HEAD `11cd3e5dc8a184ae2ca3fc2a1c5ccc4db19af152`, artefacts APEX non suivis seulement.
+
+### DA10-006:4:B1-checks-blocked
+
+- State: `relaunched / dependency-rerun`
+- Objective / position: B1 implémenté au checkpoint `BUILD/B1 → dependency-resolved checks`.
+- Effects and evidence: fixtures constantes, contrôleur pur et cinq tests locaux ajoutés; aucun route/vue/i18n, client externe ou effet réel. [rapport B1](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/blocs/B1.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: test ciblé non démarré : dépendance verrouillée `@happy-dom/global-registrator` absente du worktree; aucune installation effectuée. Variante sans preload bloquée par la même configuration. `git diff --check` doit être rejoué après reprise.
+- Problems / impact: B1 n'est pas accepté; B2/B3 restent interdits. Le blocage est local et récupérable via les dépendances déjà verrouillées, sans changement de lockfile.
+- Decision: aucune décision utilisateur requise; la restauration locale et réversible du runtime de dépendances est couverte par le mandat de maquette.
+- Recommendation / next instruction: même chat Luna/medium installe seulement `bun install --frozen-lockfile --ignore-scripts`, vérifie le lockfile, rejoue le test B1 et whitespace; aucun B2/commit.
+- Git: HEAD `11cd3e5dc`, trois fichiers fonctionnels B1 et artefacts APEX non suivis attendus.

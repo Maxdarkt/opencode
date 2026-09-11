@@ -1,8 +1,8 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `21`
-- Updated: `2026-09-11T12:08:45+02:00`
+- Generation: `22`
+- Updated: `2026-09-11T12:15:30+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
@@ -15,7 +15,7 @@
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA10-006:2:B1-complete`
+- Next event: `DA10-006:4:B1-checks-rerun`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -25,7 +25,7 @@
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
 | DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `review / code accepted` | `none` | Smoke UI intégré réservé à DA40-015; ne pas intégrer avant la recette Sprint. |
-| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 2 | `in_progress / B1 dispatched` | `none` | Luna/medium demandé : fixtures, contrôleur pur et test seulement; B2/B3 interdits. |
+| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 4 | `checkpoint / B1 checks blocked` | `none` | Luna/medium restaure les dépendances verrouillées et rejoue B1; B2/B3 interdits. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
 | DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
@@ -55,6 +55,7 @@
 - Décision utilisateur `2026-09-11` : maquette cockpit cliquable avant tout nouveau Build UI réel. DA30-009 passe en `review` sur ses preuves code (requête MT `32c056f8-e72a-47bf-a3ea-8185fa31373c`); la réception visuelle intégrée reste explicitement à DA40-015. DA10-006 est créée dans Sprint 4 (3 SP), et le Sprint est rebaseliné à 32 SP.
 - Remise `DA10-006:1:analyze-complete` acceptée : maquette à fixtures locales et interactions sans effet; surfaces UI réutilisables inventoriées, deux viewports définis, whitespace PASS. Le Plan est couvert; aucun Build n'est encore autorisé.
 - Remise `DA10-006:2:plan-complete` acceptée : B1/B2/B3 isolés, pathset et contrat « simulation sans effet » explicités. B1 Luna/medium est couvert; aucune métadonnée observée ne conditionne le lancement.
+- Remise `DA10-006:4:B1-checks-blocked` reçue : B1 est limité au pathset fixtures/contrôleur/test, mais Happy DOM est absent du worktree. L'installation verrouillée de dépendances est relancée sans modifier le lockfile; aucun succès B1/B2 n'est déclaré.
 
 ## Blockers and decisions
 
@@ -64,7 +65,7 @@
 
 ## Next action
 
-Attendre la remise B1 de DA10-006; accepter seulement les fixtures, le contrôleur pur, le test et les checks prévus avant de router B2.
+Attendre la reprise de checks B1 de DA10-006; accepter seulement fixtures, contrôleur, tests, lockfile inchangé et whitespace avant de router B2.
 
 ## Resume
 
