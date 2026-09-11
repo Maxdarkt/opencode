@@ -3246,6 +3246,361 @@ export type TaskMetricsQueueBlocked = {
   reason: TaskQueueBlockReason
 }
 
+export type LocationRef = {
+  directory: string
+  workspaceID?: string
+}
+
+export type TaskBindingCheckout = {
+  repository: string
+  branch: string
+  worktree: string
+  head: string
+}
+
+export type TaskBindingIdentity = {
+  mtTaskID: string
+  apexExternalRef: string
+  sessionID: string
+  projectID: string
+  location: LocationRef
+  checkout: TaskBindingCheckout
+}
+
+export type TaskOwnershipEntryInput = {
+  identity: TaskBindingIdentity
+  attention?: Array<TaskOwnershipAttention>
+}
+
+export type TaskOwnershipInput = {
+  entries: Array<TaskOwnershipEntryInput>
+  snapshotPath?: string
+}
+
+export type TaskOwnershipState =
+  | "available"
+  | "absent"
+  | "inaccessible"
+  | "invalid"
+  | "expired"
+  | "divergent"
+  | "blocked"
+  | "unknown"
+
+export type TaskPilotAction =
+  | "start_analyze"
+  | "write_plan"
+  | "start_build"
+  | "run_smoke"
+  | "verify"
+  | "request_review"
+  | "parent_close"
+
+export type TaskQueueSelected = {
+  kind: "selected"
+  id: string
+  action: TaskPilotAction
+}
+
+export type TaskQueueComplete = {
+  kind: "complete"
+}
+
+export type TaskQueueBlocked = {
+  kind: "blocked"
+  reason: TaskQueueBlockReason
+}
+
+export type TaskQueueResult = TaskQueueSelected | TaskQueueComplete | TaskQueueBlocked
+
+export type TaskBindingVersion = 1
+
+export type TaskBindingInfo = {
+  mtTaskID: string
+  apexExternalRef: string
+  sessionID: string
+  projectID: string
+  location: LocationRef
+  checkout: TaskBindingCheckout
+  version: TaskBindingVersion
+  time: {
+    created: number
+    updated: number
+  }
+}
+
+export type TaskOwnershipBindingFact =
+  | {
+      state: "available"
+      value: TaskBindingInfo
+      provenance: TaskOwnershipProvenance
+      freshness: TaskOwnershipFreshness
+    }
+  | {
+      state: TaskOwnershipUnavailable
+      provenance: TaskOwnershipProvenance
+      freshness: TaskOwnershipFreshness
+    }
+
+export type TaskAuthorityQueueEntryObservation = {
+  id: string
+  state: "available" | "absent" | "inaccessible" | "invalid" | "expired" | "divergent"
+  mtStatus?: TaskPilotMtStatus
+  apexPhase?: TaskPilotApexPhase
+}
+
+export type TaskOwnershipAuthorityFact =
+  | {
+      state: "available"
+      value: TaskAuthorityQueueEntryObservation
+      provenance: TaskOwnershipProvenance
+      freshness: TaskOwnershipFreshness
+    }
+  | {
+      state: TaskOwnershipUnavailable
+      provenance: TaskOwnershipProvenance
+      freshness: TaskOwnershipFreshness
+    }
+
+export type TaskExecutionOwnerId = string
+
+export type TaskExecutionGeneration = number
+
+export type TaskExecutionEffectId = string
+
+export type TaskExecutionEffectState = "pending" | "confirmed"
+
+export type TaskExecutionEffectInfo = {
+  effectID: TaskExecutionEffectId
+  state: TaskExecutionEffectState
+}
+
+export type TaskExecutionSnapshot = {
+  mtTaskID: string
+  sessionID: string
+  worktree: string
+  ownerID: TaskExecutionOwnerId
+  generation: TaskExecutionGeneration
+  effects: Array<TaskExecutionEffectInfo>
+}
+
+export type TaskOwnershipExecutionFact =
+  | {
+      state: "available"
+      value: TaskExecutionSnapshot
+      provenance: TaskOwnershipProvenance
+      freshness: TaskOwnershipFreshness
+    }
+  | {
+      state: TaskOwnershipUnavailable
+      provenance: TaskOwnershipProvenance
+      freshness: TaskOwnershipFreshness
+    }
+
+export type TaskOwnershipEntry = {
+  identity: TaskBindingIdentity
+  binding: TaskOwnershipBindingFact
+  authority: TaskOwnershipAuthorityFact
+  execution: TaskOwnershipExecutionFact
+  attention: TaskOwnershipAttentionFact
+}
+
+export type TaskOwnershipSnapshot = {
+  state: TaskOwnershipState
+  provenance: TaskOwnershipProvenance
+  freshness: TaskOwnershipFreshness
+  result: TaskQueueResult
+  entries: Array<TaskOwnershipEntry>
+}
+
+export type RepositoryTopologyRepositoryInput = {
+  root: string
+  sourceRefs: Array<string>
+  mergeTarget: string
+}
+
+export type RepositoryTopologyInput = {
+  ownership: TaskOwnershipSnapshot
+  repositories: Array<RepositoryTopologyRepositoryInput>
+}
+
+export type RepositoryTopologyState =
+  | "available"
+  | "absent"
+  | "inaccessible"
+  | "invalid"
+  | "expired"
+  | "divergent"
+  | "blocked"
+  | "unknown"
+
+export type RepositoryTopologySource =
+  | "repo_config"
+  | "git_worktree_list"
+  | "git_rev_parse"
+  | "git_status"
+  | "git_rev_list"
+  | "git_diff"
+  | "git_show_ref"
+  | "task_ownership"
+
+export type RepositoryTopologyProvenance = {
+  source: RepositoryTopologySource
+  reference: string
+}
+
+export type RepositoryTopologyFreshness = {
+  observedAt?: string
+  expiresAt?: string
+  generation?: number
+}
+
+export type RepositoryTopologyUnavailable =
+  | "absent"
+  | "inaccessible"
+  | "invalid"
+  | "expired"
+  | "divergent"
+  | "blocked"
+  | "unknown"
+
+export type RepositoryTopologyStringFact =
+  | {
+      state: "available"
+      value: string
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+  | {
+      state: RepositoryTopologyUnavailable
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+
+export type RepositoryTopologyPresence = "present"
+
+export type RepositoryTopologyPresenceFact =
+  | {
+      state: "available"
+      value: RepositoryTopologyPresence
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+  | {
+      state: RepositoryTopologyUnavailable
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+
+export type RepositoryTopologyBranch = {
+  name: string
+  presence: RepositoryTopologyPresenceFact
+}
+
+export type RepositoryTopologyCleanliness = "clean" | "modified" | "unknown"
+
+export type RepositoryTopologyCleanlinessFact =
+  | {
+      state: "available"
+      value: RepositoryTopologyCleanliness
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+  | {
+      state: RepositoryTopologyUnavailable
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+
+export type RepositoryTopologyCountFact =
+  | {
+      state: "available"
+      value: number
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+  | {
+      state: RepositoryTopologyUnavailable
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+
+export type RepositoryTopologyDiffStats = {
+  additions: number
+  deletions: number
+  modifiedFiles: number
+}
+
+export type RepositoryTopologyDiffFact =
+  | {
+      state: "available"
+      value: RepositoryTopologyDiffStats
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+  | {
+      state: RepositoryTopologyUnavailable
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+
+export type RepositoryTopologyTaskLink = {
+  mtTaskID: string
+}
+
+export type RepositoryTopologyTaskFact =
+  | {
+      state: "available"
+      value: RepositoryTopologyTaskLink
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+  | {
+      state: RepositoryTopologyUnavailable
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+
+export type RepositoryTopologyBooleanFact =
+  | {
+      state: "available"
+      value: boolean
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+  | {
+      state: RepositoryTopologyUnavailable
+      provenance: RepositoryTopologyProvenance
+      freshness: RepositoryTopologyFreshness
+    }
+
+export type RepositoryTopologyWorktree = {
+  path: RepositoryTopologyStringFact
+  branch: RepositoryTopologyStringFact
+  head: RepositoryTopologyStringFact
+  mergeTarget: RepositoryTopologyStringFact
+  cleanliness: RepositoryTopologyCleanlinessFact
+  ahead: RepositoryTopologyCountFact
+  behind: RepositoryTopologyCountFact
+  workingTreeDiff: RepositoryTopologyDiffFact
+  integrationDiff: RepositoryTopologyDiffFact
+  task: RepositoryTopologyTaskFact
+  prunable: RepositoryTopologyBooleanFact
+}
+
+export type RepositoryTopologyRepository = {
+  sourceRepo: RepositoryTopologyStringFact
+  branches: Array<RepositoryTopologyBranch>
+  worktrees: Array<RepositoryTopologyWorktree>
+}
+
+export type RepositoryTopologySnapshot = {
+  state: RepositoryTopologyState
+  provenance: RepositoryTopologyProvenance
+  freshness: RepositoryTopologyFreshness
+  repositories: Array<RepositoryTopologyRepository>
+}
+
 export type TaskAuthorityObservation = {
   state: "available" | "absent" | "inaccessible" | "invalid" | "expired" | "divergent"
   provenance: "runtime_snapshot"
@@ -3310,11 +3665,6 @@ export type LocalContextInfo = {
     } | null
     authority?: TaskAuthorityObservation | null | null
   } | null | null
-}
-
-export type LocationRef = {
-  directory: string
-  workspaceID?: string
 }
 
 export type PromptSource = {
@@ -7522,6 +7872,56 @@ export type GlobalMetricsResponses = {
 }
 
 export type GlobalMetricsResponse = GlobalMetricsResponses[keyof GlobalMetricsResponses]
+
+export type GlobalOwnershipData = {
+  body?: TaskOwnershipInput
+  path?: never
+  query?: never
+  url: "/global/ownership"
+}
+
+export type GlobalOwnershipErrors = {
+  /**
+   * Bad request
+   */
+  400: BadRequestError
+}
+
+export type GlobalOwnershipError = GlobalOwnershipErrors[keyof GlobalOwnershipErrors]
+
+export type GlobalOwnershipResponses = {
+  /**
+   * TaskOwnership.Snapshot
+   */
+  200: TaskOwnershipSnapshot
+}
+
+export type GlobalOwnershipResponse = GlobalOwnershipResponses[keyof GlobalOwnershipResponses]
+
+export type GlobalTopologyData = {
+  body?: RepositoryTopologyInput
+  path?: never
+  query?: never
+  url: "/global/topology"
+}
+
+export type GlobalTopologyErrors = {
+  /**
+   * Bad request
+   */
+  400: BadRequestError
+}
+
+export type GlobalTopologyError = GlobalTopologyErrors[keyof GlobalTopologyErrors]
+
+export type GlobalTopologyResponses = {
+  /**
+   * RepositoryTopology.Snapshot
+   */
+  200: RepositoryTopologySnapshot
+}
+
+export type GlobalTopologyResponse = GlobalTopologyResponses[keyof GlobalTopologyResponses]
 
 export type GlobalContextData = {
   body?: never

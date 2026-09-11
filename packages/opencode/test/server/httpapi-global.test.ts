@@ -11,9 +11,15 @@ import { SessionMessage } from "@opencode-ai/core/session/message"
 import { SessionSchema } from "@opencode-ai/core/session/schema"
 import { SessionMessageTable, SessionTable } from "@opencode-ai/core/session/sql"
 import { TaskBindingTable } from "@opencode-ai/core/task-binding/sql"
+import { TaskExecutionEffectTable, TaskExecutionOwnershipTable } from "@opencode-ai/core/task-execution/sql"
+import { TaskMetrics } from "@opencode-ai/core/task-metrics"
+import { TaskOwnership } from "@opencode-ai/core/task-ownership"
+import { RepositoryTopology } from "@opencode-ai/core/repository-topology"
 import { TaskAuthority } from "@opencode-ai/core/task-authority"
-import { node } from "@opencode-ai/core/task-metrics"
 import { Session } from "@/session/session"
+import { execFile } from "child_process"
+import { promisify } from "util"
+import { tmpdir } from "../fixture/fixture"
 import { NodeHttpServer } from "@effect/platform-node"
 import { describe, expect } from "bun:test"
 import { Context, DateTime, Effect, Layer, Option, Schema } from "effect"
@@ -33,9 +39,11 @@ import { authorizationLayer } from "../../src/server/routes/instance/httpapi/mid
 import { schemaErrorLayer } from "../../src/server/routes/instance/httpapi/middleware/schema-error"
 import { testEffect } from "../lib/effect"
 
-const metricsLayer = AppNodeBuilder.build(LayerNode.group([Database.node, node]), [
-  [Database.node, Database.layerFromPath(":memory:")],
-])
+const metricsLayer = AppNodeBuilder.build(
+  LayerNode.group([Database.node, TaskMetrics.node, TaskOwnership.node, RepositoryTopology.node]),
+  [[Database.node, Database.layerFromPath(":memory:")]],
+)
+const exec = promisify(execFile)
 const encode = Schema.encodeSync(SessionMessage.Message)
 const projectID = ProjectSchema.ID.make("project-httpapi-metrics")
 const sessionID = (taskID: string) => SessionSchema.ID.make(`ses_httpapi_metrics_${taskID}`)
@@ -326,6 +334,137 @@ describe("global HttpApi", () => {
       )
 
       expect(response.status).toBe(415)
+    }),
+  )
+
+  const identityPayload = (taskID: string, worktree = "/repo/worktree") => ({
+    mtTaskID: taskID,
+    apexExternalRef: `.project/tasks/${taskID}`,
+    sessionID: sessionID(taskID),
+    projectID,
+    location: { directory: worktree },
+    checkout: {
+      repository: "/repo",
+      branch: "task-metrics",
+      worktree,
+      head: "1234567",
+    },
+  })
+
+  const countRows = Effect.gen(function* () {
+    const { db } = yield* Database.Service
+    const bindings = yield* db.select().from(TaskBindingTable).all()
+    const ownership = yield* db.select().from(TaskExecutionOwnershipTable).all()
+    const effects = yield* db.select().from(TaskExecutionEffectTable).all()
+    return { bindings: bindings.length, ownership: ownership.length, effects: effects.length }
+  })
+
+  it.live("smokes distinct A/B ownership without inventing zeros or writing bindings", () =>
+    Effect.gen(function* () {
+      yield* seed({
+        taskID: "DA10-005-A",
+        message: assistant({ taskID: "DA10-005-A" }),
+      })
+      yield* seed({
+        taskID: "DA10-005-B",
+        message: assistant({ taskID: "DA10-005-B" }),
+      })
+      const before = yield* countRows
+      const response = yield* HttpClientRequest.post(GlobalPaths.ownership).pipe(
+        HttpClientRequest.bodyJsonUnsafe({
+          entries: [
+            { identity: identityPayload("DA10-005-A") },
+            { identity: identityPayload("DA10-005-B") },
+          ],
+        }),
+        HttpClient.execute,
+      )
+      expect(response.status).toBe(200)
+      const body = yield* response.json
+      expect(body).toMatchObject({
+        entries: [
+          {
+            identity: { mtTaskID: "DA10-005-A" },
+            binding: { state: "available", value: { mtTaskID: "DA10-005-A" } },
+          },
+          {
+            identity: { mtTaskID: "DA10-005-B" },
+            binding: { state: "available", value: { mtTaskID: "DA10-005-B" } },
+          },
+        ],
+      })
+      expect(yield* countRows).toEqual(before)
+    }),
+  )
+
+  it.live("keeps a missing ownership identity absent or unknown instead of zero", () =>
+    Effect.gen(function* () {
+      const response = yield* HttpClientRequest.post(GlobalPaths.ownership).pipe(
+        HttpClientRequest.bodyJsonUnsafe({
+          entries: [{ identity: identityPayload("missing-task", "/repo/missing") }],
+        }),
+        HttpClient.execute,
+      )
+      expect(response.status).toBe(200)
+      const body = (yield* response.json) as {
+        entries: Array<{ binding: { state: string; value?: unknown }; execution: { state: string } }>
+      }
+      expect(body.entries[0].binding.state).toBe("absent")
+      expect("value" in body.entries[0].binding).toBe(false)
+      expect(body.entries[0].execution.state === "absent" || body.entries[0].execution.state === "unknown").toBe(true)
+      expect(JSON.stringify(body).includes('"value":0')).toBe(false)
+    }),
+  )
+
+  it.live("rejects invalid ownership payloads", () =>
+    Effect.gen(function* () {
+      const response = yield* HttpClientRequest.post(GlobalPaths.ownership).pipe(
+        HttpClientRequest.bodyJsonUnsafe({ entries: "nope" }),
+        HttpClient.execute,
+      )
+      expect(response.status).toBe(400)
+    }),
+  )
+
+  it.live("marks empty mergeTarget invalid without writing git or execution rows", () =>
+    Effect.gen(function* () {
+      const dir = yield* Effect.acquireRelease(
+        Effect.promise(() => tmpdir({ git: true })),
+        (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+      )
+      yield* Effect.promise(() => exec("git", ["branch", "-M", "main"], { cwd: dir.path }))
+      const before = yield* countRows
+      const ownership = yield* HttpClientRequest.post(GlobalPaths.ownership).pipe(
+        HttpClientRequest.bodyJsonUnsafe({ entries: [] }),
+        HttpClient.execute,
+      )
+      expect(ownership.status).toBe(200)
+      const snapshot = yield* ownership.json
+      const response = yield* HttpClientRequest.post(GlobalPaths.topology).pipe(
+        HttpClientRequest.bodyJsonUnsafe({
+          ownership: snapshot,
+          repositories: [{ root: dir.path, sourceRefs: ["main"], mergeTarget: "" }],
+        }),
+        HttpClient.execute,
+      )
+      expect(response.status).toBe(200)
+      const body = (yield* response.json) as {
+        repositories: Array<{ worktrees: Array<{ mergeTarget: { state: string }; ahead: { state: string } }> }>
+      }
+      const worktree = body.repositories[0].worktrees[0]
+      expect(worktree.mergeTarget.state).toBe("invalid")
+      expect(worktree.ahead.state).toBe("invalid")
+      expect(yield* countRows).toEqual(before)
+    }),
+  )
+
+  it.live("rejects invalid topology payloads", () =>
+    Effect.gen(function* () {
+      const response = yield* HttpClientRequest.post(GlobalPaths.topology).pipe(
+        HttpClientRequest.bodyJsonUnsafe({ repositories: [] }),
+        HttpClient.execute,
+      )
+      expect(response.status).toBe(400)
     }),
   )
 })
