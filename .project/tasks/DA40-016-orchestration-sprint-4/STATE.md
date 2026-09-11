@@ -1,30 +1,31 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `16`
-- Updated: `2026-09-11T08:11:25+02:00`
+- Generation: `19`
+- Updated: `2026-09-11T11:58:00+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
-- Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `7`
+- Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
 - Parent thread: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Parent context: `active`
-- Active children: `0`
+- Active children: `1`
 - Capacity target: `1`
-- Under-capacity reason: `review topology conflict` — DA30-009 vérifié en code mais review UI finale dépend d'une intégration elle-même dépendante de DA30-009.
+- Under-capacity reason: `none` — capacité séquentielle occupée par DA10-006 Analyze UX.
 - Pending remittances: `0`
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `user-decision:DA30-009-review-or-topology`
-- Watcher: `not-required`
-- Watcher owner: `none`
+- Next event: `DA10-006:allocate-and-analyze`
+- Watcher: `armed`
+- Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
 
 ## Children
 
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
-| DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `verify complete / blocked` | `none` | Arbitrage : review code avec smoke UI différé, ou révision de la topologie. |
+| DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `review / code accepted` | `none` | Smoke UI intégré réservé à DA40-015; ne pas intégrer avant la recette Sprint. |
+| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 1 | `in_progress / Analyze dispatched` | `none` | Terra/medium demandé; inventorier l'UI et produire un plan de maquette sans Build. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
 | DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
@@ -51,6 +52,7 @@
 - Remise `DA30-009:8:smoke-partial` acceptée : shell stable aux deux tailles, mais vue Sprint A/B volontairement non intégrée et backend absent. La réception UI est reportée à l'intégration DA10-005/DA40-015; la frontière code VERIFY est relancée sans masquer cette limite.
 - Remise `DA30-009:9:verify-complete` acceptée : preuves code complètes, mais la règle qui exige DA10-005/DA40-015 avant review entre en cycle avec leurs dépendances sur DA30-009. Aucun changement MT n'est effectué sans arbitrage.
 - Reprise `2026-09-11` : MT confirme DA30-009 `in_progress` et quatre dépendants `todo`; STATE enfant génération 9 en VERIFY et pathset B1+B2 attendu, sans erreur whitespace. Runtime reconstruit; watcher précédent retiré car aucun enfant n'est actif.
+- Décision utilisateur `2026-09-11` : maquette cockpit cliquable avant tout nouveau Build UI réel. DA30-009 passe en `review` sur ses preuves code (requête MT `32c056f8-e72a-47bf-a3ea-8185fa31373c`); la réception visuelle intégrée reste explicitement à DA40-015. DA10-006 est créée dans Sprint 4 (3 SP), et le Sprint est rebaseliné à 32 SP.
 
 ## Blockers and decisions
 
@@ -60,7 +62,7 @@
 
 ## Next action
 
-Attendre l'arbitrage utilisateur : autoriser la review code DA30-009 avec réception UI différée à DA40-015, ou modifier les dépendances/critères. Ne lancer aucun enfant produit entre-temps.
+Attendre la remise Analyze de DA10-006, l'accepter seulement avec état/diff propres, puis router le Plan UX. Aucun Build, action MT, terminal réel ou navigateur réel dans la maquette.
 
 ## Resume
 
