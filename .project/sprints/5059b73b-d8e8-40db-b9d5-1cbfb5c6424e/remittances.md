@@ -214,3 +214,14 @@
 - Decision: l'utilisateur autorise la correction et la poursuite; Analyse Terra/medium de l'isolation de route est requise avant tout Build, car elle change le point de montage de la maquette.
 - Recommendation / next instruction: même chat, identifier le plus petit découplage bootstrap/route ou le harness local qui supprime les appels, puis proposer un paquet de correction borné et les preuves réseau locales.
 - Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
+
+### DA10-006:16:runtime-isolation-analyze-complete
+
+- State: `consumed / Plan dispatched`
+- Objective / position: cause et découplage minimal établis à `ANALYZE → parent plan review`, sans code modifié.
+- Effects and evidence: `entry.tsx` monte aujourd'hui `AppInterface` avant la route prototype, initialisant providers et shell de synchronisation qui appellent le backend. R1 propose de monter la maquette sous `PlatformProvider → AppBaseProviders`, sans `AppInterface` ni serveur HTTP; R2 compte les requêtes depuis `page.goto` et refuse toute sortie de l'origine Vite. [analyse d'isolation](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/analyze.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: diagnostic de bootstrap et `git diff --check` PASS; aucun code produit, service ou autorité réelle modifié.
+- Problems / impact: changement du point de montage seulement pour cette route; le Plan doit vérifier que les providers minimaux couvrent i18n/thème sans réintroduire de client runtime.
+- Decision: l'autorisation utilisateur couvre le Plan puis R1 borné; Terra/medium prépare les garde-fous et Luna exécutera le Build déterministe.
+- Recommendation / next instruction: même chat Terra/medium en Plan, puis R1 seul si le pathset/les checks d'isolation sont exacts.
+- Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
