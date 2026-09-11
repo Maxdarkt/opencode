@@ -1,21 +1,21 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `25`
-- Updated: `2026-09-11T12:36:00+02:00`
+- Generation: `26`
+- Updated: `2026-09-11T12:51:00+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
 - Parent thread: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Parent context: `active`
-- Active children: `0`
+- Active children: `1`
 - Capacity target: `1`
-- Under-capacity reason: `decision` — validation UX utilisateur de la maquette requise avant tout nouveau Build produit.
+- Under-capacity reason: `decision` — correction UX de DA10-006 active; les autres tâches restent dépendantes de la validation de ce modèle.
 - Pending remittances: `0`
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `user-decision:DA10-006-prototype-validation`
+- Next event: `DA10-006:10:ux-correction-analyze`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -25,7 +25,7 @@
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
 | DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `review / code accepted` | `none` | Smoke UI intégré réservé à DA40-015; ne pas intégrer avant la recette Sprint. |
-| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 10 | `parent review / smoke complete` | `ready` | Attendre validation UX; aperçu local temporaire permis, sans mutation. |
+| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 10 | `in_progress / UX correction Analyze` | `ready` | Terra/medium demandé : concevoir pile vivante, topologie dépôt/worktrees et transfert du statut vers le panneau droit. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
 | DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
@@ -59,6 +59,7 @@
 - Remise `DA10-006:6:B1-validated` acceptée : installation verrouillée, 5 tests/15 assertions et whitespace PASS; B2 Luna/medium est couvert, sans observation de modèle bloquante.
 - Remise `DA10-006:8:B2-complete` acceptée : route, vue responsive et i18n locaux sont typés et sans effet; B3 reçoit seul le smoke visuel et le parcours cliquable.
 - Remise `DA10-006:10:B3-smoke-complete` acceptée : parcours local CUA PASS aux formats 1440×900 et 1024×768; les actions restent simulées. Playwright est indisponible faute de Chromium, sans téléchargement. La maquette attend exclusivement la validation UX utilisateur avant toute extension réelle.
+- Décision UX utilisateur `2026-09-11` : conserver le modèle et itérer DA10-006. Les signaux de tâche active/réponse et une topologie source/worktrees avec états, divergence commits et diff `+/-` sont ajoutés au périmètre de maquette; le centre devient une surface d'outils pleine hauteur et le statut de tâche va dans le panneau droit. Analyse de correction Terra/medium lancée, sans effets réels.
 
 ## Blockers and decisions
 
@@ -68,7 +69,7 @@
 
 ## Next action
 
-Présenter l'aperçu local temporaire de DA10-006 et demander la validation UX utilisateur : conserver, corriger ou écarter avant de libérer tout Build produit dépendant.
+Attendre la remise d'Analyse de correction DA10-006, la consigner puis valider le plan UX borné avant toute modification de la maquette.
 
 ## Resume
 

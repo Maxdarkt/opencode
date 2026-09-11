@@ -149,3 +149,13 @@
 - Decision: validation UX utilisateur requise : conserver, corriger ou écarter le modèle avant toute extension de DA10-005.
 - Recommendation / next instruction: relancer seulement un aperçu local temporaire afin que l'utilisateur teste la route; ne modifier ni code, MT, Git ou autorités réelles.
 - Git: HEAD `11cd3e5dc`, pathset B1+B2 + artefacts APEX non commités attendu; aucun commit/push/rebase.
+
+### DA10-006:10:user-ux-correction-dispatched
+
+- State: `consumed / correction Analyze dispatched`
+- Objective / position: le retour utilisateur conserve le modèle cockpit et demande une itération UX dans la même maquette, avant tout cockpit réel.
+- Effects and evidence: deux ajouts sont à concevoir puis simuler avec fixtures : indicateur tournant pour tâche active / indicateur bleu de réponse à lire dans la pile gauche; et une vue « topologie dépôt et worktrees » affichant branches source, états, divergences de commits et statistiques `+/-` de diff. Les six cartes de statut de tâche quittent le centre et composent le haut du panneau droit, au-dessus du contexte vérifiable.
+- Problems / impact: les noms `master`, `develop`, `staging` ne sont pas universels; le futur modèle réel doit les recevoir du dépôt configuré, jamais les figer. Le prototype les représente donc par des fixtures de topologie, sans lecture Git réelle.
+- Decision: mandat explicite utilisateur de corriger la maquette; aucune décision métier ou intégration réelle n'est demandée.
+- Recommendation / next instruction: même chat, Terra/medium demandé pour Analyse du contrat UX et plan borné. Le Build ne repartira qu'après checkpoint de conception; aucun raccordement MT/APEX/Git/session/PTY/navigateur réel.
+- Git: worktree DA10-006 reste non commité, pathset prototype existant seulement; staging `8557f42a9` propre après checkpoint parent.
