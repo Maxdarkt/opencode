@@ -247,3 +247,14 @@
 - Decision: R2 Luna/medium est autorisé comme smoke mécanique; le serveur local est une ressource de tâche, à arrêter après la preuve sauf relance utilisateur.
 - Recommendation / next instruction: R2 seul : E2E/observation réseau et smoke responsive, sans modifier la composition hors instrumentation autorisée.
 - Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
+
+### DA10-006:19:runtime-isolation-R2-complete
+
+- State: `accepted / preview relaunch dispatched`
+- Objective / position: R2 valide le contrat de maquette isolée à `SMOKE → parent UX review`; le point de montage prototype n'émet plus de requête backend.
+- Effects and evidence: Chrome système observe l'UI et le parcours complet aux formats 1440×900 et 1024×768 avec 0 requête hors origine Vite, dont 0 vers `localhost:4096`. Indicateurs, tabs, six faits à droite, topologie, drawer et confirmation inerte sont vérifiés. [rapport de smoke](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/smoke-report.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: smoke UI/réseau PASS aux deux viewports; `git diff --check` PASS. Playwright Chromium demeure indisponible, sans téléchargement; fallback Chrome système documenté.
+- Problems / impact: aucune dette bloquante pour la validation UX; la preuve Playwright durable reste une limite d'environnement, non une défaillance de la maquette.
+- Decision: présenter la maquette corrigée à l'utilisateur; aucune intégration réelle, MT review ou commit du worktree ne précède sa validation UX.
+- Recommendation / next instruction: relancer Vite temporairement pour l'aperçu utilisateur, sans mutation; conserver le serveur uniquement pendant la revue.
+- Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
