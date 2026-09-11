@@ -258,3 +258,14 @@
 - Decision: présenter la maquette corrigée à l'utilisateur; aucune intégration réelle, MT review ou commit du worktree ne précède sa validation UX.
 - Recommendation / next instruction: relancer Vite temporairement pour l'aperçu utilisateur, sans mutation; conserver le serveur uniquement pendant la revue.
 - Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
+
+### DA10-006:20:user-delivery-approved
+
+- State: `consumed / Verify dispatched`
+- Objective / position: l'utilisateur valide explicitement la maquette comme livraison de référence du Sprint; la tâche entre dans sa vérification finale avant commit local et clôture.
+- Effects and evidence: le modèle UX validé devient le contrat du cockpit réel : rail activité/attention, canvas d'outils, `Task status`, contexte vérifiable et topologie dépôt/worktrees. La suite reste lecture seule; les actions Git/agent réelles sont exclues de ce Sprint.
+- Checks: preuve UX utilisateur, smoke 1440×900/1024×768 et zéro requête hors origine Vite sont acquis; Verify relira pathset, checks et état Git avant une finalisation parent.
+- Problems / impact: les scopes existants dans les worktrees métier permanents sont sales avec des changements non liés; ils ne sont pas écrits pendant la replanification et seront matérialisés dans des worktrees task-owned propres.
+- Decision: le mandat utilisateur couvre la replanification : DA20-005 est créée, DA10-005/DA30-010/DA40-015 sont re-scopées dans MT et le plan canonique; Verify Luna/medium est lancé pour DA10-006.
+- Recommendation / next instruction: même chat, Verify seulement, sans nouveau Build ni commit enfant; le parent relira puis commitera le pathset exact dans le worktree task-owned.
+- Git: prototype sur `sprint-cockpit-prototype`, HEAD de base `11cd3e5dc`, modifications non commités attendues exclusivement dans son pathset et ses preuves.

@@ -1,21 +1,21 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `35`
-- Updated: `2026-09-11T13:48:00+02:00`
-- Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
+- Generation: `36`
+- Updated: `2026-09-11T14:02:00+02:00`
+- Objective: `Livrer un cockpit Sprint réel en lecture seule, à partir de la maquette validée, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
 - Parent thread: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Parent context: `active`
 - Active children: `1`
 - Capacity target: `1`
-- Under-capacity reason: `decision` — correction UX de DA10-006 active; les autres tâches restent dépendantes de la validation de ce modèle.
+- Under-capacity reason: `decision` — clôture DA10-006 et matérialisation des scopes doivent précéder le prochain Build produit.
 - Pending remittances: `0`
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `user-ux-validation:DA10-006-corrected-prototype`
+- Next event: `DA10-006:20:verify-delivery`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -25,11 +25,12 @@
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
 | DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `review / code accepted` | `none` | Smoke UI intégré réservé à DA40-015; ne pas intégrer avant la recette Sprint. |
-| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 19 | `parent UX review / isolated smoke complete` | `ready` | Aperçu local temporaire pour validation utilisateur, sans mutation ni intégration. |
+| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 19 | `review / delivery approved, Verify active` | `ready` | Luna/medium demandé : relire pathset, checks, smoke et Git avant finalisation parent. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
-| DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
-| DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
-| DA40-015 | `none` | 1 | `todo / allocated` | `none` | Attendre les quatre lots produit. |
+| DA20-005 | `none` | 1 | `todo / scoped` | `none` | Attend DA20-004; topologie Git lecture seule créée en MT et scope canonique. |
+| DA10-005 | `none` | 1 | `todo / re-scoped` | `none` | Cockpit réel lecture seule, après DA20-004, DA20-005, DA30-009 et DA30-010. |
+| DA30-010 | `none` | 1 | `todo / re-scoped` | `none` | Métriques, provenance et attention, après DA30-009. |
+| DA40-015 | `none` | 1 | `todo / re-scoped` | `none` | Recette cockpit A/B après les cinq lots produit. |
 
 ## Event queue
 
@@ -69,6 +70,7 @@
 - Remise `DA10-006:17:runtime-isolation-plan-complete` acceptée : montage prototype minimal, preservation des routes métier et garde-fou réseau R2 sont définis. R1 Luna/medium est relancé sur `entry.tsx` seul.
 - Remise `DA10-006:18:runtime-isolation-R1-complete` acceptée : `entry.tsx` monte le prototype sans `AppInterface`; typecheck et whitespace PASS. R2 Luna/medium reçoit la preuve réseau et le smoke aux deux tailles.
 - Remise `DA10-006:19:runtime-isolation-R2-complete` acceptée : UI et zéro requête hors origine PASS aux deux formats via Chrome système; la maquette isolée attend la validation UX utilisateur.
+- Décision utilisateur `2026-09-11` : DA10-006 est la livraison UX de référence. MT passe DA10-006 en review; DA20-005 est créée (topologie Git lecture seule, 3 SP); DA10-005, DA30-010 et DA40-015 sont re-scopées. Sprint 4 est porté à 38 SP et exclut les actions réelles. Verify de DA10-006 Luna/medium est relancé avant commit local parent.
 
 ## Blockers and decisions
 
@@ -78,7 +80,7 @@
 
 ## Next action
 
-Présenter l'aperçu corrigé DA10-006 et attendre la validation UX utilisateur avant commit, MT review ou extension vers le cockpit réel.
+Attendre Verify de DA10-006, commit le pathset validé dans son worktree puis réconcilier la carte; matérialiser ensuite les scopes dans des worktrees propres avant Analyze de DA20-004.
 
 ## Resume
 

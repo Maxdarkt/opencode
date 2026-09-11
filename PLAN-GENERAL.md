@@ -1,19 +1,20 @@
 # Daidalon — plan général
 
-Mis à jour le 2026-09-10. Projet MT DA ; branche source `staging` à `948a99387`, sans Build produit direct. [Index sprints](/Users/leanbot/Documents/40_Daidalon/Daidalon/sprint.md).
+Mis à jour le 2026-09-11. Projet MT DA ; branche source `staging` à `fbf4286b2`, sans Build produit direct. [Index sprints](/Users/leanbot/Documents/40_Daidalon/Daidalon/sprint.md).
 
 ## Travail courant
 
-Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`), 32 SP planifiés. L'utilisateur a validé le 2026-09-11 une maquette cliquable du cockpit Sprint avant toute nouvelle UI réelle. DA30-009 est `review` pour ses preuves code; DA10-006 devient le prochain lot UX non mutatif; les autres enfants restent `todo`. Objectif : piloter deux tâches successives sans parallélisme, en gardant MT/APEX/session/worktree/métriques isolés et en rendant les tâches/pouvoirs de réception lisibles dans un cockpit.
+Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`), 38 SP planifiés. L'utilisateur a validé le 2026-09-11 la maquette isolée du cockpit Sprint : 1440×900 et 1024×768, zéro requête hors origine Vite et aucune action réelle. DA10-006 est en review de livraison; DA30-009 reste en review code. La suite matérialise ce modèle en lecture seule, avant toute commande Git/agent réelle.
 
 | Carte | Résultat attendu | SP | Dépendances | État |
 |---|---|---:|---|---|
-| DA30-009 | File séquentielle et autorité MT/APEX par tâche | 8 | candidate Sprint 3 intégrée dans `staging` | in_progress / Verify code complet, review à réconcilier — [preuves](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/verify.md) |
-| DA10-006 | Maquette cliquable du cockpit Sprint | 3 | décision UX du 2026-09-11 | todo / prototype non mutatif avant DA10-005 — [scope](/Users/leanbot/Documents/40_Daidalon/features/10-product-ui/.project/tasks/sprint-cockpit-clickable-prototype/scope.md) |
-| DA20-004 | Ownership et reprise sûrs lors du passage A → B | 5 | DA30-009 | todo — [scope](../features/20-workspace-git/.project/tasks/DA20-004-ownership-reprise-passage-taches/scope.md) |
-| DA10-005 | Vue Sprint de deux tâches et chat existant ciblé | 5 | DA30-009, DA20-004 | todo — [scope](../features/10-product-ui/.project/tasks/DA10-005-vue-sprint-deux-taches/scope.md) |
-| DA30-010 | Métriques Sprint par tâche, avec provenance honnête | 5 | DA30-009 | todo — [scope](../features/30-agent-runtime/.project/tasks/DA30-010-metriques-sprint-par-tache/scope.md) |
-| DA40-015 | Candidate intégrée et recette parent A/B | 3 | quatre lots produit | todo — [scope](../features/40-tooling/.project/tasks/DA40-015-candidate-integree-sprint-4/scope.md) |
+| DA30-009 | File séquentielle et autorité MT/APEX par tâche | 8 | candidate Sprint 3 intégrée dans `staging` | review — preuves code acceptées; recette intégrée réservée à DA40-015 |
+| DA10-006 | Maquette isolée du cockpit Sprint | 3 | décision UX du 2026-09-11 | review — livraison UX validée; commit local et clôture à réconcilier |
+| DA20-004 | Ownership et reprise sûrs lors du passage A → B | 5 | DA30-009 | todo — fournit l'identité sûre tâche → worktree |
+| DA20-005 | Topologie Git en lecture seule pour le cockpit | 3 | DA20-004 | todo — source, branches, worktrees, cibles de merge et stats `+/-` — [scope](.project/tasks/DA20-005-topologie-git-lecture-seule-cockpit/scope.md) |
+| DA30-010 | Métriques, provenance et signaux d’attention Sprint | 5 | DA30-009 | todo — valeurs honnêtes, fraîcheur et attention par tâche |
+| DA10-005 | Cockpit Sprint réel en lecture seule | 8 | DA20-004, DA20-005, DA30-009, DA30-010 | todo — compose le modèle UX validé à partir de projections vérifiables |
+| DA40-015 | Candidate intégrée et recette parent A/B | 3 | cinq lots produit | todo — recette cockpit et refus d'actions mutatives |
 | DA40-016 | Orchestration, réception et rotation | 3 | aucune à l’entrée | in_progress / attente arbitrage de réception DA30-009 — [scope](../features/40-tooling/.project/tasks/DA40-016-orchestration-sprint-4/scope.md) |
 
 ## Historique
@@ -32,7 +33,7 @@ Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c
 
 ## Suite
 
-Sprint 4 est actif; DA30-009 est en review code et DA10-006 est le prochain lot à analyser. Après validation utilisateur de la maquette, la séquence reprend avec DA20-004, DA10-005, DA30-010 puis DA40-015. Un Sprint suivant ne sera cadré et créé qu'après sa clôture. [Briefing révisé](docs/product/sprints/sprint-4-proposal.md).
+Sprint 4 est actif; DA10-006 est la référence UX validée et DA30-009 est en review code. La séquence est maintenant DA20-004 → DA20-005 et DA30-010 → DA10-005 → DA40-015, avec une seule écriture active. Les actions Git/agent restent hors de cette tranche. Un Sprint suivant ne sera cadré et créé qu'après sa clôture. [Briefing révisé](docs/product/sprints/sprint-4-proposal.md).
 
 ## Besoin produit à cadrer
 
