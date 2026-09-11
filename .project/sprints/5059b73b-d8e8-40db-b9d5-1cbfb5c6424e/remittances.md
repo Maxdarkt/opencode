@@ -280,3 +280,14 @@
 - Decision: le mandat utilisateur valide la livraison; le parent peut créer le commit local exact du worktree, relire son SHA puis passer la carte MT `done`.
 - Recommendation / next instruction: committer strictement le pathset contrôlé, sans merge/rebase/push; après relecture Git et MT, lancer la préparation APEX de DA20-004.
 - Git: branche `sprint-cockpit-prototype`, base `11cd3e5dc`, modifications limitées aux 8 fichiers produit et 10 preuves APEX listés dans verify.md.
+
+### DA30-009:10:code-closure-authorized
+
+- State: `accepted / parent commit pending`
+- Objective / position: les preuves DA30-009 sont relues comme fondation runtime terminée; sa recette UI reste explicitement portée par DA10-005/DA40-015 et ne bloque plus le contrat de code.
+- Effects and evidence: B1/B2 fournissent la file séquentielle fail-closed et la projection d'autorité; 23 tests/117 assertions, typechecks Schema/Core/OpenCode, lint et smoke SQLite A→B sont déjà PASS. [vérification](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/verify.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/STATE.md).
+- Checks: `git diff --check` relu PASS; pathset observé conforme aux fichiers Schema/Core/tests et preuves APEX attendus.
+- Problems / impact: aucune vue Sprint A/B n'est attachée à DA30-009 seul; c'est une limite documentée, transférée à DA10-005/DA40-015, non un succès visuel prétendu.
+- Decision: l'utilisateur demande de poursuivre le Sprint; le parent committe le pathset code validé sans merge, relit le SHA et passe DA30-009 `done` pour libérer DA20-004.
+- Recommendation / next instruction: démarrer DA20-004 depuis la fondation DA30-009 commitée dans un worktree propre et dédié; topologie DA20-005 attend son ownership.
+- Git: branche `task/DA30-009-file-sequentielle-autorite-multitache`, base `57da5e0d`, dirty attendu strictement B1/B2 et artefacts APEX.
