@@ -291,3 +291,14 @@
 - Decision: l'utilisateur demande de poursuivre le Sprint; le parent committe le pathset code validé sans merge, relit le SHA et passe DA30-009 `done` pour libérer DA20-004.
 - Recommendation / next instruction: démarrer DA20-004 depuis la fondation DA30-009 commitée dans un worktree propre et dédié; topologie DA20-005 attend son ownership.
 - Git: branche `task/DA30-009-file-sequentielle-autorite-multitache`, base `57da5e0d`, dirty attendu strictement B1/B2 et artefacts APEX.
+
+### DA30-009:10:code-closure-complete
+
+- State: `accepted / MT done`
+- Objective / position: fondation runtime clôturée localement; elle devient la base de DA20-004 sans merge vers staging.
+- Effects and evidence: commit task-owned `3fa91aba1c12461e02e85222942bf39e1d2e2565` créé avec le pathset B1/B2 et les preuves; worktree relu propre. MT est passé `done` après le commit. La recette UI intégrée demeure à DA40-015.
+- Checks: checks de Verify conservés (23 tests/117 assertions, typechecks, lint, whitespace, smoke SQLite); `git diff --check` et index du commit PASS.
+- Problems / impact: aucun cockpit UI n'est prétendu par DA30-009; l'intégration reste une dépendance explicite des lots suivants.
+- Decision: DA20-004 est maintenant éligible et reçoit un worktree propre, basé sur ce commit, sans toucher au worktree métier permanent sale.
+- Recommendation / next instruction: lancer Analyze DA20-004 sous Terra/medium avec son nouveau scope; DA20-005 reste dépendante.
+- Git: branche `task/DA30-009-file-sequentielle-autorite-multitache`, HEAD `3fa91aba1`, propre; aucune merge/push/rebase.

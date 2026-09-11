@@ -1,8 +1,8 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `38`
-- Updated: `2026-09-11T14:12:00+02:00`
+- Generation: `39`
+- Updated: `2026-09-11T14:18:00+02:00`
 - Objective: `Livrer un cockpit Sprint réel en lecture seule, à partir de la maquette validée, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
@@ -10,12 +10,12 @@
 - Parent context: `active`
 - Active children: `1`
 - Capacity target: `1`
-- Under-capacity reason: `review-only` — clôtures locales DA10-006/DA30-009 en cours avant l'allocation DA20-004.
+- Under-capacity reason: `none` — DA20-004 est éligible et son worktree propre est alloué; lancement enfant immédiat requis.
 - Pending remittances: `0`
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA30-009:10:parent-commit`
+- Next event: `DA20-004:allocate-analyze`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -24,9 +24,9 @@
 
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
-| DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `review / code closure accepted` | `ready` | Parent : commit local exact, relire SHA puis MT `done`; recette UI reste DA40-015. |
+| DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `done / committed 3fa91aba1` | `ready` | Fondation runtime; recette UI reste explicitement DA40-015. |
 | DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 20 | `done / committed 9de3b2e1c` | `ready` | Référence UX; aucun merge, conserver worktree/proofs. |
-| DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
+| DA20-004 | `pending` | 1 | `todo / allocated` | `none` | Worktree propre `features/tasks/DA20-004-cockpit-ownership`, branche `cockpit-ownership`, base `3fa91aba1`; lancer Analyze Terra/medium. |
 | DA20-005 | `none` | 1 | `todo / scoped` | `none` | Attend DA20-004; topologie Git lecture seule créée en MT et scope canonique. |
 | DA10-005 | `none` | 1 | `todo / re-scoped` | `none` | Cockpit réel lecture seule, après DA20-004, DA20-005, DA30-009 et DA30-010. |
 | DA30-010 | `none` | 1 | `todo / re-scoped` | `none` | Métriques, provenance et attention, après DA30-009. |
@@ -73,6 +73,7 @@
 - Décision utilisateur `2026-09-11` : DA10-006 est la livraison UX de référence. MT passe DA10-006 en review; DA20-005 est créée (topologie Git lecture seule, 3 SP); DA10-005, DA30-010 et DA40-015 sont re-scopées. Sprint 4 est porté à 38 SP et exclut les actions réelles. Verify de DA10-006 Luna/medium est relancé avant commit local parent.
 - Remise `DA10-006:20:verify-complete` acceptée : typecheck, 8 tests/29 assertions, whitespace, audit d'autorité et smoke réseau/UI aux deux formats PASS. Le pathset exact est prêt pour commit local parent, puis MT `done`.
 - Réconciliation DA10-006 : commit task-owned `9de3b2e1c` créé et relu propre; MT est `done`. L'utilisateur demande de poursuivre; les preuves code DA30-009 sont acceptées pour commit local et passage `done`, la recette UI restant explicitement à DA40-015.
+- Réconciliation DA30-009 : commit task-owned `3fa91aba1` créé et relu propre; MT est `done`. Un worktree task-owned propre DA20-004 est créé sur ce commit, avec scope APEX re-matérialisé hors du worktree métier sale.
 
 ## Blockers and decisions
 
@@ -82,7 +83,7 @@
 
 ## Next action
 
-Committer DA30-009 dans son worktree task-owned, relire SHA/MT; préparer ensuite les worktrees propres et les scopes DA20-004/DA20-005 avant Analyze.
+Créer le chat enfant DA20-004, passer MT `in_progress`, puis lancer Analyze Terra/medium sur le scope et le worktree propres.
 
 ## Resume
 
