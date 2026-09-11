@@ -2,7 +2,7 @@
 
 - Schema: `sprint-event-ledger/v1`
 - Sprint: `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`
-- Updated: `2026-09-11T12:27:45+02:00`
+- Updated: `2026-09-11T15:05:00+02:00`
 - Open queue depth: `0`
 
 ## Events
@@ -313,3 +313,14 @@
 - Decision: le Plan Terra/medium est couvert : borner Schema/Core/tests et ne créer aucune mutation d'ownership, endpoint, UI ou collecteur global.
 - Recommendation / next instruction: même chat en Plan Terra/medium, puis Build luna précis seulement après son checkpoint.
 - Git: branche `cockpit-ownership`, HEAD `3fa91aba1`, seuls artifacts APEX Analyze non suivis.
+
+### DA20-004:2:plan-complete
+
+- State: `accepted / paused at user checkpoint`
+- Objective / position: Plan achevé à `PLAN → parent-controlled BUILD/B1`, puis Sprint arrêté explicitement par l'utilisateur avant tout Build.
+- Effects and evidence: `TaskOwnership` devient une projection sérialisable, lecture seule et fail-closed : chaque tâche conserve identité, provenance/fraîcheur, owner/effets et attention source-explicite ou `unknown`. Les états `available`, `absent`, `inaccessible`, `invalid`, `expired`, `divergent`, `blocked` et `unknown` empêchent toute fuite A→B. [Plan](../../../../features/tasks/DA20-004-cockpit-ownership/.project/tasks/DA20-004-ownership-reprise-passage-taches/plan.md), [STATE enfant](../../../../features/tasks/DA20-004-cockpit-ownership/.project/tasks/DA20-004-ownership-reprise-passage-taches/STATE.md).
+- Checks: `git merge-base --is-ancestor 3fa91aba1 HEAD` PASS ; `git diff --check` PASS. Aucun Build, test, smoke, service, mutation MT/APEX/Git ou commit durant le Plan.
+- Problems / impact: aucun blocage. L'attention sans source reste `unknown`; DA30-010 garde l'autorité d'un futur agrégat. La totalisation MT du Sprint doit être réconciliée séparément, sans inventer de points réalisés.
+- Decision: le checkpoint utilisateur suspend le B1 pourtant prêt ; il n'exige ni mutation de statut MT ni allocation supplémentaire.
+- Recommendation / next instruction: après reprise explicite, relire les projections et exécuter seulement B1 sous `gpt-5.6-luna` / `medium` : Schema `TaskOwnership`, export et service Core lecture seule. B2, UI, endpoints, SQLite, `TaskExecution.acquire|begin|confirm|resume`, commit, rebase, merge et push restent interdits.
+- Git: worktree dédié `/Users/leanbot/Documents/40_Daidalon/features/tasks/DA20-004-cockpit-ownership`, branche `cockpit-ownership`, base/HEAD `3fa91aba1c12461e02e85222942bf39e1d2e2565`; uniquement les artefacts APEX non suivis attendus.

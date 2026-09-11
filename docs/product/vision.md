@@ -4,7 +4,7 @@
 **Signature :** The open workspace for agentic development.  
 **Dépôt :** fork communautaire de `anomalyco/opencode`  
 **Statut :** vision directrice, à valider par l'usage et les mesures de M0  
-**Dernière mise à jour :** 2026-09-06
+**Dernière mise à jour :** 2026-09-11
 
 ## Intention
 
@@ -73,14 +73,14 @@ Daidalon
 │   ├── fichiers, recherche, Git et terminaux
 │   └── sprints
 └── Sprint
-    ├── chat pilote
-    ├── tableau des tâches et statuts
-    ├── tâche APEX -> chat + worktree
-    ├── dépendances et validations
-    └── modèles, tokens, coûts et escalades
+    ├── pilote : objectif, décisions, reprises et intégrations
+    ├── rail de tâches : statut, activité et attention
+    ├── canvas de tâche APEX -> chat + worktree + outils
+    ├── panneau droit : Task status, contexte vérifiable et topologie Git
+    └── dépendances, validations, modèles, tokens, coûts et escalades
 ```
 
-Le panneau latéral droit regroupe selon le contexte la vue Sprint, les fichiers, la recherche, les diffs, Git, le terminal et, plus tard, un navigateur persistant intégré.
+Le panneau latéral droit regroupe selon le contexte la vue Sprint, les fichiers, la recherche, les diffs, Git, le terminal et, plus tard, un navigateur persistant intégré. La topologie Git présente le dépôt source et ses worktrees en lecture seule : références configurables, cible de merge, divergence de commits et statistiques `+/-`, sans action cachée.
 
 ## Fondations réutilisées
 

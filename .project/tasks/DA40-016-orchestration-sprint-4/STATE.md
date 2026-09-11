@@ -1,23 +1,23 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `41`
-- Updated: `2026-09-11T14:24:00+02:00`
+- Generation: `42`
+- Updated: `2026-09-11T15:05:00+02:00`
 - Objective: `Livrer un cockpit Sprint réel en lecture seule, à partir de la maquette validée, en isolant MT/APEX/session/worktree/métriques entre A et B.`
-- Freshness: `fresh`
+- Freshness: `stale` — le runtime ignoré n'est pas la source de ce checkpoint et sera reconstruit à la reprise.
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
 - Parent thread: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Parent context: `active`
-- Active children: `1`
+- Active children: `0`
 - Capacity target: `1`
-- Under-capacity reason: `none` — DA20-004 est éligible et son worktree propre est alloué; lancement enfant immédiat requis.
+- Under-capacity reason: `decision` — checkpoint explicite utilisateur après le Plan DA20-004 ; aucun Build ne doit être lancé avant reprise.
 - Pending remittances: `0`
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA20-004:1:plan`
-- Watcher: `armed`
-- Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
+- Next event: `user-resume:DA20-004:B1`
+- Watcher: `not-required`
+- Watcher owner: `none`
 - Successor: `none`
 
 ## Children
@@ -26,7 +26,7 @@
 | --- | --- | ---: | --- | --- | --- |
 | DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `done / committed 3fa91aba1` | `ready` | Fondation runtime; recette UI reste explicitement DA40-015. |
 | DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 20 | `done / committed 9de3b2e1c` | `ready` | Référence UX; aucun merge, conserver worktree/proofs. |
-| DA20-004 | `01a09059-ac5f-70d3-8b64-d56e8ea879db` | 1 | `in_progress / Plan` | `ready` | Terra/medium demandé : projection ownership lecture seule et attention source-explicite. |
+| DA20-004 | `01a09059-ac5f-70d3-8b64-d56e8ea879db` | 2 | `in_progress / Plan checkpointé` | `ready` | B1 Luna/medium demandé à la reprise : Schema/Core lecture seule seulement. |
 | DA20-005 | `none` | 1 | `todo / scoped` | `none` | Attend DA20-004; topologie Git lecture seule créée en MT et scope canonique. |
 | DA10-005 | `none` | 1 | `todo / re-scoped` | `none` | Cockpit réel lecture seule, après DA20-004, DA20-005, DA30-009 et DA30-010. |
 | DA30-010 | `none` | 1 | `todo / re-scoped` | `none` | Métriques, provenance et attention, après DA30-009. |
@@ -38,7 +38,7 @@
 
 ## Git and checks
 
-- Canonique staging : branche `staging`, HEAD `437a5c449fc204b79d30f77a4b1ed114edd9d69a`, propre; aucun Build produit sur staging.
+- Canonique staging avant le commit de checkpoint : branche `staging`, HEAD `11f06c68c`, propre ; aucun Build produit sur staging.
 - Baseline candidate : `/Users/leanbot/Documents/40_Daidalon/features/s3-integration`, branche `sprint3-integration`, HEAD `57da5e0d156c1b6f73c2c4528b502d6b764d9891`, propre.
 - Worktrees métier observés, sans Build : `10-product-ui` `e22d723895e3a8537f9bf21d5d6e4561ff630de1`; `20-workspace-git` `2d973aeaf6a289ba1f343663a758d7c70b1bcc11`; `30-agent-runtime` `702bf7dcd7468638c17fd95b110deb38bd253e9a`; `40-tooling` `b7111b6e973d7200e70990c6f32a1a4d4b4a64de`.
 - Registre commun corrigé : `DA` résout le source, le profil APEX tracked est accepté et le worktree task-owned DA30-009 est enregistré; 17 tests registre et 9 tests profil passent.
@@ -76,6 +76,8 @@
 - Réconciliation DA30-009 : commit task-owned `3fa91aba1` créé et relu propre; MT est `done`. Un worktree task-owned propre DA20-004 est créé sur ce commit, avec scope APEX re-matérialisé hors du worktree métier sale.
 - Lancement DA20-004 : chat `01a09059-ac5f-70d3-8b64-d56e8ea879db` créé sous Terra/medium et MT est `in_progress`; le modèle observé n'est pas une gate. Analyze seul est actif dans le worktree propre.
 - Remise `DA20-004:1:analyze-complete` acceptée : aucun transfert A→B n'est permis; les signaux d'attention sans source restent `unknown`. Le Plan Terra/medium est relancé, sans Build.
+- Remise `DA20-004:2:plan-complete` acceptée : contrat `TaskOwnership` sérialisable et lecture seule, états explicites/provenance/fraîcheur, B1 Schema/Core puis B2 tests/smoke isolés. `TaskExecution.resume` et toute mutation restent interdits. `git diff --check` PASS ; aucun Build, test, service ou commit n'a été exécuté.
+- Checkpoint utilisateur `2026-09-11` : documentation produit, suivi de Sprint, état parent et ledger sont réalignés avant commit. Le watcher est retiré, DA20-004 reste au Plan prêt à compacter et B1 n'est pas délégué.
 
 ## Blockers and decisions
 
@@ -85,8 +87,8 @@
 
 ## Next action
 
-Attendre la remise Plan DA20-004, vérifier le contrat/pathset puis déléguer le premier Build Luna/medium.
+Attendre une reprise explicite de l'utilisateur. Ensuite relire ce STATE, le ledger, MT, le STATE enfant et Git, reconstruire le runtime, puis déléguer uniquement B1 DA20-004 sous Luna/medium. L'absence ou la divergence d'observation de modèle reste informative et ne bloque pas.
 
 ## Resume
 
-Lire ce STATE et son ledger, vérifier l'expiration du runtime et relire MT, Git et les STATE enfants avant toute activation ou allocation. Ne pas créer de worktree, enfant ou mutation MT sur la seule foi de ce cache. À chaque frontière sûre, réévaluer le prochain bloc selon le routage et continuer malgré une observation de modèle absente ou divergente.
+Lire ce STATE et son ledger, vérifier l'expiration du runtime et relire MT, Git et les STATE enfants avant toute activation ou allocation. Ne pas créer de worktree, enfant ou mutation MT sur la seule foi de ce cache. Le checkpoint ne vaut pas reprise : à la reprise utilisateur, réévaluer le prochain bloc selon le routage et continuer malgré une observation de modèle absente ou divergente.

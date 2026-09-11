@@ -1,6 +1,6 @@
 # Proposition Sprint 4 — Deux tâches successives, sans parallélisme
 
-Statut : Sprint MT `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e` actif. Le 2026-09-11, l'utilisateur a validé la maquette isolée du cockpit : parcours aux deux tailles et zéro requête hors origine Vite. DA30-009 et DA10-006 sont `review`; le cockpit réel reste un lot lecture seule, sans action Git/agent.
+Statut : proposition de cadrage historique. Le Sprint MT `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e` est actif et arrêté proprement au checkpoint du 2026-09-11 : consulter le [bilan vivant Sprint 4](./sprint-4.md) pour les états exécutés. Le 2026-09-11, l'utilisateur a validé la maquette isolée du cockpit : parcours aux deux tailles et zéro requête hors origine Vite. DA30-009 et DA10-006 sont désormais `done`; le cockpit réel reste un lot lecture seule, sans action Git/agent.
 
 ## Objectif
 
@@ -40,6 +40,6 @@ Pas de parallélisme d'écrivains, multi-hôte, push, tag, déploiement, paiemen
 
 Le risque principal est une fuite d’identité ou de métrique entre A et B. Chaque lot doit donc couvrir les transitions et l’isolation par tests; la candidate intégrée doit fournir des fixtures locales temporaires, sans modifier MT ni l’instantané canonique de production locale. Les régressions i18n hors pathset restent inventoriées, jamais masquées.
 
-## Prochaine action
+## Prochaine action (au moment du cadrage)
 
-Clôturer techniquement DA10-006 dans son worktree propre, puis lancer Analyze de DA20-004. Créer et tenir le scope DA20-005 dans un worktree propre; DA10-005 sera re-scopée depuis le contrat de livraison ci-dessous avant son Analyze. DA30-009 reste en review code, avec smoke UI intégré réservé à DA40-015.
+Les actions décrites ci-dessus ont été dépassées par les clôtures DA10-006/DA30-009 et le Plan DA20-004. La reprise exacte est maintenue dans le [bilan vivant](./sprint-4.md), afin que cette proposition ne pilote plus l'exécution.

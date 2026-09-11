@@ -2,7 +2,7 @@
 
 **Statut :** conception de référence avant développement  
 **Sources :** [`vision.md`](./vision.md), [`roadmap.md`](./roadmap.md), [`worktrees.md`](./worktrees.md), [`architecture.md`](./architecture.md)
-**Dernière mise à jour :** 2026-09-06
+**Dernière mise à jour :** 2026-09-11
 
 ## 1. Rôle de ce document
 
@@ -54,6 +54,7 @@ L'interface réconcilie ces autorités ; elle ne remplace pas silencieusement l'
 - projets favoris ;
 - sprints du projet actif ;
 - tâches du sprint regroupées par statut ;
+- signal d'activité tournant pour une tâche en cours et signal bleu d'attention pour une réponse à lire ;
 - sessions libres ou historiques ;
 - réglages, fournisseurs et modèles.
 
@@ -61,7 +62,7 @@ La barre gauche répond à « où suis-je et que puis-je ouvrir ? ».
 
 ### Zone centrale — espace de travail
 
-- chat du sprint ou chat de la tâche ;
+- canvas pleine hauteur pour le chat, terminal, navigateur ou diff de la tâche sélectionnée ;
 - progression sous forme de checklist visible ;
 - demandes d'autorisation et décisions ;
 - réponses, actions d'outils et preuves ;
@@ -80,7 +81,7 @@ Onglets contextuels :
 - Coûts : modèle, fournisseur, tokens, cache, latence, retries et escalades ;
 - Navigateur : session persistante de la tâche, dans une phase ultérieure.
 
-Le panneau droit répond à « sur quelles preuves et quel état travaille-t-on ? ».
+Le panneau droit répond à « sur quelles preuves et quel état travaille-t-on ? ». Dans le cockpit Sprint, son haut affiche d'abord `Task status` (statut, dépendance, worktree, branche, HEAD, dernier check et prochaine action), puis le contexte vérifiable et la topologie du dépôt. Le chat pilote conserve les décisions globales ; le canvas d'une tâche est son espace d'exécution isolé.
 
 ## 4. Parcours essentiels
 
@@ -150,6 +151,7 @@ Non allouée -> Worktree prêt -> En travail -> En revue
 - fichiers non suivis, modifiés, indexés et conflictuels ;
 - branche source et branche de tâche ;
 - divergence avec la branche cible ;
+- vue lecture seule du dépôt source : branches configurées, worktrees, cible de réintégration, propreté, avance/retard et total `+/-` par worktree ;
 - historique des opérations rebase/merge ;
 - actions séparées avec prévisualisation de l'effet ;
 - récupération proposée avant toute suppression ou reset.
@@ -167,6 +169,8 @@ Le chat pilote ne code pas. Il :
 - produit une synthèse de fin de sprint.
 
 Chaque chat de tâche reste responsable de son unique périmètre et de son unique worktree.
+
+Le cockpit de Sprint ne déclenche pas les opérations qu'il représente dans sa première livraison : il rend l'état lisible, source-explicite et fail-closed. Un fait Git, APEX, MT ou runtime absent reste `unknown`, jamais une valeur déduite ou un faux zéro.
 
 ## 7. Coûts et performance
 
