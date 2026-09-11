@@ -1,8 +1,8 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `32`
-- Updated: `2026-09-11T13:34:00+02:00`
+- Generation: `33`
+- Updated: `2026-09-11T13:40:00+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
@@ -15,7 +15,7 @@
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA10-006:16:runtime-isolation-plan`
+- Next event: `DA10-006:17:runtime-isolation-R1`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -25,7 +25,7 @@
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
 | DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `review / code accepted` | `none` | Smoke UI intégré réservé à DA40-015; ne pas intégrer avant la recette Sprint. |
-| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 16 | `in_progress / runtime isolation Plan` | `ready` | Terra/medium demandé : borner R1/R2 et la preuve zéro requête backend. |
+| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 17 | `in_progress / runtime isolation R1` | `ready` | Luna/medium demandé : isoler entry prototype, typecheck et whitespace seulement. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
 | DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
@@ -66,6 +66,7 @@
 - Remise `DA10-006:14:ux-correction-C2-complete` acceptée : rail/canvas/panneau droit/topologie fixture composés; typecheck, tests C1 et whitespace PASS. C3 Luna/medium reçoit seul le smoke responsive.
 - Remise `DA10-006:15:ux-correction-C3-runtime-isolation-blocked` consommée : UX PASS aux deux formats, mais requêtes runtime locales détectées. L'utilisateur autorise la correction; Analyse Terra/medium de l'isolation est relancée avant Build.
 - Remise `DA10-006:16:runtime-isolation-analyze-complete` acceptée : `AppInterface` est la cause; montage minimal et garde-fou réseau sont proposés. Plan Terra/medium relancé avant R1.
+- Remise `DA10-006:17:runtime-isolation-plan-complete` acceptée : montage prototype minimal, preservation des routes métier et garde-fou réseau R2 sont définis. R1 Luna/medium est relancé sur `entry.tsx` seul.
 
 ## Blockers and decisions
 
@@ -75,7 +76,7 @@
 
 ## Next action
 
-Attendre le Plan d'isolation runtime DA10-006, puis déléguer R1 seul avec la preuve réseau définie.
+Attendre R1 de DA10-006, vérifier le pathset/typecheck puis déléguer R2 smoke réseau seul.
 
 ## Resume
 

@@ -225,3 +225,14 @@
 - Decision: l'autorisation utilisateur couvre le Plan puis R1 borné; Terra/medium prépare les garde-fous et Luna exécutera le Build déterministe.
 - Recommendation / next instruction: même chat Terra/medium en Plan, puis R1 seul si le pathset/les checks d'isolation sont exacts.
 - Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
+
+### DA10-006:17:runtime-isolation-plan-complete
+
+- State: `consumed / R1 dispatched`
+- Objective / position: Plan d'isolation accepté à `PLAN → parent-controlled BUILD/R1`, sans Build durant le Plan.
+- Effects and evidence: R1 limite `entry.tsx` au montage prototype `PlatformProvider → AppBaseProviders → SprintCockpitPrototype`, sans `AppInterface` ni client HTTP; le bootstrap des routes métier est préservé. R2 n'ajoutera qu'un observateur E2E/rapport refusant toute requête hors origine Vite. [plan](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/plan.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: `git diff --check` PASS; pathset, rollback et condition d'arrêt si les providers minimaux appellent encore le runtime sont définis.
+- Problems / impact: la maquette n'est pas encore validée isolée; R1 peut échouer proprement si le socle provider produit toujours un appel, sans élargissement de reconstruction autorisé.
+- Decision: utilisateur a autorisé la correction; R1 déterministe est délégué Luna/medium.
+- Recommendation / next instruction: R1 seulement, typecheck/whitespace; aucune E2E, serveur, navigateur, R2 ou autorité réelle avant remise.
+- Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
