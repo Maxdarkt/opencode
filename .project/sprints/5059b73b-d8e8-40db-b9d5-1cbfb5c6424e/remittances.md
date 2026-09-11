@@ -170,3 +170,14 @@
 - Decision: le retour utilisateur autorise le Plan de correction; C1/C2/C3 restent bornés aux fixtures et aucune intégration réelle n'est proposée.
 - Recommendation / next instruction: même chat Terra/medium pour Plan détaillé; l'absence ou divergence de modèle observé ne bloque pas. Après son checkpoint, Luna exécuterait C1 seulement.
 - Git: HEAD `11cd3e5dc`, pathset prototype existant non commité, aucun commit/push/rebase.
+
+### DA10-006:12:ux-correction-plan-complete
+
+- State: `consumed / C1 dispatched`
+- Objective / position: Plan de correction UX complet à `PLAN → parent-controlled BUILD/C1`, sans Build effectué au checkpoint.
+- Effects and evidence: C1 borne le modèle local, les fixtures topologiques et les transitions pures; C2 la composition/les indicateurs accessibles; C3 les checks et le smoke aux deux tailles. Le plan interdit chaque autorité réelle et prévoit le fallback CUA si Chromium demeure absent. [plan](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/plan.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: plan/pathset/accessibilité/responsive/non-effet PASS; `git diff --check` PASS; aucune modification fonctionnelle ajoutée par le Plan.
+- Problems / impact: la prévisualisation active sert encore la version avant correction jusqu'à C1/C2/C3; aucune incohérence, elle est simplement inchangée.
+- Decision: le mandat utilisateur de mise à jour de la maquette couvre C1 précis; le parent délègue Luna/medium pour fixtures/état/tests déterministes.
+- Recommendation / next instruction: C1 seulement; ne lancer ni C2/C3, serveur, navigateur, action réelle, commit, merge ou rebase avant remise et checkpoint.
+- Git: HEAD `11cd3e5dc`, modifications existantes de prototype non commités, aucun commit/push/rebase.
