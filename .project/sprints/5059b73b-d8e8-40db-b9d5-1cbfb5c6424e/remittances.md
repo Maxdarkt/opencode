@@ -159,3 +159,14 @@
 - Decision: mandat explicite utilisateur de corriger la maquette; aucune décision métier ou intégration réelle n'est demandée.
 - Recommendation / next instruction: même chat, Terra/medium demandé pour Analyse du contrat UX et plan borné. Le Build ne repartira qu'après checkpoint de conception; aucun raccordement MT/APEX/Git/session/PTY/navigateur réel.
 - Git: worktree DA10-006 reste non commité, pathset prototype existant seulement; staging `8557f42a9` propre après checkpoint parent.
+
+### DA10-006:11:ux-correction-analyze-complete
+
+- State: `consumed / Plan dispatched`
+- Objective / position: Analyse de correction UX achevée à `ANALYZE → parent plan review`, sans changement de la maquette.
+- Effects and evidence: le contrat sépare les signaux « tâche active » et « remise à lire », déplace les six faits opérationnels dans `Task status` à droite, rend le centre disponible aux aperçus d'outils, et définit une topologie locale source → branches configurables → worktrees → cibles de merge, avec propreté, avance/retard et statistiques `+/-`. [analyse](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/analyze.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: lecture des surfaces et contrat UX PASS; `git diff --check` PASS; aucun code/fixture/i18n/autorité/service modifié pendant Analyze.
+- Problems / impact: Chromium reste indisponible pour Playwright durable; le fallback CUA préexistant demeure le seul plan de smoke visuel autorisé sans installation.
+- Decision: le retour utilisateur autorise le Plan de correction; C1/C2/C3 restent bornés aux fixtures et aucune intégration réelle n'est proposée.
+- Recommendation / next instruction: même chat Terra/medium pour Plan détaillé; l'absence ou divergence de modèle observé ne bloque pas. Après son checkpoint, Luna exécuterait C1 seulement.
+- Git: HEAD `11cd3e5dc`, pathset prototype existant non commité, aucun commit/push/rebase.
