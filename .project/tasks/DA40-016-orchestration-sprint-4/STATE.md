@@ -1,8 +1,8 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `36`
-- Updated: `2026-09-11T14:02:00+02:00`
+- Generation: `37`
+- Updated: `2026-09-11T14:06:00+02:00`
 - Objective: `Livrer un cockpit Sprint réel en lecture seule, à partir de la maquette validée, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
@@ -15,7 +15,7 @@
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA10-006:20:verify-delivery`
+- Next event: `DA10-006:20:parent-commit`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -25,7 +25,7 @@
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
 | DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `review / code accepted` | `none` | Smoke UI intégré réservé à DA40-015; ne pas intégrer avant la recette Sprint. |
-| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 19 | `review / delivery approved, Verify active` | `ready` | Luna/medium demandé : relire pathset, checks, smoke et Git avant finalisation parent. |
+| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 20 | `review / Verify accepted` | `ready` | Parent : commit local exact, relire SHA puis MT `done`; aucun merge. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA20-005 | `none` | 1 | `todo / scoped` | `none` | Attend DA20-004; topologie Git lecture seule créée en MT et scope canonique. |
 | DA10-005 | `none` | 1 | `todo / re-scoped` | `none` | Cockpit réel lecture seule, après DA20-004, DA20-005, DA30-009 et DA30-010. |
@@ -71,6 +71,7 @@
 - Remise `DA10-006:18:runtime-isolation-R1-complete` acceptée : `entry.tsx` monte le prototype sans `AppInterface`; typecheck et whitespace PASS. R2 Luna/medium reçoit la preuve réseau et le smoke aux deux tailles.
 - Remise `DA10-006:19:runtime-isolation-R2-complete` acceptée : UI et zéro requête hors origine PASS aux deux formats via Chrome système; la maquette isolée attend la validation UX utilisateur.
 - Décision utilisateur `2026-09-11` : DA10-006 est la livraison UX de référence. MT passe DA10-006 en review; DA20-005 est créée (topologie Git lecture seule, 3 SP); DA10-005, DA30-010 et DA40-015 sont re-scopées. Sprint 4 est porté à 38 SP et exclut les actions réelles. Verify de DA10-006 Luna/medium est relancé avant commit local parent.
+- Remise `DA10-006:20:verify-complete` acceptée : typecheck, 8 tests/29 assertions, whitespace, audit d'autorité et smoke réseau/UI aux deux formats PASS. Le pathset exact est prêt pour commit local parent, puis MT `done`.
 
 ## Blockers and decisions
 
@@ -80,7 +81,7 @@
 
 ## Next action
 
-Attendre Verify de DA10-006, commit le pathset validé dans son worktree puis réconcilier la carte; matérialiser ensuite les scopes dans des worktrees propres avant Analyze de DA20-004.
+Committer DA10-006 dans son worktree task-owned, relire SHA/MT; préparer ensuite les worktrees propres et les scopes DA20-004/DA20-005 avant Analyze.
 
 ## Resume
 

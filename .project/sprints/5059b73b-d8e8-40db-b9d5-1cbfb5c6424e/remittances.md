@@ -269,3 +269,14 @@
 - Decision: le mandat utilisateur couvre la replanification : DA20-005 est créée, DA10-005/DA30-010/DA40-015 sont re-scopées dans MT et le plan canonique; Verify Luna/medium est lancé pour DA10-006.
 - Recommendation / next instruction: même chat, Verify seulement, sans nouveau Build ni commit enfant; le parent relira puis commitera le pathset exact dans le worktree task-owned.
 - Git: prototype sur `sprint-cockpit-prototype`, HEAD de base `11cd3e5dc`, modifications non commités attendues exclusivement dans son pathset et ses preuves.
+
+### DA10-006:20:verify-complete
+
+- State: `accepted / parent commit pending`
+- Objective / position: VERIFY clôture le Build de la maquette à `VERIFY → parent final validation`; aucun changement fonctionnel supplémentaire n'est requis.
+- Effects and evidence: pathset complet relu : route, bootstrap isolé, i18n, fixtures, état, vue, tests, E2E et preuves APEX. R2 confirme 0 requête hors origine Vite aux deux viewports et les confirmations restent inertes. [vérification](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/verify.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: typecheck App PASS; 8 tests / 29 assertions PASS; `git diff --check` PASS; audit d'autorité sans SDK/serveur/PTY/réseau dans le prototype; smoke Chrome système PASS 1440×900/1024×768, 0 requête hors origine par viewport.
+- Problems / impact: Chromium Playwright manque toujours, sans téléchargement; cette limite est informative car le fallback réseau/UI est prouvé. Le serveur de revue utilisateur est volontairement encore actif.
+- Decision: le mandat utilisateur valide la livraison; le parent peut créer le commit local exact du worktree, relire son SHA puis passer la carte MT `done`.
+- Recommendation / next instruction: committer strictement le pathset contrôlé, sans merge/rebase/push; après relecture Git et MT, lancer la préparation APEX de DA20-004.
+- Git: branche `sprint-cockpit-prototype`, base `11cd3e5dc`, modifications limitées aux 8 fichiers produit et 10 preuves APEX listés dans verify.md.
