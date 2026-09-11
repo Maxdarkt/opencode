@@ -2,7 +2,7 @@
 
 - Schema: `sprint-event-ledger/v1`
 - Sprint: `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`
-- Updated: `2026-09-11T12:15:30+02:00`
+- Updated: `2026-09-11T12:17:00+02:00`
 - Open queue depth: `0`
 
 ## Events
@@ -116,3 +116,14 @@
 - Decision: aucune décision utilisateur requise; la restauration locale et réversible du runtime de dépendances est couverte par le mandat de maquette.
 - Recommendation / next instruction: même chat Luna/medium installe seulement `bun install --frozen-lockfile --ignore-scripts`, vérifie le lockfile, rejoue le test B1 et whitespace; aucun B2/commit.
 - Git: HEAD `11cd3e5dc`, trois fichiers fonctionnels B1 et artefacts APEX non suivis attendus.
+
+### DA10-006:6:B1-validated
+
+- State: `relaunched / B2-dispatched`
+- Objective / position: B1 validé à `BUILD/B1 → parent-controlled B2`.
+- Effects and evidence: fixtures immuables des cinq états, contrôleur de sélection/onglet/dialogue pur et test de non-effet, sans route ni surface runtime. [rapport B1](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/blocs/B1.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: installation verrouillée PASS, `bun.lock` hash inchangé; 5 tests/15 assertions PASS; `git diff --check` PASS.
+- Problems / impact: aucun blocage B1; B2 demeure un paquet distinct et aucune route actuelle n'est encore visible.
+- Decision: le mandat de maquette couvre B2 précis : route locale, vue TSX et i18n sans autorité réelle.
+- Recommendation / next instruction: même chat Luna/medium exécute B2 seulement, puis checks ciblés; B3, serveur et Playwright restent interdits.
+- Git: HEAD `11cd3e5dc`, trois fichiers B1 et artefacts APEX non commités attendus.
