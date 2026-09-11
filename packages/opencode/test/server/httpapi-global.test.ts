@@ -172,6 +172,74 @@ describe("global HttpApi", () => {
     }),
   )
 
+  it.live("smokes distinct A/B sprint metrics without a false zero cost", () =>
+    Effect.gen(function* () {
+      yield* seed({
+        taskID: "DA30-010-A",
+        message: assistant({
+          taskID: "DA30-010-A",
+          completed: 160,
+          cost: 0,
+          tokens: { input: 10, output: 1, reasoning: 0, cache: { read: 0, write: 0 } },
+        }),
+      })
+      yield* seed({
+        taskID: "DA30-010-B",
+        message: assistant({
+          taskID: "DA30-010-B",
+          completed: 180,
+          cost: 0,
+          tokens: { input: 4, output: 2, reasoning: 0, cache: { read: 0, write: 0 } },
+        }),
+      })
+      const response = yield* HttpClientRequest.post(GlobalPaths.metrics).pipe(
+        HttpClientRequest.bodyJsonUnsafe({
+          type: "sprint",
+          sprintID: "sprint-ab",
+          taskIDs: ["DA30-010-A", "DA30-010-B"],
+        }),
+        HttpClient.execute,
+      )
+
+      expect(response.status).toBe(200)
+      const body = yield* response.json
+      expect(body).toMatchObject({
+        type: "sprint",
+        metrics: {
+          taskIDs: ["DA30-010-A", "DA30-010-B"],
+          tasks: [{ taskID: "DA30-010-A" }, { taskID: "DA30-010-B" }],
+          tokens: { state: "measured", value: { input: 14, output: 3 } },
+          cost: { state: "unknown" },
+        },
+      })
+      expect("value" in (body as { metrics: { cost: object } }).metrics.cost).toBe(false)
+      expect("attention" in (body as { metrics: object }).metrics).toBe(false)
+    }),
+  )
+
+  it.live("rejects a blocked sprint queue without inventing totals", () =>
+    Effect.gen(function* () {
+      const response = yield* HttpClientRequest.post(GlobalPaths.metrics).pipe(
+        HttpClientRequest.bodyJsonUnsafe({
+          type: "sprint",
+          sprintID: "sprint-q",
+          taskIDs: ["DA30-010-Q", "DA30-010-R"],
+          queue: [
+            { id: "DA30-010-Q", mtStatus: "todo", context: "concordant" },
+            { id: "DA30-010-Q", mtStatus: "todo", context: "concordant" },
+          ],
+        }),
+        HttpClient.execute,
+      )
+
+      expect(response.status).toBe(409)
+      expect(yield* response.json).toMatchObject({
+        _tag: "TaskMetrics.QueueBlocked",
+        reason: "duplicate_task_id",
+      })
+    }),
+  )
+
   it.live("smokes an incomplete sprint while retaining the unbound task", () =>
     Effect.gen(function* () {
       yield* seed({

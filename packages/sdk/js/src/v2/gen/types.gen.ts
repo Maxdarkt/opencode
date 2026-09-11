@@ -3038,6 +3038,19 @@ export type MoveSessionDestination = {
   directory: string
 }
 
+export type TaskPilotMtStatus = "todo" | "in_progress" | "review" | "done" | "blocked"
+
+export type TaskPilotApexPhase = "analyze" | "plan" | "build" | "smoke" | "verify"
+
+export type TaskPilotContext = "concordant" | "incomplete" | "divergent" | "resuming"
+
+export type TaskQueueEntry = {
+  id: string
+  mtStatus: TaskPilotMtStatus
+  apexPhase?: TaskPilotApexPhase
+  context: TaskPilotContext
+}
+
 export type TaskMetricsRequest =
   | {
       type: "task"
@@ -3047,6 +3060,7 @@ export type TaskMetricsRequest =
       type: "sprint"
       sprintID: string
       taskIDs: Array<string>
+      queue?: Array<TaskQueueEntry>
     }
 
 export type ModelRef = {
@@ -3128,6 +3142,58 @@ export type TaskMetricsNumeric =
       provenance: Array<string>
     }
 
+export type TaskOwnershipFreshness = {
+  observedAt?: string
+  expiresAt?: string
+  generation?: number
+}
+
+export type TaskMetricsFreshness =
+  | {
+      state: "available"
+      value: TaskOwnershipFreshness
+    }
+  | {
+      state: "unknown"
+    }
+
+export type TaskOwnershipSource = "task_binding" | "runtime_snapshot" | "task_execution" | "attention_input"
+
+export type TaskOwnershipProvenance = {
+  source: TaskOwnershipSource
+  reference: string
+}
+
+export type TaskOwnershipAttention = {
+  sourceTaskID: string
+  id: string
+  kind: string
+  provenance: TaskOwnershipProvenance
+  freshness: TaskOwnershipFreshness
+}
+
+export type TaskOwnershipUnavailable =
+  | "absent"
+  | "inaccessible"
+  | "invalid"
+  | "expired"
+  | "divergent"
+  | "blocked"
+  | "unknown"
+
+export type TaskOwnershipAttentionFact =
+  | {
+      state: "available"
+      value: Array<TaskOwnershipAttention>
+      provenance: TaskOwnershipProvenance
+      freshness: TaskOwnershipFreshness
+    }
+  | {
+      state: TaskOwnershipUnavailable
+      provenance: TaskOwnershipProvenance
+      freshness: TaskOwnershipFreshness
+    }
+
 export type TaskMetricsTask = {
   taskID: string
   sessionID?: string
@@ -3135,6 +3201,9 @@ export type TaskMetricsTask = {
   tokens: TaskMetricsTokens
   cost: TaskMetricsNumeric
   latency: TaskMetricsNumeric
+  freshness: TaskMetricsFreshness
+  attention: TaskOwnershipAttentionFact
+  sources: Array<TaskOwnershipProvenance>
 }
 
 export type TaskMetricsSprint = {
@@ -3146,6 +3215,8 @@ export type TaskMetricsSprint = {
   tokens: TaskMetricsTokens
   cost: TaskMetricsNumeric
   latency: TaskMetricsNumeric
+  freshness: TaskMetricsFreshness
+  sources: Array<TaskOwnershipProvenance>
 }
 
 export type TaskMetricsResponse =
@@ -3158,9 +3229,22 @@ export type TaskMetricsResponse =
       metrics: TaskMetricsSprint
     }
 
-export type TaskPilotMtStatus = "todo" | "in_progress" | "review" | "done" | "blocked"
+export type TaskQueueBlockReason =
+  | "empty_queue"
+  | "duplicate_task_id"
+  | "invalid_status_phase"
+  | "multiple_active"
+  | "predecessor_not_closed"
+  | "out_of_order"
+  | "context_incomplete"
+  | "context_divergent"
+  | "execution_resuming"
+  | "mt_blocked"
 
-export type TaskPilotApexPhase = "analyze" | "plan" | "build" | "smoke" | "verify"
+export type TaskMetricsQueueBlocked = {
+  _tag: "TaskMetrics.QueueBlocked"
+  reason: TaskQueueBlockReason
+}
 
 export type TaskAuthorityObservation = {
   state: "available" | "absent" | "inaccessible" | "invalid" | "expired" | "divergent"
@@ -7422,6 +7506,10 @@ export type GlobalMetricsErrors = {
    * Bad request
    */
   400: BadRequestError
+  /**
+   * TaskMetrics.QueueBlocked
+   */
+  409: TaskMetricsQueueBlocked
 }
 
 export type GlobalMetricsError = GlobalMetricsErrors[keyof GlobalMetricsErrors]

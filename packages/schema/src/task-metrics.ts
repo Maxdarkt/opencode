@@ -3,6 +3,8 @@ export * as TaskMetrics from "./task-metrics"
 import { Schema } from "effect"
 import { Model } from "./model"
 import { optional } from "./schema"
+import { TaskOwnership } from "./task-ownership"
+import { TaskQueue } from "./task-queue"
 
 const Provenance = Schema.Array(Schema.String)
 
@@ -48,6 +50,14 @@ export const Models = Schema.Union([
   .annotate({ identifier: "TaskMetrics.Models" })
 export type Models = typeof Models.Type
 
+export const Freshness = Schema.Union([
+  Schema.Struct({ state: Schema.Literal("available"), value: TaskOwnership.Freshness }),
+  Schema.Struct({ state: Schema.Literal("unknown") }),
+])
+  .pipe(Schema.toTaggedUnion("state"))
+  .annotate({ identifier: "TaskMetrics.Freshness" })
+export type Freshness = typeof Freshness.Type
+
 export const Task = Schema.Struct({
   taskID: Schema.String,
   sessionID: Schema.String.pipe(optional),
@@ -55,6 +65,9 @@ export const Task = Schema.Struct({
   tokens: Tokens,
   cost: Numeric,
   latency: Numeric,
+  freshness: Freshness,
+  attention: TaskOwnership.AttentionFact,
+  sources: Schema.Array(TaskOwnership.Provenance),
 }).annotate({ identifier: "TaskMetrics.Task" })
 export interface Task extends Schema.Schema.Type<typeof Task> {}
 
@@ -67,12 +80,19 @@ export const Sprint = Schema.Struct({
   tokens: Tokens,
   cost: Numeric,
   latency: Numeric,
+  freshness: Freshness,
+  sources: Schema.Array(TaskOwnership.Provenance),
 }).annotate({ identifier: "TaskMetrics.Sprint" })
 export interface Sprint extends Schema.Schema.Type<typeof Sprint> {}
 
 export const Request = Schema.Union([
   Schema.Struct({ type: Schema.Literal("task"), taskID: Schema.String }),
-  Schema.Struct({ type: Schema.Literal("sprint"), sprintID: Schema.String, taskIDs: Schema.Array(Schema.String) }),
+  Schema.Struct({
+    type: Schema.Literal("sprint"),
+    sprintID: Schema.String,
+    taskIDs: Schema.Array(Schema.String),
+    queue: Schema.Array(TaskQueue.Entry).pipe(optional),
+  }),
 ])
   .pipe(Schema.toTaggedUnion("type"))
   .annotate({ identifier: "TaskMetrics.Request" })

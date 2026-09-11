@@ -1,5 +1,6 @@
 import { LocalContext } from "@opencode-ai/schema/local-context"
 import { TaskMetrics } from "@opencode-ai/schema/task-metrics"
+import { QueueBlockedError } from "@opencode-ai/core/task-metrics"
 import { SessionID } from "@/session/schema"
 import { ConfigV1 } from "@opencode-ai/core/v1/config/config"
 import { EventV2 } from "@opencode-ai/core/event"
@@ -84,6 +85,7 @@ export const GlobalApi = HttpApi.make("global").add(
       HttpApiEndpoint.post("metrics", GlobalPaths.metrics, {
         payload: TaskMetrics.Request,
         success: TaskMetrics.Response,
+        error: QueueBlockedError,
       }).annotateMerge(
         OpenApi.annotations({
           identifier: "global.metrics",

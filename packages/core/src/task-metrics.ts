@@ -2,6 +2,7 @@ export * as TaskMetrics from "./task-metrics"
 
 import { TaskMetrics } from "@opencode-ai/schema/task-metrics"
 import { Model } from "@opencode-ai/schema/model"
+import { TaskOwnership } from "@opencode-ai/schema/task-ownership"
 import { and, asc, eq } from "drizzle-orm"
 import { Context, DateTime, Effect, Exit, Layer, Schema } from "effect"
 import { Database } from "./database/database"
@@ -9,9 +10,18 @@ import { makeGlobalNode } from "./effect/app-node"
 import { SessionMessage } from "./session/message"
 import { SessionMessageTable, SessionTable } from "./session/sql"
 import { TaskBindingTable } from "./task-binding/sql"
+import { TaskQueue } from "./task-queue"
 
 export const Request = TaskMetrics.Request
 export type Request = TaskMetrics.Request
+
+export class QueueBlockedError extends Schema.TaggedErrorClass<QueueBlockedError>()(
+  "TaskMetrics.QueueBlocked",
+  {
+    reason: TaskQueue.BlockReason,
+  },
+  { httpApiStatus: 409 },
+) {}
 
 const unknownNumeric = (provenance: string[]) => TaskMetrics.Numeric.make({ state: "unknown", provenance })
 
@@ -118,9 +128,29 @@ const combineModels = (values: TaskMetrics.Models[], provenance: string[]) => {
   return partialModels(unique.length ? unique : undefined, provenance)
 }
 
+const unknownFreshness = () => TaskMetrics.Freshness.make({ state: "unknown" })
+
+const unknownAttention = (taskID: string) =>
+  TaskOwnership.AttentionFact.make({
+    state: "unknown",
+    provenance: TaskOwnership.Provenance.make({ source: "attention_input", reference: taskID }),
+    freshness: TaskOwnership.Freshness.make({}),
+  })
+
+const bindingSources = (taskID: string) => [
+  TaskOwnership.Provenance.make({ source: "task_binding", reference: taskID }),
+]
+
+const unknownCost = (provenance: string[]) =>
+  unknownNumeric([...provenance, "no durable billing or tariff provenance"])
+
 export interface Interface {
   readonly task: (input: { taskID: string }) => Effect.Effect<TaskMetrics.Task>
-  readonly sprint: (input: { sprintID: string; taskIDs: string[] }) => Effect.Effect<TaskMetrics.Sprint>
+  readonly sprint: (input: {
+    sprintID: string
+    taskIDs: string[]
+    queue?: ReadonlyArray<TaskQueue.Entry>
+  }) => Effect.Effect<TaskMetrics.Sprint, QueueBlockedError>
 }
 
 export class Service extends Context.Service<Service, Interface>()("@opencode/TaskMetrics") {}
@@ -144,8 +174,11 @@ const layer = Layer.effect(
           taskID: input.taskID,
           models: unknownModels([...bindingProvenance, "task binding not found"]),
           tokens: unknownTokens([...bindingProvenance, "task binding not found"]),
-          cost: unknownNumeric([...bindingProvenance, "task binding not found"]),
+          cost: unknownCost([...bindingProvenance, "task binding not found"]),
           latency: unknownNumeric([...bindingProvenance, "task binding not found"]),
+          freshness: unknownFreshness(),
+          attention: unknownAttention(input.taskID),
+          sources: bindingSources(input.taskID),
         })
       const session = yield* db
         .select({ id: SessionTable.id })
@@ -159,8 +192,11 @@ const layer = Layer.effect(
           sessionID: binding.session_id,
           models: unknownModels([...bindingProvenance, "bound session not found"]),
           tokens: unknownTokens([...bindingProvenance, "bound session not found"]),
-          cost: unknownNumeric([...bindingProvenance, "bound session not found"]),
+          cost: unknownCost([...bindingProvenance, "bound session not found"]),
           latency: unknownNumeric([...bindingProvenance, "bound session not found"]),
+          freshness: unknownFreshness(),
+          attention: unknownAttention(input.taskID),
+          sources: bindingSources(input.taskID),
         })
       const rows = yield* db
         .select()
@@ -199,20 +235,28 @@ const layer = Layer.effect(
         sessionID: session.id,
         models: models(modelValues, decoded.some(Exit.isFailure), provenance),
         tokens: tokens(tokenValues, assistants.length, incomplete, provenance),
-        cost: unknownNumeric([...provenance, "no durable billing or tariff provenance"]),
+        cost: unknownCost(provenance),
         latency: numeric(latencyValues, assistants.length, incomplete, provenance),
+        freshness: unknownFreshness(),
+        attention: unknownAttention(input.taskID),
+        sources: bindingSources(input.taskID),
       })
     })
 
     return Service.of({
       task,
       sprint: Effect.fn("TaskMetrics.sprint")(function* (input) {
+        if (input.queue) {
+          const result = TaskQueue.evaluate(input.queue)
+          if (result.kind === "blocked") return yield* new QueueBlockedError({ reason: result.reason })
+        }
         const taskIDs = Array.from(new Set(input.taskIDs))
         const duplicateTaskIDs = Array.from(
           new Set(input.taskIDs.filter((taskID, index) => input.taskIDs.indexOf(taskID) !== index)),
         )
         const tasks = yield* Effect.forEach(taskIDs, (taskID) => task({ taskID }))
         const provenance = [`sprint:${input.sprintID}`, ...tasks.flatMap((item) => item.tokens.provenance)]
+        const observedAt = yield* DateTime.nowAsDate.pipe(Effect.map((date) => date.toISOString()))
         return TaskMetrics.Sprint.make({
           sprintID: input.sprintID,
           taskIDs,
@@ -233,6 +277,13 @@ const layer = Layer.effect(
           latency: combineNumeric(
             tasks.map((item) => item.latency),
             provenance,
+          ),
+          freshness: TaskMetrics.Freshness.make({
+            state: "available",
+            value: TaskOwnership.Freshness.make({ observedAt }),
+          }),
+          sources: Array.from(
+            new Map(tasks.flatMap((item) => item.sources).map((source) => [source.reference, source])).values(),
           ),
         })
       }),
