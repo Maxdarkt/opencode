@@ -1,8 +1,8 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `19`
-- Updated: `2026-09-11T11:58:00+02:00`
+- Generation: `20`
+- Updated: `2026-09-11T12:02:28+02:00`
 - Objective: `Piloter deux tâches successives sans parallélisme, en isolant MT/APEX/session/worktree/métriques entre A et B.`
 - Freshness: `fresh`
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
@@ -15,7 +15,7 @@
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `DA10-006:allocate-and-analyze`
+- Next event: `DA10-006:1:plan-complete`
 - Watcher: `armed`
 - Watcher owner: `01a08063-ecac-7b10-8a50-1cb4069c5266`
 - Successor: `none`
@@ -25,7 +25,7 @@
 | Task | Thread | APEX generation | State | Compaction | Next action |
 | --- | --- | ---: | --- | --- | --- |
 | DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `review / code accepted` | `none` | Smoke UI intégré réservé à DA40-015; ne pas intégrer avant la recette Sprint. |
-| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 1 | `in_progress / Analyze dispatched` | `none` | Terra/medium demandé; inventorier l'UI et produire un plan de maquette sans Build. |
+| DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 1 | `checkpoint / Analyze complete` | `none` | Plan Terra/medium relancé; pathset et smoke de maquette à préciser, Build interdit. |
 | DA20-004 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
 | DA10-005 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009 et DA20-004. |
 | DA30-010 | `none` | 1 | `todo / allocated` | `none` | Attendre DA30-009. |
@@ -53,6 +53,7 @@
 - Remise `DA30-009:9:verify-complete` acceptée : preuves code complètes, mais la règle qui exige DA10-005/DA40-015 avant review entre en cycle avec leurs dépendances sur DA30-009. Aucun changement MT n'est effectué sans arbitrage.
 - Reprise `2026-09-11` : MT confirme DA30-009 `in_progress` et quatre dépendants `todo`; STATE enfant génération 9 en VERIFY et pathset B1+B2 attendu, sans erreur whitespace. Runtime reconstruit; watcher précédent retiré car aucun enfant n'est actif.
 - Décision utilisateur `2026-09-11` : maquette cockpit cliquable avant tout nouveau Build UI réel. DA30-009 passe en `review` sur ses preuves code (requête MT `32c056f8-e72a-47bf-a3ea-8185fa31373c`); la réception visuelle intégrée reste explicitement à DA40-015. DA10-006 est créée dans Sprint 4 (3 SP), et le Sprint est rebaseliné à 32 SP.
+- Remise `DA10-006:1:analyze-complete` acceptée : maquette à fixtures locales et interactions sans effet; surfaces UI réutilisables inventoriées, deux viewports définis, whitespace PASS. Le Plan est couvert; aucun Build n'est encore autorisé.
 
 ## Blockers and decisions
 
@@ -62,7 +63,7 @@
 
 ## Next action
 
-Attendre la remise Analyze de DA10-006, l'accepter seulement avec état/diff propres, puis router le Plan UX. Aucun Build, action MT, terminal réel ou navigateur réel dans la maquette.
+Attendre la remise Plan de DA10-006; valider le pathset borné et le contrat « simulation sans effet », puis seulement router le Build précis sous Luna/medium.
 
 ## Resume
 

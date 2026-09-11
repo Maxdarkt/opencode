@@ -2,7 +2,7 @@
 
 - Schema: `sprint-event-ledger/v1`
 - Sprint: `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`
-- Updated: `2026-09-10T07:37:56+02:00`
+- Updated: `2026-09-11T12:02:28+02:00`
 - Open queue depth: `0`
 
 ## Events
@@ -83,3 +83,14 @@
 - Decision: arbitrage utilisateur requis : autoriser `DA30-009 → review` pour réception code avec smoke UI final différé à DA40-015, ou réviser les dépendances Sprint/critères de review.
 - Recommendation / next instruction: conserver aucune tâche produit active jusqu'à l'arbitrage; ne pas muter MT ni lancer les dépendants.
 - Git: HEAD `57da5e0d`, dirty attendu strictement dans le pathset validé, aucun commit/push/rebase.
+
+### DA10-006:1:analyze-complete
+
+- State: `relaunched / plan-dispatched`
+- Objective / position: Analyse UX complète à la frontière `ANALYZE → parent-controlled PLAN`.
+- Effects and evidence: inventaire des rails, onglets, panneau latéral, aperçu diff, terminal et dialogue de confirmation existants; proposition d'une route locale à fixtures immuables, sans autorités réelles. [analyse](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/analyze.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: inventaire et règles UI PASS; `git diff --check` PASS; aucun test, serveur ou code produit conformément à Analyze.
+- Problems / impact: aucun blocage; le prototype reste explicitement non mutatif. DA10-005 ne sera pas étendue sans validation de la maquette.
+- Decision: le mandat utilisateur couvre la préparation du Plan de maquette; la validation de la maquette elle-même reste une décision future avant le cockpit réel.
+- Recommendation / next instruction: même chat relancé en Plan Terra/medium pour préciser le pathset, les fixtures, les interactions locales, tests et smoke; Build interdit.
+- Git: branche `sprint-cockpit-prototype`, HEAD `11cd3e5dc8a184ae2ca3fc2a1c5ccc4db19af152`, seulement deux artefacts APEX non suivis.
