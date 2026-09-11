@@ -302,3 +302,14 @@
 - Decision: DA20-004 est maintenant éligible et reçoit un worktree propre, basé sur ce commit, sans toucher au worktree métier permanent sale.
 - Recommendation / next instruction: lancer Analyze DA20-004 sous Terra/medium avec son nouveau scope; DA20-005 reste dépendante.
 - Git: branche `task/DA30-009-file-sequentielle-autorite-multitache`, HEAD `3fa91aba1`, propre; aucune merge/push/rebase.
+
+### DA20-004:1:analyze-complete
+
+- State: `consumed / Plan dispatched`
+- Objective / position: Analyse ownership/reprise achevée à `ANALYZE → parent plan review`, dans le worktree propre basé sur DA30-009.
+- Effects and evidence: DA20-004 doit introduire une projection de lecture fail-closed par tâche; `TaskExecution.resume` reste strictement intra-tâche. Les signaux d'attention doivent porter un `sourceTaskID`, sinon rester `unknown`, afin de ne jamais migrer A vers B. [analyse](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA20-004-cockpit-ownership/.project/tasks/DA20-004-ownership-reprise-passage-taches/analyze.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA20-004-cockpit-ownership/.project/tasks/DA20-004-ownership-reprise-passage-taches/STATE.md).
+- Checks: base/HEAD `3fa91aba1` vérifiés; `git diff --check` PASS; aucun Build, test, service ou autorité réelle pendant Analyze.
+- Problems / impact: aucun signal d'attention durable par tâche n'existe aujourd'hui; le contrat doit exiger une source explicite ou déclarer `unknown`. DA30-010 reste propriétaire du futur agrégat, sans bloquer DA20-004.
+- Decision: le Plan Terra/medium est couvert : borner Schema/Core/tests et ne créer aucune mutation d'ownership, endpoint, UI ou collecteur global.
+- Recommendation / next instruction: même chat en Plan Terra/medium, puis Build luna précis seulement après son checkpoint.
+- Git: branche `cockpit-ownership`, HEAD `3fa91aba1`, seuls artifacts APEX Analyze non suivis.
