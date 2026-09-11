@@ -203,3 +203,14 @@
 - Decision: C3 est couvert par le mandat de maquette; il ne fait que démarrer la route locale, observer les parcours et produire les preuves, sans action réelle.
 - Recommendation / next instruction: même chat Luna/medium pour C3 seul; arrêt propre du serveur après smoke sauf aperçu utilisateur explicitement requis.
 - Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
+
+### DA10-006:15:ux-correction-C3-runtime-isolation-blocked
+
+- State: `consumed / isolation correction Analyze dispatched`
+- Objective / position: C3 a vérifié l'UX, mais ne peut pas accepter le contrat de simulation isolée : le shell de l'application émet des requêtes runtime en arrière-plan.
+- Effects and evidence: parcours UI PASS à 1440×900 et 1024×768 (indicateurs, canvas, panneau, topologie, drawer et dialogue inerte); aucun Commit/Launch/Merge/Production n'a d'effet. Chrome système a observé environ 730 requêtes par viewport vers `localhost:4096` (`health/session/project/provider/model/event`), incompatibles avec le périmètre fixtures. [rapport de smoke](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/smoke-report.md), [STATE enfant](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-006-maquette-cliquable-cockpit-sprint/.project/tasks/sprint-cockpit-clickable-prototype/STATE.md).
+- Checks: smoke UI aux deux tailles PASS; `git diff --check` PASS; Playwright non exécuté faute de Chromium, sans téléchargement; serveur arrêté proprement.
+- Problems / impact: la route doit être isolée du shell/runtime de l'application avant que la maquette puisse être déclarée sans connexion réelle. Ce n'est ni une limite du navigateur intégré Codex ni une action utilisateur.
+- Decision: l'utilisateur autorise la correction et la poursuite; Analyse Terra/medium de l'isolation de route est requise avant tout Build, car elle change le point de montage de la maquette.
+- Recommendation / next instruction: même chat, identifier le plus petit découplage bootstrap/route ou le harness local qui supprime les appels, puis proposer un paquet de correction borné et les preuves réseau locales.
+- Git: HEAD `11cd3e5dc`, pathset prototype non commité; aucun commit/push/rebase/merge.
