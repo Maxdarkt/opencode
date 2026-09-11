@@ -2,8 +2,8 @@ import { expect, test, type Page } from "@playwright/test"
 
 async function openCockpit(page: Page) {
   await page.goto("/sprint/cockpit", { waitUntil: "domcontentloaded" })
-  await expect(page.getByText("DA10-005-A").first()).toBeVisible()
-  await expect(page.getByText("DA10-005-B").first()).toBeVisible()
+  await expect(page.getByText("DA40-015-A").first()).toBeVisible()
+  await expect(page.getByText("DA40-015-B").first()).toBeVisible()
   await page.getByRole("button", { name: "Commit" }).first().click()
   await expect(page.getByRole("dialog")).toContainText("will not run")
   await page.getByRole("button", { name: "Acknowledge simulation" }).click()

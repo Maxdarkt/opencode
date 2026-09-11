@@ -31,44 +31,44 @@ describe("sprint cockpit mapper", () => {
       ownership: snapshot([
         {
           identity: sprintCockpitInput.identities[0],
-          binding: missing("absent", "task_binding", "DA10-005-A"),
-          authority: missing("unknown", "runtime_snapshot", "DA10-005-A"),
-          execution: missing("absent", "task_execution", "DA10-005-A"),
-          attention: missing("unknown", "attention_input", "DA10-005-A"),
+          binding: missing("absent", "task_binding", "DA40-015-A"),
+          authority: missing("unknown", "runtime_snapshot", "DA40-015-A"),
+          execution: missing("absent", "task_execution", "DA40-015-A"),
+          attention: missing("unknown", "attention_input", "DA40-015-A"),
         },
         {
           identity: sprintCockpitInput.identities[1],
           binding: {
             state: "available",
             value: { ...sprintCockpitInput.identities[1], version: 1, time: { created: 1, updated: 1 } },
-            provenance: provenance("task_binding", "DA10-005-B"),
+            provenance: provenance("task_binding", "DA40-015-B"),
             freshness: {},
           },
           authority: {
             state: "available",
-            value: { id: "DA10-005-B", state: "available", mtStatus: "todo" },
-            provenance: provenance("runtime_snapshot", "DA10-005-B"),
+            value: { id: "DA40-015-B", state: "available", mtStatus: "todo" },
+            provenance: provenance("runtime_snapshot", "DA40-015-B"),
             freshness: {},
           },
-          execution: missing("absent", "task_execution", "DA10-005-B"),
+          execution: missing("absent", "task_execution", "DA40-015-B"),
           attention: {
             state: "available",
             value: [
               {
-                sourceTaskID: "DA10-005-B",
+                sourceTaskID: "DA40-015-B",
                 id: "attn",
                 kind: "signal",
-                provenance: provenance("attention_input", "DA10-005-B"),
+                provenance: provenance("attention_input", "DA40-015-B"),
                 freshness: {},
               },
             ],
-            provenance: provenance("attention_input", "DA10-005-B"),
+            provenance: provenance("attention_input", "DA40-015-B"),
             freshness: {},
           },
         },
       ]),
     })
-    expect(view.tasks.map((task) => task.id)).toEqual(["DA10-005-A", "DA10-005-B"])
+    expect(view.tasks.map((task) => task.id)).toEqual(["DA40-015-A", "DA40-015-B"])
     expect(view.tasks[0].worktree.text.includes("0")).toBe(false)
     expect(view.tasks[0].sessionHref).toBeNull()
     expect(view.tasks[1].sessionHref).toBe(`/session/${sprintCockpitInput.identities[1].sessionID}`)
@@ -88,7 +88,7 @@ describe("sprint cockpit mapper", () => {
   test("fallback marks HTTP failure inaccessible and never deep-links", () => {
     const view = inaccessibleCockpitView()
     expect(view.source).toBe("inaccessible")
-    expect(view.tasks.map((task) => task.id)).toEqual(["DA10-005-A", "DA10-005-B"])
+    expect(view.tasks.map((task) => task.id)).toEqual(["DA40-015-A", "DA40-015-B"])
     expect(view.tasks.every((task) => task.sessionHref === null)).toBe(true)
     expect(view.tasks.every((task) => task.status.state === "inaccessible")).toBe(true)
   })
@@ -98,9 +98,9 @@ describe("sprint cockpit layout", () => {
   test("keeps A/B selection local without mutative callbacks", () => {
     const actions: SensitiveAction[] = ["launch", "commit", "merge", "production"]
     expect(actions.every((action) => typeof action !== "function")).toBe(true)
-    const selected = reduceCockpitLayoutState(createCockpitLayoutState(), { type: "selectTask", taskId: "DA10-005-B" })
-    expect(selected.selectedTaskId).toBe("DA10-005-B")
-    expect(createCockpitLayoutState().selectedTaskId).toBe("DA10-005-A")
+    const selected = reduceCockpitLayoutState(createCockpitLayoutState(), { type: "selectTask", taskId: "DA40-015-B" })
+    expect(selected.selectedTaskId).toBe("DA40-015-B")
+    expect(createCockpitLayoutState().selectedTaskId).toBe("DA40-015-A")
   })
 })
 

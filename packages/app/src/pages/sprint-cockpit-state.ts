@@ -22,7 +22,7 @@ export type CockpitLayoutIntent =
   | { readonly type: "openConfirmation"; readonly action: SensitiveAction }
   | { readonly type: "closeConfirmation" }
 
-export function createCockpitLayoutState(selectedTaskId = "DA10-005-A"): CockpitLayoutState {
+export function createCockpitLayoutState(selectedTaskId = "DA40-015-A"): CockpitLayoutState {
   return {
     selectedTaskId,
     view: "cockpit",
