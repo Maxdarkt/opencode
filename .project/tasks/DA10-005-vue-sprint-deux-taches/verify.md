@@ -1,6 +1,7 @@
 # Verify — DA10-005
 
 - Status: PASS
+- SHA: `35e7d83d5`
 - Checks:
   - `packages/opencode` typecheck PASS
   - `httpapi-global` + `httpapi-control-plane` PASS
@@ -11,4 +12,4 @@
 
 ## Commit
 
-Local only, no push/merge. SHA recorded in STATE after commit.
+`35e7d83d5` local only, no push/merge.
