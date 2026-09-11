@@ -4,16 +4,16 @@ Mis à jour le 2026-09-10. Projet MT DA ; branche source `staging` à `948a99387
 
 ## Travail courant
 
-Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`), 29 SP planifiés. DA40-016 et DA30-009 sont `in_progress`; les quatre autres enfants restent `todo`. Objectif : piloter deux tâches successives sans parallélisme, en gardant MT/APEX/session/worktree/métriques isolés. DA30-009 exécute B1 dans son worktree task-owned; le [STATE parent](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/tasks/DA40-016-orchestration-sprint-4/STATE.md) porte la preuve.
+Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`), 29 SP planifiés. DA40-016 et DA30-009 sont `in_progress`; les quatre autres enfants restent `todo`. Objectif : piloter deux tâches successives sans parallélisme, en gardant MT/APEX/session/worktree/métriques isolés. DA30-009 a achevé son Build/Verify dans son worktree task-owned; la réception UI A/B est reportée à DA40-015 et le [STATE parent](/Users/leanbot/Documents/40_Daidalon/Daidalon/.project/tasks/DA40-016-orchestration-sprint-4/STATE.md) porte l'arbitrage de transition.
 
 | Carte | Résultat attendu | SP | Dépendances | État |
 |---|---|---:|---|---|
-| DA30-009 | File séquentielle et autorité MT/APEX par tâche | 8 | candidate Sprint 3 intégrée dans `staging` | in_progress / Build B1 — [plan](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/plan.md) |
+| DA30-009 | File séquentielle et autorité MT/APEX par tâche | 8 | candidate Sprint 3 intégrée dans `staging` | in_progress / Verify code complet, review à réconcilier — [preuves](/Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-009-file-sequentielle-autorite-multitache/.project/tasks/DA30-009-file-sequentielle-autorite-multitache/verify.md) |
 | DA20-004 | Ownership et reprise sûrs lors du passage A → B | 5 | DA30-009 | todo — [scope](../features/20-workspace-git/.project/tasks/DA20-004-ownership-reprise-passage-taches/scope.md) |
 | DA10-005 | Vue Sprint de deux tâches et chat existant ciblé | 5 | DA30-009, DA20-004 | todo — [scope](../features/10-product-ui/.project/tasks/DA10-005-vue-sprint-deux-taches/scope.md) |
 | DA30-010 | Métriques Sprint par tâche, avec provenance honnête | 5 | DA30-009 | todo — [scope](../features/30-agent-runtime/.project/tasks/DA30-010-metriques-sprint-par-tache/scope.md) |
 | DA40-015 | Candidate intégrée et recette parent A/B | 3 | quatre lots produit | todo — [scope](../features/40-tooling/.project/tasks/DA40-015-candidate-integree-sprint-4/scope.md) |
-| DA40-016 | Orchestration, réception et rotation | 3 | aucune à l’entrée | todo — [scope](../features/40-tooling/.project/tasks/DA40-016-orchestration-sprint-4/scope.md) |
+| DA40-016 | Orchestration, réception et rotation | 3 | aucune à l’entrée | in_progress / attente arbitrage de réception DA30-009 — [scope](../features/40-tooling/.project/tasks/DA40-016-orchestration-sprint-4/scope.md) |
 
 ## Historique
 
@@ -31,7 +31,7 @@ Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c
 
 ## Suite
 
-Sprint 4 est actif; DA30-009 exécute B1 et reste le seul enfant actif selon la [routine permanente](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/workflow/suivi-sprints.md). Un Sprint suivant ne sera cadré et créé qu'après sa clôture. [Briefing validé](docs/product/sprints/sprint-4-proposal.md).
+Sprint 4 est actif; DA30-009 a terminé Build/Verify et aucune tâche produit n'est active pendant l'arbitrage de review. Une fois la réception code réconciliée, la séquence reprend avec DA20-004, DA10-005, DA30-010 puis DA40-015. Un Sprint suivant ne sera cadré et créé qu'après sa clôture. [Briefing validé](docs/product/sprints/sprint-4-proposal.md).
 
 ## Besoin produit à cadrer
 
