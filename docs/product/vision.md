@@ -1,108 +1,89 @@
 # Daidalon — vision produit
 
-**Produit :** Daidalon  
-**Signature :** The open workspace for agentic development.  
-**Dépôt :** fork communautaire de `anomalyco/opencode`  
-**Statut :** vision directrice, à valider par l'usage et les mesures de M0  
-**Dernière mise à jour :** 2026-09-11
+**Produit :** Daidalon
+**Signature :** The open workspace for agentic development.
+**Dépôt :** fork communautaire de `anomalyco/opencode`
+**Statut :** vision directrice — recadrage 2026-09-12
+**Guide d’expérience :** Cursor (contrôle humain), pas Codex (orchestrateur fournisseur)
 
 ## Intention
 
-Construire sur OpenCode un environnement de développement agentique centré sur les projets, les tâches et les worktrees, avec une expérience graphique aussi lisible que Codex Desktop et une orchestration APEX/Sprint durable.
+Daidalon est un **outil de travail agentique que le développeur possède**. OpenCode fournit le moteur (sessions, outils, Git, multi-fournisseur). Cursor fournit le **modèle de conduite** : un chat collé à un worktree, un prompt qui positionne, un agent borné, le pilote qui garde la main.
 
-Le fork conserve les fondations d'OpenCode et les améliore progressivement. Il ne cherche pas à réécrire son runtime, son abstraction multi-fournisseur, ses sessions, son terminal, Git, ses outils ou sa gestion du contexte.
+On ne repart pas de zéro. On ne clone pas le chrome de Cursor. On **suit son contrat de contrôle** et on l’améliore là où Cursor et Codex lient le développeur au marketing d’un fournisseur.
 
-> L'environnement, les outils, le contexte, la mémoire et l'état appartiennent au runtime. Le fournisseur LLM est un moteur d'intelligence interchangeable.
+> L’outil, le contexte, la mémoire et Git appartiennent au développeur. Le LLM est un moteur interchangeable. L’abonnement est un adaptateur de paiement, jamais l’identité du produit.
 
-## Principes produit
+## Pourquoi pas rester sur Cursor
 
-### Le projet est le point d'entrée
+Cursor est excellent comme poste de pilotage. Il n’est pas le produit : le fournisseur, les règles plateforme et le prix de l’abonnement le sont. Daidalon existe pour :
 
-L'utilisateur choisit un dossier local avec un sélecteur clair, vérifie son arborescence, son dépôt Git, sa branche et ses worktrees, puis entre dans un espace projet stable.
+- choisir le LLM **après** l’outil, pas l’inverse ;
+- brancher API **ou** abonnement tant que c’est moins cher, et **sortir** quand les abo montent ;
+- investir l’effort dans la **couche smart** : contexte, compaction, routage, budgets, refus des courses à vide.
 
-### Le sprint possède un pilote
+Un agent qui tourne 30 minutes hors mandat n’est pas un outil. C’est une irréligion pour le fournisseur.
 
-Chaque sprint dispose d'un chat orchestrateur général. Il présente l'objectif, les dépendances, les tâches, leur statut et les décisions. Il ouvre et suit les chats de tâches sans devenir lui-même un espace d'implémentation.
-
-### Une tâche possède un contexte d'exécution isolé
-
-Une tâche de code relie durablement :
+## Trois plans (pas un monolithe)
 
 ```text
-Tâche MT Tasks
-  -> dossier APEX
-  -> chat OpenCode
-  -> branche Git
-  -> worktree dédié
-  -> fichiers, terminal et diff
-  -> modèle, tokens, coût et résultat
+1. Workbench (Cursor)
+   chat ↔ worktree, fichiers, diff, terminal, serveur de preview, navigateur
+
+2. Conducteur de sprint (Daidalon)
+   objectif, dépendances, prompts de lancement, candidate, merge vers staging
+
+3. Couche économie (Daidalon)
+   tokens, cache, coût, budget, modèle, device (CPU/RAM des process locaux)
 ```
 
-### L'interface rend l'état évident
+Le look peut rester simple **jusqu’à la maquette**. Le chrome cible est figé dans [`maquette.md`](./maquette.md) / [`maquette/cockpit.html`](./maquette/cockpit.html). Les features à livrer : [`livrable.md`](./livrable.md).
 
-À tout moment, l'utilisateur doit savoir :
+## Principes
 
-- quel projet est ouvert ;
-- quel dossier, quelle branche et quel worktree sont actifs ;
-- quelle tâche et quelle phase APEX sont en cours ;
-- quels fichiers ont changé ;
-- quel modèle travaille et combien il consomme ;
-- quelles validations restent à effectuer.
+### Le développeur conduit
 
-### Le déroulement de l'agent reste visible
+L’agent n’orchestre pas le sprint tout seul. Un chat pilote propose ; l’humain lance, arrête, merge. Chaque chat de tâche a un worktree, un mandat, une fin.
 
-Les petites étapes visibles dans le prompt OpenCode sont conservées. Elles doivent pouvoir afficher la progression réelle, les fichiers concernés, les commandes importantes et les contrôles effectués sans noyer l'utilisateur dans les détails techniques.
+### Une carte, un worktree
+
+Pas de worktrees métier figés (`10-product-ui`…) comme méthode produit. DA10/20/30/40 = **thème**. Exécution = `features/tasks/<carte>/`. En fin de sprint : merger **la candidate**, pousser `staging`, retirer les worktrees de cartes.
+
+### Identité visible en permanence
+
+Projet, sprint, carte, phase APEX, worktree, branche, écart vs `staging`, modèle, tokens, coût. Absent = `unknown`, jamais un faux zéro.
 
 ### Les modèles restent interchangeables
 
-OpenAI, Anthropic, xAI, les modèles locaux et les fournisseurs compatibles sont utilisés via API en priorité. Les abonnements peuvent être proposés comme adaptateurs opportunistes, jamais comme dépendance structurante.
+API d’abord. Abonnements = adaptateurs. Changer de moteur ne change pas les tâches, les preuves APEX ni Git.
 
-### Le coût est un signal produit
+### Le coût est un levier, pas un badge
 
-Le runtime mesure les tokens d'entrée, de sortie et de cache, la latence, les retries, les escalades, le modèle, le fournisseur et le succès. L'objectif est de vérifier si la persistance externe, la sélection minimale de contexte, le cache et le routage permettent un coût API comparable à un abonnement intensif.
+Mesurer pour **décider** : moins de contexte, autre modèle, arrêt, pas pour vanter un compteur. La couche smart vise un coût API maîtrisé face à un abo intensif, et une sortie propre quand l’abo augmente.
 
 ## Expérience cible
 
 ```text
 Daidalon
-├── Accueil
-│   └── projets récents, favoris et sélecteur local explicite
-├── Projet
-│   ├── chat général
-│   ├── branches et worktrees
-│   ├── fichiers, recherche, Git et terminaux
-│   └── sprints
+├── Projet (dépôt source / staging)
+│   ├── chats (chaque fil affiche son worktree, comme Cursor)
+│   ├── fichiers, Git, terminaux
+│   └── serveurs du worktree (make dev) + navigateur intégré
 └── Sprint
-    ├── pilote : objectif, décisions, reprises et intégrations
-    ├── rail de tâches : statut, activité et attention
-    ├── canvas de tâche APEX -> chat + worktree + outils
-    ├── panneau droit : Task status, contexte vérifiable et topologie Git
-    └── dépendances, validations, modèles, tokens, coûts et escalades
+    ├── chat pilote : dépendances, prompts, merge candidate
+    ├── rail : tâches, activité, worktree, attention
+    ├── canvas : chat de la carte sélectionnée
+    └── panneaux : statut, Git vs staging, tokens/budget, process machine
 ```
 
-Le panneau latéral droit regroupe selon le contexte la vue Sprint, les fichiers, la recherche, les diffs, Git, le terminal et, plus tard, un navigateur persistant intégré. La topologie Git présente le dépôt source et ses worktrees en lecture seule : références configurables, cible de merge, divergence de commits et statistiques `+/-`, sans action cachée.
+## Succès
 
-## Fondations réutilisées
+Une personne solo peut : coller un prompt sur le bon arbre, voir où elle est, lancer la preview, suivre le sprint, merger la candidate, changer de LLM, et **savoir ce que ça a coûté** — sans être captif d’OpenAI, Anthropic ou Cursor.
 
-L'audit initial confirme la présence de briques à conserver :
+## Limites
 
-- application SolidJS et desktop Electron ;
-- Tailwind CSS 4, Kobalte, Solid Primitives et design system interne ;
-- sessions et persistance SQLite ;
-- providers, modèles, streaming, outils et MCP ;
-- contexte durable, compaction, prompt caching et métriques de coût ;
-- terminal, fichiers, revue de diff et intégration Git ;
-- mécanismes de worktree existants à sécuriser et élever au rang d'objet produit.
-
-## Limites directrices
-
-- Ne pas présumer qu'une brique doit être remplacée avant de l'avoir auditée et testée.
-- Ne pas coupler une tâche à plusieurs worktrees écrivables.
-- Ne pas lancer l'orchestration parallèle avant de sécuriser le cycle de vie d'un worktree unique.
-- Ne pas masquer les opérations Git destructrices derrière une action implicite.
-- Ne pas optimiser uniquement le nombre de tokens au détriment du taux de réussite.
-- Garder `codex-workflow-config` séparé et inchangé durant M0 ; APEX et Sprint sont des inspirations et des contrats d'intégration à étudier.
-
-## Succès produit
-
-Le projet réussit si une personne peut piloter plusieurs tâches de développement depuis une vue Sprint claire, reprendre chaque tâche sans perte de contexte, isoler son code dans un worktree, changer de modèle sans perdre l'état et comprendre le coût réel d'un résultat validé.
+- Ne pas encoder une mauvaise habitude personnelle dans l’architecture.
+- Ne pas lancer un agent sans borne de mandat / budget / temps.
+- Ne pas lier le produit à un abo unique.
+- Ne pas fusionner commit/merge/push dans un bouton magique.
+- Ne pas optimiser les tokens au détriment d’un résultat validé.

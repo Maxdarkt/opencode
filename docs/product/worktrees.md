@@ -1,70 +1,51 @@
 # Daidalon — topologie Git et worktrees
 
-**Statut :** convention active  
-**Dernière mise à jour :** 2026-09-06
+**Statut :** convention active (recadrage 2026-09-12)
+**Dernière mise à jour :** 2026-09-12
 
-## Structure locale
+## Méthode actuelle (Cursor)
 
 ```text
-/Users/leanbot/Documents/40_Daidalon/
-├── Daidalon/                    # dépôt source, branche staging
-└── features/
-    ├── 10-product-ui/           # branche 10-product-ui
-    ├── 20-workspace-git/        # branche 20-workspace-git
-    ├── 30-agent-runtime/        # branche 30-agent-runtime
-    └── 40-tooling/              # branche 40-tooling
+Daidalon/                          # source, branche staging — observation, pas de Build produit
+features/tasks/<CARTE>/            # un worktree par carte MT, créé au lancement
 ```
 
-Les quatre worktrees sont permanents et représentent des domaines métier. Les tâches sont exécutées séquentiellement dans un même worktree et peuvent avancer en parallèle entre domaines indépendants.
+- Une **carte** = une branche `task/…` = un worktree = un chat.
+- DA10 / DA20 / DA30 / DA40 = **thème** informatif, pas un checkout.
+- `staging` n’exécute pas le produit. Les nouveaux arbres partent du HEAD `staging` après promotion.
+- Fin de sprint : merger **uniquement la candidate** (dernier worktree qui contient les commits), `git push origin staging`, retirer les worktrees de cartes **propres**. Preview (`develop`) et prod (`master`) restent facultatives.
 
-## Domaines
+## Legacy — worktrees métier permanents
 
-| Code | Domaine | Responsabilité principale |
+```text
+features/10-product-ui/
+features/20-workspace-git/
+features/30-agent-runtime/
+features/40-tooling/
+```
+
+Ces arbres existent encore. Ils **ne sont plus** le modèle d’exécution. Les y empiler plusieurs tâches à la suite a bloqué le flux. Ne pas les supprimer sans mandat. Ne pas les reproduire dans l’UI comme « les » worktrees du produit.
+
+## Thèmes (pas des checkouts)
+
+| Code | Thème | Exemples |
 |---|---|---|
-| `10` | `product-ui` | expérience produit, interface et organisation du travail du développeur |
-| `20` | `workspace-git` | projets locaux, dépôts, branches, worktrees, fichiers et Git |
-| `30` | `agent-runtime` | agents, contexte, mémoire, modèles, routage, coûts et orchestration |
-| `40` | `tooling` | MCP, skills, qualité, automatisation, CI et maintenance transverse |
+| `10` | workbench / UI | cockpit, rail, preview |
+| `20` | Git / workspace | topologie, diff vs staging |
+| `30` | runtime / économie | file, tokens, budget, contexte |
+| `40` | tooling | candidate, promotion, serveurs, MCP |
 
-## Flux Git cible
-
-```text
-upstream/dev
-     ↓ audit et synchronisation explicite
-staging
- ├── 10-product-ui
- ├── 20-workspace-git
- ├── 30-agent-runtime
- └── 40-tooling
-     ↓ intégration validée
-origin/dev
-```
-
-- `staging` est la branche d'intégration locale du dépôt source.
-- Aucun développement de tâche n'est réalisé directement sur `staging`.
-- Une tâche de code appartient à un seul domaine, une seule branche active et un seul worktree.
-- Les opérations commit, rebase, merge, push et suppression de worktree restent des portes séparées et explicites.
-- Les branches métier permanentes sont réalignées sur `staging` uniquement par une opération contrôlée.
-
-## Convention MT Tasks et APEX
-
-Les nouvelles cartes utilisent le préfixe projet `DA` et le code du domaine :
+## Flux Git
 
 ```text
-DA10-001  product-ui
-DA20-001  workspace-git
-DA30-001  agent-runtime
-DA40-001  tooling
+staging  (source saine)
+  └── task/DA…-…     (carte)
+        └── candidate sprint
+              └── merge → staging → origin/staging
 ```
 
-Chaque carte suivie doit pointer vers un dossier canonique sous `.project/tasks/` et conserver la même référence dans MT Tasks, le plan général et l'état APEX.
+Aucun développement de carte sur `staging`. Commit / merge / push / `worktree remove` sont des portes séparées.
 
-## Projections documentaires
+## APEX et projections
 
-`/Users/leanbot/Documents/40_Daidalon/Daidalon` est la racine documentaire
-canonique. Les `PLAN-GENERAL.md` et `sprint.md` des quatre worktrees sont des
-projections read-only conservées pour le contexte local; le [registre
-canonique](../../.project/runtime/canonical-projections.md) porte leur
-`canonical_ref`, date, revision et fraîcheur. Aucun worktree ne publie le canonique
-en modifiant sa copie. Les dossiers APEX restent, eux, dans leur worktree métier
-attitré et conservent leur `external_ref` stable.
+La racine documentaire canonique est le checkout `staging`. Les dossiers APEX vivent **dans le worktree de la carte**. Les copies `PLAN-GENERAL.md` / `sprint.md` ailleurs sont des projections read-only.

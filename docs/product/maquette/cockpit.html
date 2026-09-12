@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daidalon — maquette workbench</title>
+  <style>
+    :root {
+      --bg: #0c0c0e;
+      --panel: #141416;
+      --elev: #1c1c20;
+      --line: #2a2a30;
+      --text: #f4f4f5;
+      --mute: #a1a1aa;
+      --blue: #60a5fa;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --red: #f87171;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 13px/1.4 ui-sans-serif, system-ui, sans-serif; }
+    button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+    .app { display: flex; flex-direction: column; height: 100vh; min-height: 640px; }
+    .top {
+      display: flex; align-items: center; gap: 16px; height: 40px; padding: 0 12px;
+      border-bottom: 1px solid var(--line); background: var(--panel); flex-shrink: 0;
+    }
+    .brand { font-weight: 600; letter-spacing: -0.02em; }
+    .pill { color: var(--mute); font-size: 12px; font-family: ui-monospace, monospace; }
+    .pill strong { color: var(--text); font-weight: 500; }
+    .top-right { margin-left: auto; display: flex; gap: 12px; align-items: center; font-size: 12px; color: var(--mute); }
+    .shell { display: flex; flex: 1; min-height: 0; }
+    .rail {
+      width: 252px; flex-shrink: 0; border-right: 1px solid var(--line); background: var(--panel);
+      display: flex; flex-direction: column;
+    }
+    .rail h2 { margin: 0; padding: 12px 12px 8px; font-size: 11px; font-weight: 600; color: var(--mute); text-transform: uppercase; letter-spacing: 0.06em; }
+    .card {
+      display: block; width: calc(100% - 12px); margin: 0 6px 4px; padding: 8px 10px; border-radius: 8px; text-align: left;
+    }
+    .card:hover { background: var(--elev); }
+    .card.on { background: var(--elev); outline: 1px solid var(--line); }
+    .card .id { display: flex; justify-content: space-between; gap: 8px; font-weight: 600; font-size: 12px; }
+    .card .wt { color: var(--mute); font-size: 11px; font-family: ui-monospace, monospace; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .dot { width: 7px; height: 7px; border-radius: 99px; display: inline-block; }
+    .dot.run { background: var(--amber); }
+    .dot.attn { background: var(--blue); }
+    .mid { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bg); }
+    .tabs { display: flex; gap: 4px; padding: 8px 12px; border-bottom: 1px solid var(--line); }
+    .tabs button { padding: 6px 10px; border-radius: 6px; color: var(--mute); }
+    .tabs button.on { background: var(--elev); color: var(--text); }
+    .canvas { flex: 1; overflow: auto; padding: 16px 20px 80px; }
+    .msg { max-width: 720px; margin: 0 auto 14px; }
+    .msg .who { font-size: 11px; color: var(--mute); margin-bottom: 4px; }
+    .composer {
+      border-top: 1px solid var(--line); padding: 10px 16px 14px; background: var(--panel);
+    }
+    .composer .box {
+      max-width: 720px; margin: 0 auto; border: 1px solid var(--line); border-radius: 10px;
+      background: var(--elev); padding: 10px 12px; color: var(--mute);
+    }
+    .right {
+      width: 320px; flex-shrink: 0; border-left: 1px solid var(--line); background: var(--panel);
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .right .tabs { flex-wrap: wrap; }
+    .pane { flex: 1; overflow: auto; padding: 12px; }
+    .kv { margin-bottom: 10px; padding: 10px; border-radius: 8px; background: var(--elev); border: 1px solid var(--line); }
+    .kv dt { font-size: 11px; color: var(--mute); }
+    .kv dd { margin: 4px 0 0; font-size: 12px; word-break: break-word; }
+    .mono { font-family: ui-monospace, monospace; }
+    .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    .btn { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--elev); }
+    .btn.pri { border-color: #1d4ed8; background: #1e3a8a; }
+    .ok { color: var(--green); }
+    .warn { color: var(--amber); }
+    .toast {
+      display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: var(--elev); border: 1px solid var(--amber); color: var(--amber);
+      padding: 10px 14px; border-radius: 8px; z-index: 20; font-size: 12px;
+    }
+    .toast.show { display: block; }
+    @media (max-width: 1024px) {
+      .rail { width: 64px; }
+      .card .wt, .rail h2 span, .card .id span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; }
+      .right { width: 260px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <span class="brand">Daidalon</span>
+      <span class="pill">staging <strong>b2241f14c</strong></span>
+      <span class="pill">Sprint 5 · 24 SP</span>
+      <div class="top-right">
+        <span>Grok · API</span>
+        <span>budget <strong class="ok">$12.40 / $40</strong></span>
+      </div>
+    </header>
+    <div class="shell">
+      <aside class="rail">
+        <h2><span>Sprint · chats</span></h2>
+        <button class="card on" data-id="pilot" type="button">
+          <div class="id">Pilote <span class="dot attn"></span></div>
+          <div class="wt">staging · conducteur</div>
+        </button>
+        <button class="card" data-id="a" type="button">
+          <div class="id">DA10-017 <span class="dot run"></span></div>
+          <div class="wt">features/tasks/DA10-017-identites</div>
+        </button>
+        <button class="card" data-id="b" type="button">
+          <div class="id">DA40-018 <span></span></div>
+          <div class="wt">features/tasks/DA40-018-preview</div>
+        </button>
+      </aside>
+      <section class="mid">
+        <div class="tabs" id="canvas-tabs">
+          <button class="on" data-tab="chat" type="button">Chat</button>
+          <button data-tab="term" type="button">Terminal</button>
+          <button data-tab="git" type="button">Diff</button>
+          <button data-tab="web" type="button">Preview</button>
+        </div>
+        <div class="canvas" id="canvas"></div>
+        <div class="composer">
+          <div class="box" id="composer">Coller le prompt de lancement · l’agent reste dans ce worktree</div>
+        </div>
+      </section>
+      <aside class="right">
+        <div class="tabs" id="right-tabs">
+          <button class="on" data-p="task" type="button">Tâche</button>
+          <button data-p="git" type="button">Git</button>
+          <button data-p="cost" type="button">Coût</button>
+          <button data-p="srv" type="button">Serveurs</button>
+        </div>
+        <div class="pane" id="pane"></div>
+      </aside>
+    </div>
+  </div>
+  <div class="toast" id="toast">Simulation — aucun effet Git / agent</div>
+  <script>
+    const tasks = {
+      pilot: {
+        title: "Pilote Sprint 5",
+        wt: "Daidalon (staging)",
+        branch: "staging",
+        head: "b2241f14c",
+        vs: "source · 0 ahead",
+        next: "Lancer DA10-017 (dépendances OK)",
+        prompt: "Skill apex-task. Carte DA10-017. cwd = features/tasks/DA10-017-identites. Base b2241f14c.",
+        chat: [
+          ["Toi", "Objectif : identités réelles, worktree visible, pas d’orchestrateur Codex."],
+          ["Pilote", "Éligible : DA10-017. DA40-018 attend W1. Copie le prompt, ouvre un chat, ne code pas ici."]
+        ]
+      },
+      a: {
+        title: "DA10-017 Identités rail",
+        wt: "features/tasks/DA10-017-identites",
+        branch: "task/DA10-017-identites",
+        head: "3aa1c0ffe",
+        vs: "staging · +4 / −0",
+        next: "Analyze validé → Plan",
+        prompt: "(déjà dans ce fil)",
+        chat: [
+          ["Toi", "Analyze. Un chat = un worktree. Rail comme Cursor."],
+          ["Agent", "Contrat : facts fail-closed. Pathset App rail + panneaux. Stop après analyze.md."]
+        ]
+      },
+      b: {
+        title: "DA40-018 Preview make dev",
+        wt: "features/tasks/DA40-018-preview",
+        branch: "task/DA40-018-preview",
+        head: "—",
+        vs: "non alloué",
+        next: "Attend DA10-017",
+        prompt: "(bloqué : dépendance)",
+        chat: [["Système", "Carte non lancée. Le pilote ne crée pas ce worktree tant que W1 n’est pas done."]]
+      }
+    };
+    let id = "pilot";
+    let tab = "chat";
+    let panel = "task";
+    let serverOn = false;
+    const canvas = document.getElementById("canvas");
+    const pane = document.getElementById("pane");
+    const composer = document.getElementById("composer");
+    function toast() {
+      const t = document.getElementById("toast");
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 1800);
+    }
+    function renderCanvas() {
+      const t = tasks[id];
+      if (tab === "chat") {
+        canvas.innerHTML = t.chat.map(([w, m]) => `<div class="msg"><div class="who">${w}</div><div>${m}</div></div>`).join("");
+        composer.textContent = t.prompt;
+        return;
+      }
+      if (tab === "term") {
+        canvas.innerHTML = `<div class="msg mono" style="color:var(--mute)">$ make dev<br/>worktree_code=17 backend=4117 ui=4417<br/>${serverOn ? "VITE ready http://127.0.0.1:4417/sprint/cockpit" : "(arrêté)"}</div>`;
+        return;
+      }
+      if (tab === "git") {
+        canvas.innerHTML = `<div class="msg"><div class="who">${t.branch} vs staging</div><div class="mono">${t.vs}<br/>packages/app/src/pages/sprint-cockpit.tsx</div></div>`;
+        return;
+      }
+      canvas.innerHTML = `<div class="msg">${serverOn ? "Preview 4417 · /sprint/cockpit (simulé)" : "Démarre les serveurs dans le panneau Serveurs."}</div>`;
+    }
+    function renderPane() {
+      const t = tasks[id];
+      if (panel === "task") {
+        pane.innerHTML = kv("Carte", t.title) + kv("Worktree", t.wt, true) + kv("Prochaine action", t.next) +
+          `<div class="row"><button class="btn pri" id="copy" type="button">Copier le prompt</button></div>`;
+        document.getElementById("copy").onclick = () => { navigator.clipboard?.writeText(t.prompt); toast(); };
+        return;
+      }
+      if (panel === "git") {
+        pane.innerHTML = kv("Branche", t.branch, true) + kv("HEAD", t.head, true) + kv("vs staging", t.vs) +
+          `<div class="row"><button class="btn" type="button" id="merge">Merger la candidate</button></div>`;
+        document.getElementById("merge").onclick = toast;
+        return;
+      }
+      if (panel === "cost") {
+        pane.innerHTML = kv("Tour", "in 12.4k · out 1.1k · cache 4.2k") + kv("Tâche", "$2.10 · Grok API") + kv("Sprint", "$12.40 / $40") +
+          `<p class="warn" style="font-size:12px">Pas de faux zéro : session absente → unknown</p>`;
+        return;
+      }
+      pane.innerHTML = kv("make dev", serverOn ? "ON · 4117 / 4417" : "OFF") + kv("CPU / RAM", serverOn ? "12% · 410 Mo" : "—") +
+        `<div class="row"><button class="btn pri" id="srv" type="button">${serverOn ? "Arrêter" : "Démarrer"}</button></div>`;
+      document.getElementById("srv").onclick = () => { serverOn = !serverOn; renderPane(); renderCanvas(); };
+    }
+    function kv(k, v, mono) {
+      return `<dl class="kv"><dt>${k}</dt><dd class="${mono ? "mono" : ""}">${v}</dd></dl>`;
+    }
+    document.querySelectorAll(".card").forEach((el) => {
+      el.onclick = () => {
+        document.querySelectorAll(".card").forEach((c) => c.classList.remove("on"));
+        el.classList.add("on");
+        id = el.dataset.id;
+        renderCanvas();
+        renderPane();
+      };
+    });
+    document.getElementById("canvas-tabs").onclick = (e) => {
+      const b = e.target.closest("button");
+      if (!b) return;
+      document.querySelectorAll("#canvas-tabs button").forEach((x) => x.classList.toggle("on", x === b));
+      tab = b.dataset.tab;
+      renderCanvas();
+    };
+    document.getElementById("right-tabs").onclick = (e) => {
+      const b = e.target.closest("button");
+      if (!b) return;
+      document.querySelectorAll("#right-tabs button").forEach((x) => x.classList.toggle("on", x === b));
+      panel = b.dataset.p;
+      renderPane();
+    };
+    renderCanvas();
+    renderPane();
+  </script>
+</body>
+</html>

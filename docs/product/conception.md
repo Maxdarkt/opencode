@@ -1,14 +1,14 @@
 # Daidalon — conception produit
 
-**Statut :** conception de référence avant développement  
+**Statut :** conception de référence — recadrage Cursor / économie 2026-09-12
 **Sources :** [`vision.md`](./vision.md), [`roadmap.md`](./roadmap.md), [`worktrees.md`](./worktrees.md), [`architecture.md`](./architecture.md)
-**Dernière mise à jour :** 2026-09-11
+**Dernière mise à jour :** 2026-09-12
 
 ## 1. Rôle de ce document
 
 Ce document est le fil directeur entre la vision et les tâches d'implémentation. Il décrit le modèle produit, l'architecture de navigation, les parcours, les états et les règles de sécurité. Toute feature doit se rattacher à une section de cette conception et produire une preuve observable.
 
-La conception reste indépendante des choix de détail du code tant que l'audit n'a pas confirmé le meilleur point d'extension dans OpenCode.
+La conception reste indépendante des détails de code. Le **modèle de conduite** est Cursor : le développeur positionne, l’agent exécute un mandat borné, le LLM est interchangeable. Codex-style « tout seul pendant 30 minutes » est un anti-pattern.
 
 ## 2. Modèle produit
 
@@ -54,19 +54,18 @@ L'interface réconcilie ces autorités ; elle ne remplace pas silencieusement l'
 - projets favoris ;
 - sprints du projet actif ;
 - tâches du sprint regroupées par statut ;
-- signal d'activité tournant pour une tâche en cours et signal bleu d'attention pour une réponse à lire ;
+- signal d'activité pour une tâche en cours et attention pour une réponse à lire ; le libellé du fil **inclut le worktree**, comme Cursor ;
 - sessions libres ou historiques ;
-- réglages, fournisseurs et modèles.
+- réglages, **fournisseurs et modèles** (jamais un abo unique comme identité).
 
 La barre gauche répond à « où suis-je et que puis-je ouvrir ? ».
 
 ### Zone centrale — espace de travail
 
-- canvas pleine hauteur pour le chat, terminal, navigateur ou diff de la tâche sélectionnée ;
+- canvas pleine hauteur pour le chat, terminal, **preview navigateur** ou diff ;
 - progression sous forme de checklist visible ;
 - demandes d'autorisation et décisions ;
-- réponses, actions d'outils et preuves ;
-- bascule rapide entre tâche et sprint sans perdre le brouillon.
+- réponses, actions d'outils et preuves.
 
 La zone centrale répond à « que fait l'agent et quelle décision attend-il ? ».
 
@@ -74,12 +73,12 @@ La zone centrale répond à « que fait l'agent et quelle décision attend-il ? 
 
 Onglets contextuels :
 
-- Sprint : objectif, tâches, statuts, dépendances et budget ;
-- Fichiers : arborescence du worktree actif et fichiers ouverts ;
-- Git : branche, worktree, diff ligne par ligne, commits et opérations proposées ;
-- Terminal : processus liés à la tâche ;
-- Coûts : modèle, fournisseur, tokens, cache, latence, retries et escalades ;
-- Navigateur : session persistante de la tâche, dans une phase ultérieure.
+- Sprint : objectif, tâches, dépendances, **prochain lancement**, budget ;
+- Fichiers : arborescence du worktree actif ;
+- Git : branche, worktree, **écart vs staging**, diff, propreté ;
+- Terminal / **Serveurs** : `make dev` du worktree, ports, process, CPU/RAM locaux ;
+- Coûts : modèle, fournisseur, tokens, cache, latence, retries, budget ;
+- Navigateur : preview du serveur de ce worktree.
 
 Le panneau droit répond à « sur quelles preuves et quel état travaille-t-on ? ». Dans le cockpit Sprint, son haut affiche d'abord `Task status` (statut, dépendance, worktree, branche, HEAD, dernier check et prochaine action), puis le contexte vérifiable et la topologie du dépôt. Le chat pilote conserve les décisions globales ; le canvas d'une tâche est son espace d'exécution isolé.
 
@@ -102,7 +101,7 @@ Critère clé : aucune ambiguïté sur le chemin réellement ouvert.
 2. Définir objectif, budget, critères de sortie et tâches.
 3. Afficher les dépendances et les tâches non prêtes.
 4. Ouvrir le chat pilote avec le mandat du sprint.
-5. Le pilote propose les tâches à lancer ; l'utilisateur conserve les gates sensibles.
+5. Le pilote propose les tâches **éligibles (dépendances)** et le **prompt** à coller ; l'utilisateur lance.
 
 ### P3 — lancer une tâche APEX
 
@@ -120,9 +119,18 @@ Critère clé : la tâche ne peut jamais écrire dans un autre worktree par conf
 1. Afficher le diff ligne par ligne dans l'onglet Git.
 2. Relier chaque changement aux étapes et validations APEX.
 3. Montrer tests, smoke, dettes et décisions.
-4. Présenter séparément commit, rebase, merge, push et suppression du worktree.
+4. Présenter séparément commit, rebase, merge **de la candidate**, push `staging` et suppression du worktree de carte.
 5. Exiger une confirmation ciblée pour toute opération destructive ou externe.
 6. Réconcilier Git, APEX et MT Tasks après chaque transition.
+
+### P5 — lancer la preview du worktree
+
+1. Lire `.make.env` du worktree (code, ports).
+2. Un bouton **Démarrer / Arrêter** lance `make dev` dans **ce** arbre seulement.
+3. Ouvrir le navigateur intégré sur l’UI (ex. `/sprint/cockpit`).
+4. Afficher CPU/RAM des process locaux ; ne pas tuer un autre worktree.
+
+Critère clé : plus besoin de chercher la commande ; le contexte (arbre + ports) est celui du chat actif.
 
 ## 5. Worktrees et Git
 
@@ -168,7 +176,7 @@ Le chat pilote ne code pas. Il :
 - supervise la revue et le smoke visuel ;
 - produit une synthèse de fin de sprint.
 
-Chaque chat de tâche reste responsable de son unique périmètre et de son unique worktree.
+Chaque chat de tâche reste responsable de son unique périmètre et de son unique worktree. Le pilote propose l’ordre (dépendances) et le prompt ; il ne code pas. Fin de sprint : candidate → `staging` → retirer les arbres de cartes.
 
 Le cockpit de Sprint ne déclenche pas les opérations qu'il représente dans sa première livraison : il rend l'état lisible, source-explicite et fail-closed. Un fait Git, APEX, MT ou runtime absent reste `unknown`, jamais une valeur déduite ou un faux zéro.
 
@@ -182,7 +190,7 @@ Le cockpit de Sprint ne déclenche pas les opérations qu'il représente dans sa
 - modèle et fournisseur par tour ;
 - latence, retries et escalades ;
 - budget restant ;
-- coût par tâche techniquement validée.
+- charge machine : CPU, RAM, ports des process du worktree (serveur, Vite).
 
 ### Présentation
 
@@ -217,6 +225,7 @@ Les secrets restent dans les mécanismes de credentials existants et ne sont jam
 - Ne jamais regrouper plusieurs opérations Git sensibles dans un bouton ambigu.
 - Garder les tâches, coûts et changements compréhensibles sans ouvrir un terminal.
 - Conserver la densité utile d'un outil professionnel ; éviter les écrans décoratifs.
+- **Un chat = un worktree.** Le rail le montre. Pas de worktrees métier figés dans le produit.
 
 ## 10. Repères d'avancement de la conception
 
@@ -228,28 +237,24 @@ Les secrets restent dans les mécanismes de credentials existants et ne sont jam
 | C3 | Le cycle worktree/Git est-il sûr et explicite ? | state machine et prototype du panneau Git |
 | C4 | Le chat pilote orchestre-t-il sans coder ? | scénario Sprint complet sur papier |
 | C5 | Les coûts aident-ils à décider ? | maquette des indicateurs et protocole de mesure |
-| C6 | La première tranche verticale est-elle bornée ? | scope et critères du Sprint 1 |
+| C6 | La preview du worktree se lance sans chasse aux ports ? | make dev borné + navigateur |
+| C7 | Le coût et le device aident-ils à arrêter une course à vide ? | budget + process |
 
 Une porte validée peut être traduite en cartes MT Tasks et tâches APEX. Une porte non validée reste une question de conception, pas une tâche de développement.
 
-## 11. Première tranche verticale candidate
+## 11. Tranche suivante (Sprint 5)
 
-Après validation de C0 à C3 :
+1. Identités réelles dans le cockpit (plus fixtures comme source).
+2. Rail : worktree + phase + tokens.
+3. Conducteur : tâches éligibles + prompt.
+4. Serveurs du worktree + navigateur.
+5. Panneaux coût / Git vs `staging`.
 
-1. sélecteur local avec aperçu et persistance ;
-2. shell projet avec navigation gauche ;
-3. chat de tâche existant au centre ;
-4. panneau droit Fichiers/Git ;
-5. rattachement explicite d'une tâche à un worktree unique ;
-6. indicateurs de coût déjà disponibles dans OpenCode.
+Look basique accepté. Pas de parallélisme. Pas d’abo unique.
 
-Cette tranche doit fonctionner pour un projet, un sprint, une tâche et un worktree avant tout parallélisme.
+## 12. Questions ouvertes
 
-## 12. Questions de conception ouvertes
-
-- Le chat général appartient-il au projet ou uniquement au sprint actif ?
-- Une tâche sans code doit-elle disposer d'un worktree facultatif ou d'aucun worktree ?
-- MT Tasks reste-t-il obligatoire ou devient-il un adaptateur de suivi parmi d'autres ?
-- Jusqu'où renommer visuellement OpenCode dans le fork sans compliquer la synchronisation amont ?
-- Quel niveau de détail des étapes agentiques doit être ouvert par défaut ?
-- Quelles opérations Git peuvent être proposées automatiquement, sans être exécutées automatiquement ?
+- MT Tasks obligatoire ou un adaptateur de suivi parmi d’autres ?
+- Jusqu’où renommer OpenCode dans le fork sans casser le sync amont ?
+- Quelles bornes (temps, $, pathset) coupent un agent qui dérive ?
+- Quel niveau d’adaptateur d’abonnement sans captivité ?

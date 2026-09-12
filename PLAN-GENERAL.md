@@ -24,7 +24,7 @@ Aucun sprint actif. Sprint 4 completed et promu : merge `b3aa79245` (`545718268`
 
 ## Suite
 
-Sprint 5 non créé. Briefing : [proposition](docs/product/sprints/sprint-5-proposal.md). Nouveaux worktrees depuis `staging` `b3aa79245`. `develop`/`master` non poussés.
+Vision : [vision](docs/product/vision.md) · [livrable](docs/product/livrable.md) · [maquette](docs/product/maquette.md). Sprint 5 : [proposition](docs/product/sprints/sprint-5-proposal.md).
 
 ## Besoin produit à cadrer
 
@@ -36,6 +36,6 @@ Mémoire durable de projet : conception DA40-005, intégration au skill DA40-008
 |---|---|---|---|
 | DA30-011 | Réconcilier le worktree métriques Sprint 3 avec la révision intégrée avant réalignement | todo, proposé Sprint 5 | [scope](.project/tasks/DA30-DA30-011-reconcilier-divergence-metriques-sprint3/scope.md) |
 
-À cadrer au Sprint 5 (pas encore de carte MT) : codes DA10/20/30/40 = thème ; worktrees métier permanents à geler. Promotion Sprint 4 faite.
+À cadrer au Sprint 5 : cockpit = Cursor + coûts + serveurs de worktree + conducteur de sprint. Worktrees métier figés = legacy, pas le produit.
 
 La dette de compaction desktop reste portée par la tâche APEX-only globale `desktop-compaction-transport` dans `codex-workflow-config`; elle ne devient pas une carte produit Daidalon.
