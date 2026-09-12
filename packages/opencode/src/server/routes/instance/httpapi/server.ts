@@ -53,6 +53,8 @@ import { RuntimeFlags } from "@/effect/runtime-flags"
 import { MoveSession } from "@opencode-ai/core/control-plane/move-session"
 import { Database } from "@opencode-ai/core/database/database"
 import { TaskMetrics } from "@opencode-ai/core/task-metrics"
+import { TaskOwnership } from "@opencode-ai/core/task-ownership"
+import { RepositoryTopology } from "@opencode-ai/core/repository-topology"
 import { TaskAuthority } from "@opencode-ai/core/task-authority"
 import { AppNodeBuilderV1 } from "@/effect/app-node-builder-v1"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
@@ -218,6 +220,8 @@ const app = LayerNode.group([
   LocalContext.node,
   Database.node,
   TaskMetrics.node,
+  TaskOwnership.node,
+  RepositoryTopology.node,
   TaskAuthority.node,
   Auth.node,
   Account.node,

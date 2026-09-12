@@ -90,6 +90,10 @@ import type {
   GlobalHealthResponses,
   GlobalMetricsErrors,
   GlobalMetricsResponses,
+  GlobalOwnershipErrors,
+  GlobalOwnershipResponses,
+  GlobalTopologyErrors,
+  GlobalTopologyResponses,
   GlobalUpgradeErrors,
   GlobalUpgradeResponses,
   InstanceDisposeErrors,
@@ -179,6 +183,7 @@ import type {
   QuestionReplyErrors,
   QuestionReplyResponses,
   QuestionV2Reply,
+  RepositoryTopologyInput,
   SessionAbortErrors,
   SessionAbortResponses,
   SessionChildrenErrors,
@@ -237,6 +242,7 @@ import type {
   SyncStealErrors,
   SyncStealResponses,
   TaskMetricsRequest,
+  TaskOwnershipInput,
   TextPartInput,
   ToolIdsErrors,
   ToolIdsResponses,
@@ -1335,6 +1341,54 @@ export class Global extends HeyApiClient {
     const params = buildClientParams([parameters], [{ args: [{ key: "taskMetricsRequest", map: "body" }] }])
     return (options?.client ?? this.client).post<GlobalMetricsResponses, GlobalMetricsErrors, ThrowOnError>({
       url: "/global/metrics",
+      ...options,
+      ...params,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+        ...params.headers,
+      },
+    })
+  }
+
+  /**
+   * Read task ownership
+   *
+   * Read task ownership facts for explicit identities. Missing or unproven facts stay absent or unknown and are not converted to zero.
+   */
+  public ownership<ThrowOnError extends boolean = false>(
+    parameters?: {
+      taskOwnershipInput?: TaskOwnershipInput
+    },
+    options?: Options<never, ThrowOnError>,
+  ) {
+    const params = buildClientParams([parameters], [{ args: [{ key: "taskOwnershipInput", map: "body" }] }])
+    return (options?.client ?? this.client).post<GlobalOwnershipResponses, GlobalOwnershipErrors, ThrowOnError>({
+      url: "/global/ownership",
+      ...options,
+      ...params,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+        ...params.headers,
+      },
+    })
+  }
+
+  /**
+   * Read repository topology
+   *
+   * Read repository topology from an explicit ownership snapshot and repository list. mergeTarget is never inferred.
+   */
+  public topology<ThrowOnError extends boolean = false>(
+    parameters?: {
+      repositoryTopologyInput?: RepositoryTopologyInput
+    },
+    options?: Options<never, ThrowOnError>,
+  ) {
+    const params = buildClientParams([parameters], [{ args: [{ key: "repositoryTopologyInput", map: "body" }] }])
+    return (options?.client ?? this.client).post<GlobalTopologyResponses, GlobalTopologyErrors, ThrowOnError>({
+      url: "/global/topology",
       ...options,
       ...params,
       headers: {

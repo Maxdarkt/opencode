@@ -1,5 +1,8 @@
 import { LocalContext } from "@opencode-ai/schema/local-context"
+import { RepositoryTopology } from "@opencode-ai/schema/repository-topology"
 import { TaskMetrics } from "@opencode-ai/schema/task-metrics"
+import { TaskOwnership } from "@opencode-ai/schema/task-ownership"
+import { QueueBlockedError } from "@opencode-ai/core/task-metrics"
 import { SessionID } from "@/session/schema"
 import { ConfigV1 } from "@opencode-ai/core/v1/config/config"
 import { EventV2 } from "@opencode-ai/core/event"
@@ -75,6 +78,8 @@ export const GlobalPaths = {
   config: "/global/config",
   dispose: "/global/dispose",
   metrics: "/global/metrics",
+  ownership: "/global/ownership",
+  topology: "/global/topology",
   upgrade: "/global/upgrade",
 } as const
 
@@ -84,12 +89,35 @@ export const GlobalApi = HttpApi.make("global").add(
       HttpApiEndpoint.post("metrics", GlobalPaths.metrics, {
         payload: TaskMetrics.Request,
         success: TaskMetrics.Response,
+        error: QueueBlockedError,
       }).annotateMerge(
         OpenApi.annotations({
           identifier: "global.metrics",
           summary: "Read task or sprint metrics",
           description:
             "Read local task metrics from persisted session observations. Sprint membership is supplied by the caller; unknown values are not converted to zero.",
+        }),
+      ),
+      HttpApiEndpoint.post("ownership", GlobalPaths.ownership, {
+        payload: TaskOwnership.Input,
+        success: TaskOwnership.Snapshot,
+      }).annotateMerge(
+        OpenApi.annotations({
+          identifier: "global.ownership",
+          summary: "Read task ownership",
+          description:
+            "Read task ownership facts for explicit identities. Missing or unproven facts stay absent or unknown and are not converted to zero.",
+        }),
+      ),
+      HttpApiEndpoint.post("topology", GlobalPaths.topology, {
+        payload: RepositoryTopology.Input,
+        success: RepositoryTopology.Snapshot,
+      }).annotateMerge(
+        OpenApi.annotations({
+          identifier: "global.topology",
+          summary: "Read repository topology",
+          description:
+            "Read repository topology from an explicit ownership snapshot and repository list. mergeTarget is never inferred.",
         }),
       ),
       HttpApiEndpoint.get("context", GlobalPaths.context, {
