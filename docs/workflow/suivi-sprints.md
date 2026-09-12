@@ -33,7 +33,19 @@ Instruction permanente utilisateur du 2026-09-06 : à chaque fin de tâche/sprin
 - La taille ou l’importance métier ne suffit pas à justifier une escalade. Le parent consigne modèle réel, effort, motif et éventuelle escalade dans le checkpoint et le registre runtime.
 - Avant chaque lancement, comparer le modèle prévu au modèle réellement créé. Toute divergence est une anomalie d’orchestration à corriger avant de poursuivre.
 
-Pas de push, merge, rebase, promotion, suppression de worktree ou nettoyage de fichiers par cette routine seule.
+Pas de push, merge, rebase, promotion, suppression de worktree ou nettoyage de fichiers **pendant** le sprint, ni par la rotation documentaire seule.
+
+## Fin de sprint — Git (minimum, mandat 2026-09-12)
+
+Après clôture MT et archivage des cartes `done`, le sprint n’est Git-clos que lorsque `staging` redevient la source saine :
+
+1. Committer sur `staging` les docs de clôture (propres, `git diff --check`).
+2. Merger **uniquement la candidate** du sprint (ici `545718268` / DA40-015), pas chaque worktree de carte. Arrêt au premier conflit non trivial.
+3. `git push origin staging` (créer la branche distante si absente). Ne pas pousser vers `dev` / `develop` / `main` / `master` par cette étape.
+4. `git worktree remove` seulement les worktrees `features/tasks/` du sprint clos, **propres**. Conserver les worktrees métier/historiques jusqu’à un mandat séparé.
+5. Déploiement `develop` (preview) ou `master` (prod) : **facultatif**, sprint par sprint.
+
+Un Sprint suivant part de ce `staging` à jour. Sans cette promotion, les nouveaux worktrees naissent d’une base **sans** le code du sprint clos.
 
 ## Préflight de promotion et réalignement explicitement mandatés
 

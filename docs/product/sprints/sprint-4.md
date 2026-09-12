@@ -1,42 +1,36 @@
 # Sprint 4 — Cockpit Sprint lecture seule
 
-**Sprint MT :** `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e` · **État :** actif, checkpoint demandé le 2026-09-11 · **Référence de plan :** [proposition Sprint 4](./sprint-4-proposal.md).
+Statut : completed le 2026-09-12. ID MT : `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e` ; référence : `da-release-0.1-sprint-4`. Sept cartes produit, 35 SP acceptés, 0 inachevée. La carte d’orchestration `DA40-016` (3 SP planifiés) n’est plus présente dans MT au moment de la clôture ; preuves APEX conservées, carte non recréée.
 
-## Décision produit à préserver
+## Objectif et résultat
 
-La livraison visée n'est pas un chat qui orchestre indistinctement les tâches. C'est un cockpit de Sprint où le pilote garde l'objectif, les décisions, les reprises et les intégrations, tandis que chaque tâche conserve son chat, son worktree et ses preuves.
+Livrer un cockpit Sprint réel en lecture seule, issu de la maquette UX : rail, canvas, contexte, topologie Git et métriques honnêtes, isolés entre A et B. Aucune action mutative depuis le cockpit.
 
-La maquette validée est la référence UX : rail de tâches à gauche (activité tournante et attention bleue), canvas central pleine hauteur pour l'espace actif, puis panneau droit avec état de tâche, contexte vérifiable et topologie Git. La topologie est lue depuis le dépôt configuré : branches source, worktrees, cible de réintégration, propreté, avance/retard et statistiques `+/-`. Aucun nom de branche n'est figé. Toutes les actions du cockpit restent en lecture seule pendant ce Sprint.
+Candidate locale : `features/tasks/DA40-015-candidate-integree`, branche `task/DA40-015-candidate-integree`, HEAD `545718268`. Pas de merge `staging`, push, tag ni suppression de worktree.
 
-## État au point d'arrêt
+| Carte | Résultat accepté | SP | Commit / preuve |
+|---|---|---:|---|
+| DA10-006 | Maquette isolée, deux formats, zéro requête hors origine | 3 | `9de3b2e1c` |
+| DA30-009 | File séquentielle et autorité A→B fail-closed | 8 | `3fa91aba1` |
+| DA20-004 | Projection `TaskOwnership` lecture seule | 5 | `7df15b2cd` |
+| DA20-005 | Projection `RepositoryTopology` lecture seule | 3 | `cfa081ca8` |
+| DA30-010 | Métriques + provenance, jamais un faux zéro | 5 | `7c8d490f0` |
+| DA10-005 | Cockpit réel branché aux projections | 8 | feat `35e7d83d5` ; tip `5d18386f1` |
+| DA40-015 | Candidate, fixtures A/B, recette 1440/1024 | 3 | `545718268` |
+| DA40-016 | Orchestration Cursor (parent) | 3 | APEX seulement ; absent de MT à la clôture |
 
-| Carte | SP | État MT / APEX | Fait vérifié | Prochaine action |
-|---|---:|---|---|---|
-| DA10-006 | 3 | `done` / Verify accepté | Maquette cliquable isolée, deux formats et absence de requête hors origine Vite. Commit `9de3b2e1c`. | Conserver comme référence UX ; pas de merge. |
-| DA30-009 | 8 | `done` / Verify accepté | File séquentielle et autorité A→B fail-closed. 23 tests / 117 assertions, typechecks et smoke technique. Commit `3fa91aba1`. | Réception UI différée à DA40-015. |
-| DA20-004 | 5 | `in_progress` / Plan checkpointé | Contrat `TaskOwnership` lecture seule, ownership A/B isolé et attention sans source à `unknown`. | B1 seul : Schema/Core, routé Luna sur reprise. |
-| DA20-005 | 3 | `todo` / scoped | Scope canonique : topologie Git lecture seule. | Analyze après DA20-004. |
-| DA30-010 | 5 | `todo` / re-scoped | Métriques, provenance, fraîcheur et attention. | Analyze après la fondation de file. |
-| DA10-005 | 8 | `todo` / re-scoped | Cockpit réel : rail, canvas, panneau droit, données provenant des projections. | Analyze après DA20-004/005 et DA30-010. |
-| DA40-015 | 3 | `todo` / re-scoped | Candidate, fixtures A/B, checks et recette parent. | Intégration après les lots produit. |
-| DA40-016 | 3 | `in_progress` / orchestration | Mémoire, routage, réconciliations et ce checkpoint. | Attendre la reprise utilisateur. |
+## Réception et preuves
 
-Les cartes terminées représentent 11 SP sur 38. MT Tasks affiche encore un agrégat `0 SP done` malgré les cartes `done` : c'est une divergence de totalisation à réconcilier, pas un avancement nul et pas une donnée que l'interface devra inventer.
+- Remises Verify+commit dans le [ledger](../../../.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md).
+- Recette parent A/B aux deux tailles, simulation inerte, faits `unknown`/`absent` sans faux zéro (`smoke-report.md` DA40-015).
+- Méthode Cursor figée : une carte = un worktree sous `features/tasks/` ; DA10/20/30/40 = thème ; `/summarize` optionnel aux waits Analyze/Plan.
 
-## Ordre de reprise et limites
+## Dettes et suite
 
-1. DA20-004 B1, puis B2 et ses preuves.
-2. DA20-005 et DA30-010, dans des worktrees dédiés propres.
-3. DA10-005 seulement avec les projections prouvées ; aucune donnée manquante ne devient un faux zéro.
-4. DA40-015 : intégration et smoke visuel parent aux formats 1440×900 et 1024×768.
+- Candidate non promue vers `staging`.
+- `DA40-016` manquante dans MT.
+- Worktrees métier permanents encore présents (legacy).
+- `DA30-011` reste backlog.
+- Sprint 5 : proposition non créée — [briefing](./sprint-5-proposal.md). Pas de 0.3 (parallélisme / commandes Git-agent mutatives).
 
-Le Sprint n'autorise ni action Git ou agent depuis le cockpit, ni push, merge, rebase, déploiement, suppression de worktree ou parallélisme d'écrivains. Les worktrees métier permanents restent préservés ; les nouveaux Builds passent par des worktrees dédiés.
-
-## Preuves et reprise durable
-
-- [État parent APEX](../../../.project/tasks/DA40-016-orchestration-sprint-4/STATE.md)
-- [Registre de remises](../../../.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md)
-- [Plan DA20-004](../../../../features/tasks/DA20-004-cockpit-ownership/.project/tasks/DA20-004-ownership-reprise-passage-taches/plan.md)
-- [Suivi des sprints](../../../sprint.md) et [plan général](../../../PLAN-GENERAL.md)
-
-Au prochain redémarrage, relire ces projections et l'état Git avant de lancer B1. Le modèle demandé est consigné à chaque frontière ; une observation absente ou divergente reste informative et ne suspend pas le travail.
+Preuves : [STATE parent](../../../.project/tasks/DA40-016-orchestration-sprint-4/STATE.md), [plan sortant](../../../.project/archives/sprint-4/plan-sortant.md).

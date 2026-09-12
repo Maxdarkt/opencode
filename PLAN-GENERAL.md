@@ -1,23 +1,14 @@
 # Daidalon — plan général
 
-Mis à jour le 2026-09-11. Projet MT DA ; branche source `staging` à `fbf4286b2`, sans Build produit direct. [Index sprints](/Users/leanbot/Documents/40_Daidalon/Daidalon/sprint.md).
+Mis à jour le 2026-09-12. Projet MT DA ; branche source `staging` à `9c1259461`, sans Build produit direct. [Index sprints](/Users/leanbot/Documents/40_Daidalon/Daidalon/sprint.md).
 
 ## Travail courant
 
-Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`), 38 SP planifiés. L'utilisateur a validé le 2026-09-11 la maquette isolée du cockpit Sprint : 1440×900 et 1024×768, zéro requête hors origine Vite et aucune action réelle. DA10-006 est en review de livraison; DA30-009 reste en review code. La suite matérialise ce modèle en lecture seule, avant toute commande Git/agent réelle.
-
-| Carte | Résultat attendu | SP | Dépendances | État |
-|---|---|---:|---|---|
-| DA30-009 | File séquentielle et autorité MT/APEX par tâche | 8 | candidate Sprint 3 intégrée dans `staging` | review — preuves code acceptées; recette intégrée réservée à DA40-015 |
-| DA10-006 | Maquette isolée du cockpit Sprint | 3 | décision UX du 2026-09-11 | review — livraison UX validée; commit local et clôture à réconcilier |
-| DA20-004 | Ownership et reprise sûrs lors du passage A → B | 5 | DA30-009 | todo — fournit l'identité sûre tâche → worktree |
-| DA20-005 | Topologie Git en lecture seule pour le cockpit | 3 | DA20-004 | todo — source, branches, worktrees, cibles de merge et stats `+/-` — [scope](.project/tasks/DA20-005-topologie-git-lecture-seule-cockpit/scope.md) |
-| DA30-010 | Métriques, provenance et signaux d’attention Sprint | 5 | DA30-009 | todo — valeurs honnêtes, fraîcheur et attention par tâche |
-| DA10-005 | Cockpit Sprint réel en lecture seule | 8 | DA20-004, DA20-005, DA30-009, DA30-010 | todo — compose le modèle UX validé à partir de projections vérifiables |
-| DA40-015 | Candidate intégrée et recette parent A/B | 3 | cinq lots produit | todo — recette cockpit et refus d'actions mutatives |
-| DA40-016 | Orchestration, réception et rotation | 3 | aucune à l’entrée | in_progress / attente arbitrage de réception DA30-009 — [scope](../features/40-tooling/.project/tasks/DA40-016-orchestration-sprint-4/scope.md) |
+Aucun sprint actif. Sprint 4 completed : 7 cartes, 35 SP acceptés, candidate locale `545718268` non fusionnée. [Bilan](docs/product/sprints/sprint-4.md). Sprint 5 : [proposition](docs/product/sprints/sprint-5-proposal.md), non créé.
 
 ## Historique
+
+- Sprint 4 completed : 7 cartes produit, 35 SP acceptés, candidate `545718268` ; orchestration APEX sans carte MT `DA40-016` à la clôture ; [bilan](docs/product/sprints/sprint-4.md) ; [plan sortant](.project/archives/sprint-4/plan-sortant.md).
 
 - Sprint 3 completed : 7 cartes, 34 SP acceptés, candidate `57da5e0d` intégrée localement dans `staging` au merge `948a99387`; autorité MT/APEX explicite, fraîche et fail-closed; [bilan](docs/product/sprints/sprint-3.md) ; [journal de promotion](.project/journals/OP-DA40-016-sprint-3-promotion-rotation.md).
 
@@ -33,7 +24,7 @@ Sprint 4 est actif : `da-release-0.1-sprint-4` (`5059b73b-d8e8-40db-b9d5-1cbfb5c
 
 ## Suite
 
-Sprint 4 est actif; DA10-006 est la référence UX validée et DA30-009 est en review code. La séquence est maintenant DA20-004 → DA20-005 et DA30-010 → DA10-005 → DA40-015, avec une seule écriture active. Les actions Git/agent restent hors de cette tranche. Un Sprint suivant ne sera cadré et créé qu'après sa clôture. [Briefing révisé](docs/product/sprints/sprint-4-proposal.md).
+Sprint 5 non créé. Briefing : [proposition](docs/product/sprints/sprint-5-proposal.md). Création MT dans un nouveau chat après validation. Pas de promotion `staging` par cette rotation.
 
 ## Besoin produit à cadrer
 
@@ -43,6 +34,8 @@ Mémoire durable de projet : conception DA40-005, intégration au skill DA40-008
 
 | Carte | Résultat attendu | État | Référence |
 |---|---|---|---|
-| DA30-011 | Réconcilier le worktree métriques Sprint 3 avec la révision intégrée avant réalignement | todo, hors Sprint 4 | [scope](.project/tasks/DA30-DA30-011-reconcilier-divergence-metriques-sprint3/scope.md) |
+| DA30-011 | Réconcilier le worktree métriques Sprint 3 avec la révision intégrée avant réalignement | todo, proposé Sprint 5 | [scope](.project/tasks/DA30-DA30-011-reconcilier-divergence-metriques-sprint3/scope.md) |
+
+À cadrer au Sprint 5 (pas encore de carte MT) : promotion candidate `545718268` ; codes DA10/20/30/40 = thème ; worktrees métier permanents à geler ; cockpit branché aux identités réelles.
 
 La dette de compaction desktop reste portée par la tâche APEX-only globale `desktop-compaction-transport` dans `codex-workflow-config`; elle ne devient pas une carte produit Daidalon.

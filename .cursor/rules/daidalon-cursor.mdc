@@ -1,0 +1,14 @@
+---
+description: Daidalon Cursor workspace — sprint vs APEX, staging, worktrees
+alwaysApply: true
+---
+
+# Daidalon (Cursor)
+
+- Source checkout `staging`: observe only. No product Build here.
+- Sprint chat: personal skill `sprint-support`. No implementation.
+- Task chat: personal skill `apex-task`. One card, one worktree under `features/tasks/`.
+- DA10/20/30/40 = theme, not a frozen domain worktree.
+- APEX: persist `.md` + `STATE.md` every palier. Analyze and Plan wait for user validation. Build chains through Smoke/Verify. After Verify green, the task chat commits locally without asking (no push/merge), then pastes a remittance; sprint never commits in a card worktree. `/summarize` is optional at Analyze/Plan waits, never a Build gate. After summarize, reread STATE + next file only.
+- Codex skills under `~/.codex/skills` are out of scope in Cursor.
+- MT Tasks owns card/sprint status. Do not invent `display_id`. At sprint close, archive every done member card in MT; do not leave them as `done` on the active board.

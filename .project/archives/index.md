@@ -1,11 +1,12 @@
 # Index global des archives Daidalon
 
-Mis à jour : 2026-09-08. Cet index est une aide de retrouvabilité;
+Mis à jour : 2026-09-12. Cet index est une aide de retrouvabilité;
 les cartes MT et dossiers APEX gardent leurs autorités respectives. Aucun
 archivage ne déplace ni ne supprime les preuves.
 
 | Période / carte | Résultat | Dossier APEX stable | Bilan / trace | Chat ID | Visibilité |
 |---|---|---|---|---|---|
+| Sprint 4 | 7 cartes, 35 SP, candidate `545718268` | dossiers APEX dans `features/tasks/*` | `sprint-4/`, `docs/product/sprints/sprint-4.md` | parent Cursor `30dae365-e035-4604-9113-53767fcb9c05` | 7 MT archived après close ; `DA40-016` absente de MT |
 | Sprint 3 | 7 cartes, 34 SP acceptés, candidate `57da5e0d` | `.project/tasks/<id>` dans les worktrees 10/30/40 | `sprint-3/`, `docs/product/sprints/sprint-3.md` | parent `01a07d34-6e02-7a81-a3ed-0287a9ad3690`; six enfants dans le runtime | 7 MT/cards et chats archived après done |
 | M0 | 6 cartes, 17 SP acceptés | `.project/tasks/<id>` dans leurs worktrees | `m0/`, `m0/archivage-preuves.json` | indexé dans la preuve | MT archived |
 | Sprint 1 | 7 cartes, 26 SP acceptés | `.project/tasks/<id>` dans leurs worktrees | `sprint-1/`, `docs/product/sprints/sprint-1.md` | indexé dans runtime | MT archived |

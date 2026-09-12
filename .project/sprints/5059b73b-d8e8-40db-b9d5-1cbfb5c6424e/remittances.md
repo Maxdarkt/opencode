@@ -2,7 +2,7 @@
 
 - Schema: `sprint-event-ledger/v1`
 - Sprint: `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`
-- Updated: `2026-09-11T15:05:00+02:00`
+- Updated: `2026-09-11T23:59:00+02:00`
 - Open queue depth: `0`
 
 ## Events
@@ -324,3 +324,58 @@
 - Decision: le checkpoint utilisateur suspend le B1 pourtant prêt ; il n'exige ni mutation de statut MT ni allocation supplémentaire.
 - Recommendation / next instruction: après reprise explicite, relire les projections et exécuter seulement B1 sous `gpt-5.6-luna` / `medium` : Schema `TaskOwnership`, export et service Core lecture seule. B2, UI, endpoints, SQLite, `TaskExecution.acquire|begin|confirm|resume`, commit, rebase, merge et push restent interdits.
 - Git: worktree dédié `/Users/leanbot/Documents/40_Daidalon/features/tasks/DA20-004-cockpit-ownership`, branche `cockpit-ownership`, base/HEAD `3fa91aba1c12461e02e85222942bf39e1d2e2565`; uniquement les artefacts APEX non suivis attendus.
+
+### DA20-004:3:verify-commit-complete
+
+- State: `accepted / MT done`
+- Objective / position: ownership lecture seule clôturé localement ; base des lots topologie et métriques.
+- Effects and evidence: Verify génération 5, blocs analyze/plan/B1/B2/smoke/verify. Commit `7df15b2cd2f61cbc6d28fd7ed54a4401fe85a2df` (`feat(core): add read-only task ownership projection`). Pathset Schema/Core/tests + preuves APEX. Recette UI reportée à DA40-015. MT `done` requête `dff2baa8-f325-465c-b2bc-a57188222a65`.
+- Checks: typecheck Schema/Core PASS ; oxlint PASS ; 28 tests PASS ; worktree propre après commit.
+- Problems / impact: `verify.md` encore rédigé comme « non commité » ; Git HEAD fait autorité. Chat `dcaf9e59` aborté (worktree 20 métier) ; ne pas le reprendre.
+- Decision: DA20-005 et DA30-010 éligibles en parallèle, worktrees de carte depuis ce commit, pas les worktrees métier permanents.
+- Recommendation / next instruction: Analyze APEX dans deux chats Cursor, même fenêtre.
+- Git: branche `cockpit-ownership`, HEAD `7df15b2cd`, propre ; pas de merge/push.
+
+### DA20-005:1:verify-commit-complete
+
+- State: `accepted / MT done`
+- Objective / position: topologie Git lecture seule clôturée localement.
+- Effects and evidence: Verify génération 8, blocs analyze/plan/B1–B3/smoke/verify/local-commit. Commit `cfa081ca808567fb8608f67371072cccd5bd932b` (`feat(core): add read-only repository topology projection`). Recette UI reportée à DA10-005/DA40-015. MT `done` requête `53792b52-44d9-437e-a6e3-30774e46a87b`.
+- Checks: typecheck Schema/Core PASS ; 14 tests topology+ownership PASS ; `git diff --check` PASS ; smoke fixtures tmp 2 worktrees.
+- Problems / impact: `verify.md` encore rédigé comme « non commité » ; Git HEAD fait autorité. `STATE.md` dirty post-commit. Dette : `packages/core/bunfig.toml` `test.root = "."`.
+- Decision: pas de merge/push ; DA10-005 attend encore le commit DA30-010.
+- Recommendation / next instruction: réception DA30-010 (Verify PASS, pas de commit, MT `review`) ; coller la remise commit ici.
+- Git: branche `task/DA20-005-topologie-git`, HEAD `cfa081ca8` ; pas de merge/push.
+
+### DA30-010:1:verify-commit-complete
+
+- State: `accepted / MT done`
+- Objective / position: métriques Sprint lecture seule clôturées localement.
+- Effects and evidence: Verify génération 8, B1–B4 + smoke. Tip `7c8d490f095feb61c57c09e51a7fe18c7bdc1c97` (`chore(core): record DA30-010 verify commit SHA`) au-dessus de `91485d37b` (`feat(core): expose sprint task metrics with provenance`). Recette UI à DA10-005. MT `done` requête `18d38250-8c81-4b53-91b0-4ea4ed3da3cf`.
+- Checks: typecheck schema/core/opencode/client/sdk PASS ; Core 10 + HttpApi 9 PASS ; smoke SQLite A/B ; `git diff --check` PASS ; worktree propre.
+- Problems / impact: STATE/`verify.md` citent encore `91485d37b` ; tip Git `7c8d490f0` fait autorité. Scope DA10-005 historique encore DA30-009/DA20-004 seulement.
+- Decision: pas de merge/push. Jonction DA20-005 (`cfa081ca8`) + DA30-010 (`7c8d490f0`) dans le worktree DA10-005, pas sur `staging`. `merge-tree` sans CONFLICT observé.
+- Recommendation / next instruction: lancer DA10-005 (Analyze→Verify) ; DA40-015 ensuite.
+- Git: branche `task/DA30-010-metriques-sprint`, HEAD `7c8d490f0` ; pas de merge/push.
+
+### DA10-005:1:verify-commit-complete
+
+- State: `accepted / MT done`
+- Objective / position: cockpit Sprint lecture seule clôturé localement.
+- Effects and evidence: Verify génération 6, B1–B3 + smoke. Feat `35e7d83d5` (`feat(app): add read-only sprint cockpit from projections`). Tip Git `5d18386f1` (`chore(app): record DA10-005 verify commit SHA`). Recette parent A/B à DA40-015. MT `done` requête `ef744dcf-bd8f-427c-8b01-afd0b6573fa6`.
+- Checks: typecheck opencode/app PASS ; tests httpapi + sprint-cockpit PASS ; smoke 1440/1024 PASS ; `verify.md` PASS.
+- Problems / impact: remise citait `35e7d83d5` ; Git tip `5d18386f1` fait autorité. `bun.lock` dirty (hashes seulement) — ne pas hériter du working tree, seulement du SHA commité.
+- Decision: pas de merge/push. DA40-015 depuis `5d18386f1`.
+- Recommendation / next instruction: lancer DA40-015 (Analyze→Verify) ; un seul chat.
+- Git: branche `task/DA10-005-cockpit-sprint`, HEAD `5d18386f1` ; pas de merge/push.
+
+### DA40-015:1:verify-commit-complete
+
+- State: `accepted / MT done`
+- Objective / position: candidate Sprint 4 locale et recette parent A/B clôturées.
+- Effects and evidence: Verify génération 7, overlay A/B + correction gitlink. Tip `545718268` (`chore(app): record DA40-015 verify SHA`) au-dessus de `b0940ceff` / `e8af77134`. Smoke 1440/1024 + fail-closed. MT `done` requête `01a6c224-17a2-41ac-9310-d4a0a11e3d0b`.
+- Checks: typecheck schema/core/opencode/app PASS ; tests queue/ownership/topology/metrics/httpapi/sprint-cockpit PASS ; worktree propre.
+- Problems / impact: `verify.md`/`STATE.md` citent encore `b0940ceff` ; Git tip `545718268` fait autorité.
+- Decision: pas de push/merge/promotion. Clôture sprint et merge `staging` seulement sur mandat explicite.
+- Recommendation / next instruction: archiver le chat DA40-015 ; décider clôture/rotation ou promotion locale.
+- Git: branche `task/DA40-015-candidate-integree`, HEAD `545718268` ; propre.

@@ -1,21 +1,21 @@
 # STATE — DA40-016 — Orchestration Sprint 4
 
 - Schema: `sprint-state/v2`
-- Generation: `42`
-- Updated: `2026-09-11T15:05:00+02:00`
+- Generation: `50`
+- Updated: `2026-09-12T00:10:00+02:00`
 - Objective: `Livrer un cockpit Sprint réel en lecture seule, à partir de la maquette validée, en isolant MT/APEX/session/worktree/métriques entre A et B.`
-- Freshness: `stale` — le runtime ignoré n'est pas la source de ce checkpoint et sera reconstruit à la reprise.
+- Freshness: `archived` — Sprint 4 closed 2026-09-12 ; no successor sprint created.
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
-- Parent thread: `01a08063-ecac-7b10-8a50-1cb4069c5266`
-- Parent context: `active`
+- Parent thread: Cursor `30dae365-e035-4604-9113-53767fcb9c05`
+- Parent context: `closing`
 - Active children: `0`
-- Capacity target: `1`
-- Under-capacity reason: `decision` — checkpoint explicite utilisateur après le Plan DA20-004 ; aucun Build ne doit être lancé avant reprise.
+- Capacity target: `0`
+- Under-capacity reason: `closed` — Sprint 4 en rotation ; Sprint 5 non créé.
 - Pending remittances: `0`
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
 - In analysis: `none`
-- Next event: `user-resume:DA20-004:B1`
+- Next event: `closed`
 - Watcher: `not-required`
 - Watcher owner: `none`
 - Successor: `none`
@@ -26,11 +26,11 @@
 | --- | --- | ---: | --- | --- | --- |
 | DA30-009 | `01a0899a-792c-7ca3-bd47-a23ede55d33f` | 9 | `done / committed 3fa91aba1` | `ready` | Fondation runtime; recette UI reste explicitement DA40-015. |
 | DA10-006 | `01a08fe4-8240-7a03-a703-301f91036079` | 20 | `done / committed 9de3b2e1c` | `ready` | Référence UX; aucun merge, conserver worktree/proofs. |
-| DA20-004 | `01a09059-ac5f-70d3-8b64-d56e8ea879db` | 2 | `in_progress / Plan checkpointé` | `ready` | B1 Luna/medium demandé à la reprise : Schema/Core lecture seule seulement. |
-| DA20-005 | `none` | 1 | `todo / scoped` | `none` | Attend DA20-004; topologie Git lecture seule créée en MT et scope canonique. |
-| DA10-005 | `none` | 1 | `todo / re-scoped` | `none` | Cockpit réel lecture seule, après DA20-004, DA20-005, DA30-009 et DA30-010. |
-| DA30-010 | `none` | 1 | `todo / re-scoped` | `none` | Métriques, provenance et attention, après DA30-009. |
-| DA40-015 | `none` | 1 | `todo / re-scoped` | `none` | Recette cockpit A/B après les cinq lots produit. |
+| DA20-004 | Cursor (chat tâche ; `dcaf9e59` aborté) | 5 | `done / committed 7df15b2cd` | `ready` | Ownership lecture seule ; recette UI DA40-015. |
+| DA20-005 | Cursor (chat tâche) | 8 | `done / committed cfa081ca8` | `ready` | Topologie lecture seule ; recette UI DA10-005. |
+| DA10-005 | Cursor (chat tâche) | 6 | `done / committed 5d18386f1` | `ready` | Cockpit lecture seule ; recette parent DA40-015. |
+| DA30-010 | Cursor (chat tâche) | 8 | `done / committed 7c8d490f0` | `ready` | Métriques lecture seule ; recette UI DA40-015. |
+| DA40-015 | Cursor (chat tâche) | 7 | `done / committed 545718268` | `ready` | Candidate locale ; pas de merge. Archiver le chat. |
 
 ## Event queue
 
@@ -78,17 +78,18 @@
 - Remise `DA20-004:1:analyze-complete` acceptée : aucun transfert A→B n'est permis; les signaux d'attention sans source restent `unknown`. Le Plan Terra/medium est relancé, sans Build.
 - Remise `DA20-004:2:plan-complete` acceptée : contrat `TaskOwnership` sérialisable et lecture seule, états explicites/provenance/fraîcheur, B1 Schema/Core puis B2 tests/smoke isolés. `TaskExecution.resume` et toute mutation restent interdits. `git diff --check` PASS ; aucun Build, test, service ou commit n'a été exécuté.
 - Checkpoint utilisateur `2026-09-11` : documentation produit, suivi de Sprint, état parent et ledger sont réalignés avant commit. Le watcher est retiré, DA20-004 reste au Plan prêt à compacter et B1 n'est pas délégué.
+- Reprise Cursor `2026-09-11` : chat tâche `dcaf9e59` aborté (mauvais ciblage worktree 20 métier). Exécution APEX + commit dans le worktree `features/tasks/DA20-004-cockpit-ownership`. Verify enfant génération 5, 28 tests, typechecks Schema/Core, oxlint, whitespace PASS. Commit `7df15b2cd` propre. Recette UI hors mandat. MT `done` (requête `dff2baa8-f325-465c-b2bc-a57188222a65`). `verify.md` dit encore « non commité » : texte périmé, Git fait autorité.
 
 ## Blockers and decisions
 
 - Routage par phase (autorité commune rechargée le `2026-09-09`) : Luna pour Build issu d'un plan précis et pour checks/smokes mécaniques ; Terra pour Analyze/Plan à conception croisée ou diagnostic restant ; Sol/Astra seulement sur besoin démontré. Chaque lancement/frontière sûre consigne `requested_model` et `requested_effort`; les métadonnées observées disponibles sont informatives. Absence ou divergence observée est consignée puis l'exécution continue : aucune attestation, inspection UI, polling ni gate Build.
 - Transmission : DA30-009 a reçu la règle de routage et l'absence de gate LLM. Les quatre paquets de lancement futurs et toute réévaluation à une frontière sûre portent la même règle. Les chats Sprint 3 déjà terminés ne sont pas réveillés.
-- Exclusions confirmées : aucun Build sur staging, parallélisme, multi-hôte, push, tag, déploiement, publication, action Git destructive, suppression ou réalignement de worktree.
+- Exclusions confirmées : aucun Build sur staging, multi-hôte, push, tag, déploiement, publication, action Git destructive, suppression ou réalignement de worktree. Deux écrivains max si worktrees de carte disjoints (décision Cursor 2026-09-11).
 
 ## Next action
 
-Attendre une reprise explicite de l'utilisateur. Ensuite relire ce STATE, le ledger, MT, le STATE enfant et Git, reconstruire le runtime, puis déléguer uniquement B1 DA20-004 sous Luna/medium. L'absence ou la divergence d'observation de modèle reste informative et ne bloque pas.
+Clôture mandatée 2026-09-12 : 7 cartes produit `done` (35 SP), candidate `545718268` non fusionnée. `DA40-016` absente de MT. Sprint 5 = proposition seulement. Archiver les chats tâche Cursor à la main.
 
 ## Resume
 
-Lire ce STATE et son ledger, vérifier l'expiration du runtime et relire MT, Git et les STATE enfants avant toute activation ou allocation. Ne pas créer de worktree, enfant ou mutation MT sur la seule foi de ce cache. Le checkpoint ne vaut pas reprise : à la reprise utilisateur, réévaluer le prochain bloc selon le routage et continuer malgré une observation de modèle absente ou divergente.
+Lire ce STATE et son ledger, relire MT, Git et les STATE enfants avant toute allocation. Ne pas créer de worktree depuis ce chat support.
