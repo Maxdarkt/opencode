@@ -14,7 +14,7 @@ Les `display_id` nouveaux seront créés au cadrage ; ne pas les inventer avant.
 
 | Ordre | Thème | Résultat | SP | Notes |
 |---:|---|---|---:|---|
-| 1 | DA40 | Promouvoir `545718268` vers `staging` (préflight) | 3 | Mandat Git explicite dans la carte |
+| 1 | DA40 | *(fait hors sprint)* Promouvoir `545718268` vers `staging` | — | Fait : merge `b3aa79245`, `origin/staging` |
 | 2 | DA30 | `DA30-011` réconcilier métriques Sprint 3 | 3 | Carte backlog existante |
 | 3 | DA40 | Thèmes DA10/20/30/40 seulement ; geler/documenter les worktrees métier permanents | 3 | Pas de suppression destructive sans mandat |
 | 4 | DA10 | Cockpit branché aux identités réelles (plus fixtures A/B comme source) | 8 | Fail-closed si snapshot absent |
@@ -27,7 +27,7 @@ Les `display_id` nouveaux seront créés au cadrage ; ne pas les inventer avant.
 1. A reste consultable après activation de B ; aucune fuite d’identité.
 2. Reprendre un chat existant ; ne pas en créer un second pour B.
 3. Le cockpit n’exécute pas commit, merge, push, spawn agent.
-4. Promotion `staging` seulement dans le lot 1, après préflight.
+4. Promotion `staging` **déjà faite** (`b3aa79245`). Preview/prod restent facultatives.
 
 ## Exclusions
 

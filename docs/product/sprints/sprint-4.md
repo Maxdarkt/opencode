@@ -6,7 +6,7 @@ Statut : completed le 2026-09-12. ID MT : `5059b73b-d8e8-40db-b9d5-1cbfb5c6424e`
 
 Livrer un cockpit Sprint réel en lecture seule, issu de la maquette UX : rail, canvas, contexte, topologie Git et métriques honnêtes, isolés entre A et B. Aucune action mutative depuis le cockpit.
 
-Candidate locale : `features/tasks/DA40-015-candidate-integree`, branche `task/DA40-015-candidate-integree`, HEAD `545718268`. Pas de merge `staging`, push, tag ni suppression de worktree.
+Candidate locale : `545718268`, fusionnée dans `staging` au merge `b3aa79245`, poussée sur `origin/staging`. Worktrees de cartes Sprint 4 retirés. Pas de push `dev`/`main`/`master`.
 
 | Carte | Résultat accepté | SP | Commit / preuve |
 |---|---|---:|---|
@@ -27,7 +27,7 @@ Candidate locale : `features/tasks/DA40-015-candidate-integree`, branche `task/D
 
 ## Dettes et suite
 
-- Candidate non promue vers `staging`.
+- Candidate non promue vers `develop`/`master` (preview/prod facultatives).
 - `DA40-016` manquante dans MT.
 - Worktrees métier permanents encore présents (legacy).
 - `DA30-011` reste backlog.

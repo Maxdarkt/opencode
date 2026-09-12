@@ -18,6 +18,14 @@
 4. `git push -u origin staging`.
 5. `git worktree remove` des 7 cartes propres.
 
-## Interdits
+## Résultat observé
 
-Aucun `--force` push, reset dur, tag, deploy, suppression des worktrees métier.
+- Docs de clôture : `d39a56787`.
+- Merge candidate : `b3aa79245` (`ort`, 0 conflit).
+- Push : `origin/staging` créée (`git@github.com:Maxdarkt/opencode.git`), sans `-u` (pas de `git config`). HTTPS `origin` n’a pas d’identifiants.
+- Worktrees cartes retirés (7). Branches locales `task/DA*` conservées. Worktrees métier non touchés.
+- `dev` / `main` / `master` non poussés.
+
+## Conclusion
+
+- `reconciled` pour le minimum Git. Suite : Sprint 5 depuis `b3aa79245`.

@@ -1,14 +1,14 @@
 # Daidalon — plan général
 
-Mis à jour le 2026-09-12. Projet MT DA ; branche source `staging` à `9c1259461`, sans Build produit direct. [Index sprints](/Users/leanbot/Documents/40_Daidalon/Daidalon/sprint.md).
+Mis à jour le 2026-09-12. Projet MT DA ; branche source `staging` à `b3aa79245` (merge candidate Sprint 4). [Index sprints](/Users/leanbot/Documents/40_Daidalon/Daidalon/sprint.md).
 
 ## Travail courant
 
-Aucun sprint actif. Sprint 4 completed : 7 cartes, 35 SP acceptés, candidate locale `545718268` non fusionnée. [Bilan](docs/product/sprints/sprint-4.md). Sprint 5 : [proposition](docs/product/sprints/sprint-5-proposal.md), non créé.
+Aucun sprint actif. Sprint 4 completed et promu : merge `b3aa79245` (`545718268` dans `staging`), push `origin/staging`, 7 worktrees de cartes retirés. [Bilan](docs/product/sprints/sprint-4.md). Sprint 5 : [proposition](docs/product/sprints/sprint-5-proposal.md), non créé.
 
 ## Historique
 
-- Sprint 4 completed : 7 cartes produit, 35 SP acceptés, candidate `545718268` ; orchestration APEX sans carte MT `DA40-016` à la clôture ; [bilan](docs/product/sprints/sprint-4.md) ; [plan sortant](.project/archives/sprint-4/plan-sortant.md).
+- Sprint 4 completed : 7 cartes produit, 35 SP acceptés, candidate `545718268` fusionnée dans `staging` au merge `b3aa79245` ; [bilan](docs/product/sprints/sprint-4.md) ; [journal de promotion](.project/journals/OP-DA40-016-sprint-4-promotion.md).
 
 - Sprint 3 completed : 7 cartes, 34 SP acceptés, candidate `57da5e0d` intégrée localement dans `staging` au merge `948a99387`; autorité MT/APEX explicite, fraîche et fail-closed; [bilan](docs/product/sprints/sprint-3.md) ; [journal de promotion](.project/journals/OP-DA40-016-sprint-3-promotion-rotation.md).
 
@@ -24,7 +24,7 @@ Aucun sprint actif. Sprint 4 completed : 7 cartes, 35 SP acceptés, candidate lo
 
 ## Suite
 
-Sprint 5 non créé. Briefing : [proposition](docs/product/sprints/sprint-5-proposal.md). Création MT dans un nouveau chat après validation. Pas de promotion `staging` par cette rotation.
+Sprint 5 non créé. Briefing : [proposition](docs/product/sprints/sprint-5-proposal.md). Nouveaux worktrees depuis `staging` `b3aa79245`. `develop`/`master` non poussés.
 
 ## Besoin produit à cadrer
 
@@ -36,6 +36,6 @@ Mémoire durable de projet : conception DA40-005, intégration au skill DA40-008
 |---|---|---|---|
 | DA30-011 | Réconcilier le worktree métriques Sprint 3 avec la révision intégrée avant réalignement | todo, proposé Sprint 5 | [scope](.project/tasks/DA30-DA30-011-reconcilier-divergence-metriques-sprint3/scope.md) |
 
-À cadrer au Sprint 5 (pas encore de carte MT) : promotion candidate `545718268` ; codes DA10/20/30/40 = thème ; worktrees métier permanents à geler ; cockpit branché aux identités réelles.
+À cadrer au Sprint 5 (pas encore de carte MT) : codes DA10/20/30/40 = thème ; worktrees métier permanents à geler. Promotion Sprint 4 faite.
 
 La dette de compaction desktop reste portée par la tâche APEX-only globale `desktop-compaction-transport` dans `codex-workflow-config`; elle ne devient pas une carte produit Daidalon.
