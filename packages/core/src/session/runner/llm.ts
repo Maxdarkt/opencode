@@ -8,7 +8,8 @@ import {
   isContextOverflowFailure,
   type ProviderErrorEvent,
 } from "@opencode-ai/llm"
-import { Cause, DateTime, Effect, FiberSet, Layer, Option, Semaphore, Stream } from "effect"
+import { SessionBounds } from "@opencode-ai/schema/session-bounds"
+import { Cause, DateTime, Effect, Fiber, FiberSet, Layer, Option, Semaphore, Stream } from "effect"
 import { AgentV2 } from "../../agent"
 import { Config } from "../../config"
 import { Database } from "../../database/database"
@@ -37,6 +38,7 @@ import { SessionRunnerModel } from "./model"
 import { createLLMEventPublisher } from "./publish-llm-event"
 import { toLLMMessages } from "./to-llm-message"
 import { MAX_STEPS_PROMPT } from "./max-steps"
+import { SessionRunnerBounds } from "./bounds"
 import { Snapshot } from "../../snapshot"
 import { makeLocationNode } from "../../effect/app-node"
 import { llmClient } from "../../effect/app-node-platform"
@@ -52,7 +54,7 @@ import { llmClient } from "../../effect/app-node-platform"
  *   - [ ] Replace local ownership with durable multi-node ownership when clustered.
  *   - [ ] Mark busy, retrying, idle, interrupted, or terminal-failure status durably.
  *   - [ ] Honor interruption and reject stale work after runtime attachment replacement.
- *   - [x] Honor optional agent step limits.
+ *   - [x] Honor finite agent step, token, and duration bounds.
  *   - [ ] Bound provider retries and repeated identical tool calls.
  *
  * - Runtime context assembly
@@ -88,7 +90,8 @@ import { llmClient } from "../../effect/app-node-platform"
  *
  * The current slice loads V2 history, translates it, resolves a model through a core service, and persists one
  * provider turn. Registry definitions are advertised, local tool calls are settled durably, and an
- * explicit loop starts the next provider turn after local settlement. Configured agent step limits bound the loop.
+ * explicit loop starts the next provider turn after local settlement. Finite agent step, token,
+ * and duration bounds always terminate the drain.
  */
 
 const layer = Layer.effect(
@@ -162,6 +165,13 @@ const layer = Layer.effect(
       }
     }
 
+    type DrainState = {
+      burned: number
+      budgetKnown: boolean
+      tokenLimit: number | undefined
+      stopReason: SessionBounds.StopReason | undefined
+    }
+
     const continueAfterCompaction = (step: number) => new TurnTransitionError({ _tag: "ContinueAfterCompaction", step })
     const continueAfterOverflowCompaction = (step: number) =>
       new TurnTransitionError({ _tag: "ContinueAfterOverflowCompaction", step })
@@ -175,11 +185,16 @@ const layer = Layer.effect(
       sessionID: SessionSchema.ID,
       promotion: SessionInput.Delivery | undefined,
       step: number,
+      drain: DrainState,
       recoverOverflow?: typeof compaction.compactAfterOverflow,
     ) {
       const session = yield* getSession(sessionID)
       if (session.location.directory !== location.directory || session.location.workspaceID !== location.workspaceID)
         return yield* Effect.interrupt
+      if (SessionRunnerBounds.budgetExceeded(drain.budgetKnown, drain.burned, drain.tokenLimit)) {
+        drain.stopReason = "budget"
+        return { needsContinuation: false, step }
+      }
       const agent = yield* agents.select(session.agent)
       const initialized = yield* SessionContextEpoch.initialize(db, loadSystemContext(agent), session.id)
       const toolFibers = yield* FiberSet.make<void, ToolOutputStore.Error>()
@@ -198,9 +213,12 @@ const layer = Layer.effect(
       const system =
         initialized ?? (yield* SessionContextEpoch.prepare(db, events, loadSystemContext(agent), session.id))
       const model = yield* models.resolve(session)
+      const bounds = Config.latest(yield* config.entries(), "bounds")
+      const stepLimit = SessionRunnerBounds.resolveStepLimit(agent.info?.steps, bounds?.steps)
+      drain.tokenLimit = SessionRunnerBounds.resolveTokenLimit(bounds?.tokens, model.route.defaults.limits?.context)
       const entries = yield* SessionHistory.entriesForRunner(db, session.id, system.baselineSeq)
       const context = entries.map((entry) => entry.message)
-      const isLastStep = agent.info?.steps !== undefined && currentStep >= agent.info.steps
+      const isLastStep = currentStep >= stepLimit
       const toolMaterialization = isLastStep ? undefined : yield* tools.materialize(agent.info?.permissions)
       const pruned = SessionCompaction.prune(context)
       const promptCacheKey = ContextPack.promptCacheKey(
@@ -359,6 +377,10 @@ const layer = Layer.effect(
                 files,
               }),
             )
+            if (stepSettlement.measured) {
+              drain.budgetKnown = true
+              drain.burned += SessionRunnerBounds.burnedTokens(stepSettlement.tokens)
+            }
           }
           if (publisher.hasProviderError())
             yield* withPublication(publisher.failUnsettledTools("Tool execution interrupted"))
@@ -367,6 +389,7 @@ const layer = Layer.effect(
           if (stream._tag === "Failure") return yield* Effect.failCause(stream.cause)
           if (settled._tag === "Failure" && Cause.hasInterrupts(settled.cause))
             return yield* Effect.failCause(settled.cause)
+          if (isLastStep && !publisher.hasProviderError()) drain.stopReason = "steps"
           return { needsContinuation: !publisher.hasProviderError() && needsContinuation, step: currentStep }
         }),
       )
@@ -375,31 +398,32 @@ const layer = Layer.effect(
       sessionID: SessionSchema.ID,
       promotion: SessionInput.Delivery | undefined,
       step: number,
+      drain: DrainState,
     ) => Effect.Effect<{ readonly needsContinuation: boolean; readonly step: number }, RunError>
 
-    const runAfterOverflowCompaction: RunTurn = Effect.fnUntraced(function* (sessionID, promotion, step) {
-      return yield* runTurnAttempt(sessionID, promotion, step).pipe(
+    const runAfterOverflowCompaction: RunTurn = Effect.fnUntraced(function* (sessionID, promotion, step, drain) {
+      return yield* runTurnAttempt(sessionID, promotion, step, drain).pipe(
         Effect.catchDefect(
           Effect.fnUntraced(function* (defect) {
             if (!(defect instanceof TurnTransitionError)) return yield* Effect.die(defect)
             if (defect.transition._tag === "ContinueAfterOverflowCompaction")
               return yield* Effect.die("Post-compaction provider attempt cannot recover another overflow")
             yield* Effect.yieldNow
-            return yield* runAfterOverflowCompaction(sessionID, undefined, defect.transition.step)
+            return yield* runAfterOverflowCompaction(sessionID, undefined, defect.transition.step, drain)
           }),
         ),
       )
     })
 
-    const runTurn: RunTurn = Effect.fnUntraced(function* (sessionID, promotion, step) {
-      return yield* runTurnAttempt(sessionID, promotion, step, compaction.compactAfterOverflow).pipe(
+    const runTurn: RunTurn = Effect.fnUntraced(function* (sessionID, promotion, step, drain) {
+      return yield* runTurnAttempt(sessionID, promotion, step, drain, compaction.compactAfterOverflow).pipe(
         Effect.catchDefect(
           Effect.fnUntraced(function* (defect) {
             if (!(defect instanceof TurnTransitionError)) return yield* Effect.die(defect)
             yield* Effect.yieldNow
             if (defect.transition._tag === "ContinueAfterOverflowCompaction")
-              return yield* runAfterOverflowCompaction(sessionID, undefined, defect.transition.step)
-            return yield* runTurn(sessionID, undefined, defect.transition.step)
+              return yield* runAfterOverflowCompaction(sessionID, undefined, defect.transition.step, drain)
+            return yield* runTurn(sessionID, undefined, defect.transition.step, drain)
           }),
         ),
       )
@@ -413,21 +437,73 @@ const layer = Layer.effect(
       const hasQueue = hasSteer ? false : yield* SessionInput.hasPending(db, input.sessionID, "queue")
       if (!input.force && !hasSteer && !hasQueue) return
       yield* failInterruptedTools(input.sessionID)
+      const drain: DrainState = {
+        burned: 0,
+        budgetKnown: false,
+        tokenLimit: undefined,
+        stopReason: undefined,
+      }
+      const durationMs = SessionRunnerBounds.resolveDurationMs(
+        Config.latest(yield* config.entries(), "bounds")?.duration_ms,
+      )
       let promotion: SessionInput.Delivery | undefined = hasSteer ? "steer" : hasQueue ? "queue" : undefined
       let shouldRun = input.force || hasSteer || hasQueue
-      while (shouldRun) {
-        let needsContinuation = true
-        let step = 1
-        while (needsContinuation) {
-          const result = yield* runTurn(input.sessionID, promotion, step)
-          needsContinuation = result.needsContinuation
-          step = result.step + 1
-          promotion = "steer"
-          if (!needsContinuation) needsContinuation = yield* SessionInput.hasPending(db, input.sessionID, "steer")
+      const drainFiber = Fiber.getCurrent()!
+      // Wall-clock deadline: FiberSet.makeRuntime sleepers are not TestClock-visible.
+      const timer = yield* Effect.callback<void>((resume) => {
+        const handle = setTimeout(() => resume(Effect.void), durationMs)
+        return Effect.sync(() => clearTimeout(handle))
+      }).pipe(
+        Effect.andThen(
+          Effect.sync(() => {
+            drain.stopReason = "timeout"
+          }),
+        ),
+        Effect.andThen(Fiber.interrupt(drainFiber)),
+        Effect.forkDetach({ startImmediately: true }),
+      )
+      yield* Effect.gen(function* () {
+        while (shouldRun) {
+          let needsContinuation = true
+          let step = 1
+          while (needsContinuation) {
+            if (SessionRunnerBounds.budgetExceeded(drain.budgetKnown, drain.burned, drain.tokenLimit)) {
+              drain.stopReason = "budget"
+              break
+            }
+            const result = yield* runTurn(input.sessionID, promotion, step, drain)
+            needsContinuation = result.needsContinuation
+            step = result.step + 1
+            promotion = "steer"
+            if (!needsContinuation) {
+              if (drain.stopReason === "budget") break
+              needsContinuation = yield* SessionInput.hasPending(db, input.sessionID, "steer")
+              if (needsContinuation && drain.stopReason === "steps") drain.stopReason = undefined
+            }
+          }
+          if (drain.stopReason === "budget") break
+          shouldRun = yield* SessionInput.hasPending(db, input.sessionID, "queue")
+          if (shouldRun && drain.stopReason === "steps") drain.stopReason = undefined
+          promotion = shouldRun ? "queue" : undefined
         }
-        shouldRun = yield* SessionInput.hasPending(db, input.sessionID, "queue")
-        promotion = shouldRun ? "queue" : undefined
-      }
+      }).pipe(
+        Effect.onInterrupt(() =>
+          Effect.sync(() => {
+            if (drain.stopReason !== "timeout") drain.stopReason = "interrupt"
+          }),
+        ),
+        Effect.ensuring(Fiber.interrupt(timer).pipe(Effect.forkChild, Effect.asVoid)),
+        Effect.ensuring(
+          Effect.gen(function* () {
+            if (!drain.stopReason) return
+            yield* events.publish(SessionBounds.DrainEnded, {
+              sessionID: input.sessionID,
+              timestamp: yield* DateTime.now,
+              reason: drain.stopReason,
+            })
+          }),
+        ),
+      )
     })
 
     return Service.of({
