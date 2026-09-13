@@ -11,6 +11,7 @@ export type CockpitLayoutState = {
   readonly rightPanelTab: RightPanelTab
   readonly mobileDrawerOpen: boolean
   readonly confirmation: SensitiveAction | null
+  readonly launchError: string | null
 }
 
 export type CockpitLayoutIntent =
@@ -21,6 +22,7 @@ export type CockpitLayoutIntent =
   | { readonly type: "setMobileDrawer"; readonly open: boolean }
   | { readonly type: "openConfirmation"; readonly action: SensitiveAction }
   | { readonly type: "closeConfirmation" }
+  | { readonly type: "setLaunchError"; readonly message: string | null }
 
 export function createCockpitLayoutState(selectedTaskId = "DA40-015-A"): CockpitLayoutState {
   return {
@@ -31,6 +33,7 @@ export function createCockpitLayoutState(selectedTaskId = "DA40-015-A"): Cockpit
     rightPanelTab: "taskStatus",
     mobileDrawerOpen: false,
     confirmation: null,
+    launchError: null,
   }
 }
 
@@ -40,6 +43,7 @@ export function reduceCockpitLayoutState(state: CockpitLayoutState, intent: Cock
   if (intent.type === "selectPreview") return { ...state, view: "task", canvasTab: intent.tab, previewTab: intent.tab }
   if (intent.type === "selectRightPanel") return { ...state, rightPanelTab: intent.tab, mobileDrawerOpen: true }
   if (intent.type === "setMobileDrawer") return { ...state, mobileDrawerOpen: intent.open }
-  if (intent.type === "openConfirmation") return { ...state, confirmation: intent.action }
+  if (intent.type === "openConfirmation") return { ...state, confirmation: intent.action, launchError: null }
+  if (intent.type === "setLaunchError") return { ...state, launchError: intent.message }
   return { ...state, confirmation: null }
 }

@@ -92,6 +92,8 @@ import type {
   GlobalMetricsResponses,
   GlobalOwnershipErrors,
   GlobalOwnershipResponses,
+  GlobalTaskChatOpenErrors,
+  GlobalTaskChatOpenResponses,
   GlobalTopologyErrors,
   GlobalTopologyResponses,
   GlobalUpgradeErrors,
@@ -241,6 +243,7 @@ import type {
   SyncStartResponses,
   SyncStealErrors,
   SyncStealResponses,
+  TaskChatOpenInput,
   TaskMetricsRequest,
   TaskOwnershipInput,
   TextPartInput,
@@ -1389,6 +1392,30 @@ export class Global extends HeyApiClient {
     const params = buildClientParams([parameters], [{ args: [{ key: "repositoryTopologyInput", map: "body" }] }])
     return (options?.client ?? this.client).post<GlobalTopologyResponses, GlobalTopologyErrors, ThrowOnError>({
       url: "/global/topology",
+      ...options,
+      ...params,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+        ...params.headers,
+      },
+    })
+  }
+
+  /**
+   * Open a task chat
+   *
+   * Create or resume the single session bound to an observed card worktree. Existing bindings are reused without creating a second chat.
+   */
+  public taskChatOpen<ThrowOnError extends boolean = false>(
+    parameters?: {
+      taskChatOpenInput?: TaskChatOpenInput
+    },
+    options?: Options<never, ThrowOnError>,
+  ) {
+    const params = buildClientParams([parameters], [{ args: [{ key: "taskChatOpenInput", map: "body" }] }])
+    return (options?.client ?? this.client).post<GlobalTaskChatOpenResponses, GlobalTaskChatOpenErrors, ThrowOnError>({
+      url: "/global/task-chat/open",
       ...options,
       ...params,
       headers: {

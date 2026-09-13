@@ -56,6 +56,7 @@ import { TaskMetrics } from "@opencode-ai/core/task-metrics"
 import { TaskOwnership } from "@opencode-ai/core/task-ownership"
 import { RepositoryTopology } from "@opencode-ai/core/repository-topology"
 import { TaskAuthority } from "@opencode-ai/core/task-authority"
+import { TaskBinding } from "@opencode-ai/core/task-binding"
 import { AppNodeBuilderV1 } from "@/effect/app-node-builder-v1"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { httpClient } from "@opencode-ai/core/effect/app-node-platform"
@@ -223,6 +224,7 @@ const app = LayerNode.group([
   TaskOwnership.node,
   RepositoryTopology.node,
   TaskAuthority.node,
+  TaskBinding.node,
   Auth.node,
   Account.node,
   Config.node,

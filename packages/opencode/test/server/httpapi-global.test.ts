@@ -2,14 +2,21 @@ import { LocalContext } from "@opencode-ai/core/local-context"
 import { Database } from "@opencode-ai/core/database/database"
 import { AppNodeBuilder } from "@opencode-ai/core/effect/app-node-builder"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
+import { EventV2 } from "@opencode-ai/core/event"
 import { ModelV2 } from "@opencode-ai/core/model"
+import { ProjectV2 } from "@opencode-ai/core/project"
 import { ProjectSchema } from "@opencode-ai/core/project/schema"
 import { ProjectTable } from "@opencode-ai/core/project/sql"
 import { ProviderV2 } from "@opencode-ai/core/provider"
 import { AbsolutePath } from "@opencode-ai/core/schema"
+import { SessionV2 } from "@opencode-ai/core/session"
+import { SessionExecution } from "@opencode-ai/core/session/execution"
 import { SessionMessage } from "@opencode-ai/core/session/message"
+import { SessionProjector } from "@opencode-ai/core/session/projector"
 import { SessionSchema } from "@opencode-ai/core/session/schema"
+import { SessionStore } from "@opencode-ai/core/session/store"
 import { SessionMessageTable, SessionTable } from "@opencode-ai/core/session/sql"
+import { TaskBinding } from "@opencode-ai/core/task-binding"
 import { TaskBindingTable } from "@opencode-ai/core/task-binding/sql"
 import { TaskExecutionEffectTable, TaskExecutionOwnershipTable } from "@opencode-ai/core/task-execution/sql"
 import { TaskMetrics } from "@opencode-ai/core/task-metrics"
@@ -18,6 +25,8 @@ import { RepositoryTopology } from "@opencode-ai/core/repository-topology"
 import { TaskAuthority } from "@opencode-ai/core/task-authority"
 import { Session } from "@/session/session"
 import { execFile } from "child_process"
+import { mkdir } from "fs/promises"
+import path from "path"
 import { promisify } from "util"
 import { tmpdir } from "../fixture/fixture"
 import { NodeHttpServer } from "@effect/platform-node"
@@ -40,8 +49,33 @@ import { schemaErrorLayer } from "../../src/server/routes/instance/httpapi/middl
 import { testEffect } from "../lib/effect"
 
 const metricsLayer = AppNodeBuilder.build(
-  LayerNode.group([Database.node, TaskMetrics.node, TaskOwnership.node, RepositoryTopology.node]),
-  [[Database.node, Database.layerFromPath(":memory:")]],
+  LayerNode.group([
+    Database.node,
+    TaskMetrics.node,
+    TaskOwnership.node,
+    RepositoryTopology.node,
+    TaskBinding.node,
+    EventV2.node,
+    SessionProjector.node,
+    SessionStore.node,
+    SessionV2.node,
+    LocalContext.node,
+  ]),
+  [
+    [Database.node, Database.layerFromPath(":memory:")],
+    [SessionExecution.node, SessionExecution.noopLayer],
+    [
+      ProjectV2.node,
+      Layer.succeed(
+        ProjectV2.Service,
+        ProjectV2.Service.of({
+          resolve: (directory) => Effect.succeed({ id: ProjectV2.ID.global, directory }),
+          directories: () => Effect.succeed([]),
+          commit: () => Effect.void,
+        }),
+      ),
+    ],
+  ],
 )
 const exec = promisify(execFile)
 const encode = Schema.encodeSync(SessionMessage.Message)
@@ -132,7 +166,6 @@ const apiLayer = HttpRouter.serve(
   Layer.provideMerge(metricsLayer),
   Layer.provide(Layer.mock(Auth.Service)({})),
   Layer.provide(Layer.mock(Config.Service)({})),
-  Layer.provide(Layer.mock(LocalContext.Service)({})),
   Layer.provide(Layer.mock(TaskAuthority.Service)({})),
   Layer.provide(Layer.mock(Session.Service)({})),
   Layer.provide(Layer.mock(MoveSession.Service)({})),
@@ -354,9 +387,15 @@ describe("global HttpApi", () => {
   const countRows = Effect.gen(function* () {
     const { db } = yield* Database.Service
     const bindings = yield* db.select().from(TaskBindingTable).all()
+    const sessions = yield* db.select().from(SessionTable).all()
     const ownership = yield* db.select().from(TaskExecutionOwnershipTable).all()
     const effects = yield* db.select().from(TaskExecutionEffectTable).all()
-    return { bindings: bindings.length, ownership: ownership.length, effects: effects.length }
+    return {
+      bindings: bindings.length,
+      sessions: sessions.length,
+      ownership: ownership.length,
+      effects: effects.length,
+    }
   })
 
   it.live("smokes distinct A/B ownership without inventing zeros or writing bindings", () =>
@@ -462,6 +501,136 @@ describe("global HttpApi", () => {
     Effect.gen(function* () {
       const response = yield* HttpClientRequest.post(GlobalPaths.topology).pipe(
         HttpClientRequest.bodyJsonUnsafe({ repositories: [] }),
+        HttpClient.execute,
+      )
+      expect(response.status).toBe(400)
+    }),
+  )
+
+  const openPayload = (taskID: string, worktree: string, apex = `.project/tasks/${taskID}`) => ({
+    mtTaskID: taskID,
+    apexExternalRef: apex,
+    worktree,
+  })
+
+  const conventionTree = (taskID: string, git = true) =>
+    Effect.acquireRelease(
+      Effect.promise(async () => {
+        const tmp = await tmpdir()
+        const worktree = path.join(tmp.path, "features", "tasks", taskID)
+        await mkdir(worktree, { recursive: true })
+        if (git) {
+          await exec("git", ["init"], { cwd: worktree })
+          await exec("git", ["config", "core.fsmonitor", "false"], { cwd: worktree })
+          await exec("git", ["config", "commit.gpgsign", "false"], { cwd: worktree })
+          await exec("git", ["config", "user.email", "test@opencode.test"], { cwd: worktree })
+          await exec("git", ["config", "user.name", "Test"], { cwd: worktree })
+          await exec("git", ["commit", "--allow-empty", "-m", "root"], { cwd: worktree })
+          await exec("git", ["branch", "-M", "chat-worktree"], { cwd: worktree })
+        }
+        return { tmp, worktree }
+      }),
+      (dir) => Effect.promise(() => dir.tmp[Symbol.asyncDispose]()),
+    )
+
+  it.live("opens a task chat once then reopens the same session without a second binding", () =>
+    Effect.gen(function* () {
+      const tree = yield* conventionTree("DA10-007")
+      const before = yield* countRows
+      const created = yield* HttpClientRequest.post(GlobalPaths.taskChatOpen).pipe(
+        HttpClientRequest.bodyJsonUnsafe(openPayload("DA10-007", tree.worktree)),
+        HttpClient.execute,
+      )
+      expect(created.status).toBe(200)
+      const createdBody = (yield* created.json) as { sessionID: string; created: boolean }
+      expect(createdBody.created).toBe(true)
+      expect(createdBody.sessionID).toBeTruthy()
+      const afterCreate = yield* countRows
+      expect(afterCreate.bindings).toBe(before.bindings + 1)
+      expect(afterCreate.sessions).toBe(before.sessions + 1)
+      expect(afterCreate.ownership).toBe(before.ownership)
+      expect(afterCreate.effects).toBe(before.effects)
+
+      const reopened = yield* HttpClientRequest.post(GlobalPaths.taskChatOpen).pipe(
+        HttpClientRequest.bodyJsonUnsafe(openPayload("DA10-007", tree.worktree)),
+        HttpClient.execute,
+      )
+      expect(reopened.status).toBe(200)
+      const reopenedBody = (yield* reopened.json) as { sessionID: string; created: boolean }
+      expect(reopenedBody.created).toBe(false)
+      expect(reopenedBody.sessionID).toBe(createdBody.sessionID)
+      expect(yield* countRows).toEqual(afterCreate)
+    }),
+  )
+
+  it.live("refuses a missing worktree without writing bindings or execution", () =>
+    Effect.gen(function* () {
+      const before = yield* countRows
+      const worktree = path.join("/tmp", "opencode-missing-task-chat", "features", "tasks", "DA10-007-missing")
+      const response = yield* HttpClientRequest.post(GlobalPaths.taskChatOpen).pipe(
+        HttpClientRequest.bodyJsonUnsafe(openPayload("DA10-007-missing", worktree)),
+        HttpClient.execute,
+      )
+      expect(response.status).toBe(404)
+      expect(yield* countRows).toEqual(before)
+    }),
+  )
+
+  it.live("refuses a worktree outside the card convention", () =>
+    Effect.gen(function* () {
+      const dir = yield* Effect.acquireRelease(
+        Effect.promise(() => tmpdir({ git: true })),
+        (tmp) => Effect.promise(() => tmp[Symbol.asyncDispose]()),
+      )
+      const before = yield* countRows
+      const response = yield* HttpClientRequest.post(GlobalPaths.taskChatOpen).pipe(
+        HttpClientRequest.bodyJsonUnsafe(openPayload("DA10-007", dir.path)),
+        HttpClient.execute,
+      )
+      expect(response.status).toBe(400)
+      expect(yield* countRows).toEqual(before)
+    }),
+  )
+
+  it.live("refuses a non-checkout directory on the convention path", () =>
+    Effect.gen(function* () {
+      const tree = yield* conventionTree("DA10-007-nogit", false)
+      const before = yield* countRows
+      const response = yield* HttpClientRequest.post(GlobalPaths.taskChatOpen).pipe(
+        HttpClientRequest.bodyJsonUnsafe(openPayload("DA10-007-nogit", tree.worktree)),
+        HttpClient.execute,
+      )
+      expect(response.status).toBe(400)
+      expect(yield* countRows).toEqual(before)
+    }),
+  )
+
+  it.live("refuses a colliding apex ref without a second binding row", () =>
+    Effect.gen(function* () {
+      yield* seed({
+        taskID: "DA10-007-seed",
+        message: assistant({ taskID: "DA10-007-seed" }),
+      })
+      const tree = yield* conventionTree("DA10-007-collide")
+      const before = yield* countRows
+      const response = yield* HttpClientRequest.post(GlobalPaths.taskChatOpen).pipe(
+        HttpClientRequest.bodyJsonUnsafe(
+          openPayload("DA10-007-collide", tree.worktree, ".project/tasks/DA10-007-seed"),
+        ),
+        HttpClient.execute,
+      )
+      expect(response.status).toBe(409)
+      const after = yield* countRows
+      expect(after.bindings).toBe(before.bindings)
+      expect(after.ownership).toBe(before.ownership)
+      expect(after.effects).toBe(before.effects)
+    }),
+  )
+
+  it.live("rejects invalid task-chat payloads", () =>
+    Effect.gen(function* () {
+      const response = yield* HttpClientRequest.post(GlobalPaths.taskChatOpen).pipe(
+        HttpClientRequest.bodyJsonUnsafe({ mtTaskID: "" }),
         HttpClient.execute,
       )
       expect(response.status).toBe(400)

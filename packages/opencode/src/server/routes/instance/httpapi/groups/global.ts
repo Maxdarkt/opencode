@@ -1,5 +1,6 @@
 import { LocalContext } from "@opencode-ai/schema/local-context"
 import { RepositoryTopology } from "@opencode-ai/schema/repository-topology"
+import { TaskChat } from "@opencode-ai/schema/task-chat"
 import { TaskMetrics } from "@opencode-ai/schema/task-metrics"
 import { TaskOwnership } from "@opencode-ai/schema/task-ownership"
 import { QueueBlockedError } from "@opencode-ai/core/task-metrics"
@@ -80,6 +81,7 @@ export const GlobalPaths = {
   metrics: "/global/metrics",
   ownership: "/global/ownership",
   topology: "/global/topology",
+  taskChatOpen: "/global/task-chat/open",
   upgrade: "/global/upgrade",
 } as const
 
@@ -118,6 +120,25 @@ export const GlobalApi = HttpApi.make("global").add(
           summary: "Read repository topology",
           description:
             "Read repository topology from an explicit ownership snapshot and repository list. mergeTarget is never inferred.",
+        }),
+      ),
+      HttpApiEndpoint.post("taskChatOpen", GlobalPaths.taskChatOpen, {
+        payload: TaskChat.OpenInput,
+        success: TaskChat.OpenResult,
+        error: [
+          TaskChat.WorktreeMissing,
+          TaskChat.WorktreeNotCheckout,
+          TaskChat.WorktreeConvention,
+          TaskChat.InspectFailed,
+          TaskChat.ConflictError,
+          TaskChat.SessionNotFoundError,
+        ],
+      }).annotateMerge(
+        OpenApi.annotations({
+          identifier: "global.taskChatOpen",
+          summary: "Open a task chat",
+          description:
+            "Create or resume the single session bound to an observed card worktree. Existing bindings are reused without creating a second chat.",
         }),
       ),
       HttpApiEndpoint.get("context", GlobalPaths.context, {

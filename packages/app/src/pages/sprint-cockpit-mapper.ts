@@ -11,6 +11,7 @@ import type {
   TaskOwnershipExecutionFact,
   TaskOwnershipSnapshot,
 } from "@opencode-ai/sdk/v2/client"
+import { legacySessionHref } from "@/utils/session-route"
 import { sprintCockpitInput } from "./sprint-cockpit-input"
 
 export type DisplayFact = {
@@ -26,6 +27,9 @@ export type CockpitTaskView = {
   readonly sessionHref: string | null
   readonly isWorking: boolean
   readonly hasUnread: boolean
+  readonly apexExternalRef: string
+  readonly worktreePath: string | null
+  readonly worktreeLabel: DisplayFact
   readonly worktree: DisplayFact
   readonly branch: DisplayFact
   readonly head: DisplayFact
@@ -71,6 +75,21 @@ export function formatFact(fact: StringishFact | undefined, asText: (value: unkn
   }
 }
 
+const FEATURES_TASKS = "features/tasks/"
+
+export function worktreeLabelFromPath(observed: string | undefined): DisplayFact {
+  if (!observed) return { text: "unknown", state: "unknown", source: "worktree" }
+  const normalized = observed.replaceAll("\\", "/")
+  const index = normalized.indexOf(FEATURES_TASKS)
+  if (index < 0) return { text: "unknown", state: "unknown", source: "worktree" }
+  return { text: normalized.slice(index), state: "available", source: "observed" }
+}
+
+const observedWorktree = (entry: TaskOwnershipEntry) => {
+  if (entry.binding.state === "available") return entry.binding.value.checkout.worktree
+  return entry.identity.checkout.worktree
+}
+
 const sessionFromBinding = (binding: TaskOwnershipBindingFact) => {
   if (binding.state !== "available") return null
   return binding.value.sessionID
@@ -101,13 +120,17 @@ const statusFrom = (authority: TaskOwnershipAuthorityFact): DisplayFact => {
 
 const mapEntry = (entry: TaskOwnershipEntry): CockpitTaskView => {
   const sessionID = sessionFromBinding(entry.binding) ?? sessionFromExecution(entry.execution)
+  const worktreePath = observedWorktree(entry) ?? null
   return {
     id: entry.identity.mtTaskID,
     title: entry.identity.mtTaskID,
     status: statusFrom(entry.authority),
-    sessionHref: sessionID ? `/session/${sessionID}` : null,
+    sessionHref: sessionID && worktreePath ? legacySessionHref(worktreePath, sessionID) : null,
     isWorking: workingFrom(entry.authority, entry.execution),
     hasUnread: unreadFrom(entry.attention),
+    apexExternalRef: entry.identity.apexExternalRef,
+    worktreePath,
+    worktreeLabel: worktreeLabelFromPath(worktreePath ?? undefined),
     worktree: formatFact(entry.binding.state === "available" ? { state: "available", value: entry.binding.value.checkout.worktree, provenance: entry.binding.provenance } : entry.binding),
     branch: formatFact(entry.binding.state === "available" ? { state: "available", value: entry.binding.value.checkout.branch, provenance: entry.binding.provenance } : entry.binding),
     head: formatFact(entry.binding.state === "available" ? { state: "available", value: entry.binding.value.checkout.head, provenance: entry.binding.provenance } : entry.binding),
@@ -166,6 +189,9 @@ export function inaccessibleCockpitView(): CockpitView {
       sessionHref: null,
       isWorking: false,
       hasUnread: false,
+      apexExternalRef: identity.apexExternalRef,
+      worktreePath: identity.checkout.worktree,
+      worktreeLabel: worktreeLabelFromPath(identity.checkout.worktree),
       worktree: { text: "inaccessible (http)", state: "inaccessible", source: "http" },
       branch: { text: "inaccessible (http)", state: "inaccessible", source: "http" },
       head: { text: "inaccessible (http)", state: "inaccessible", source: "http" },
