@@ -1591,6 +1591,82 @@ export type SessionsEventsOutput =
       readonly data: { readonly timestamp: number; readonly sessionID: string; readonly messageID: string }
     }
 
+export type SessionsPackInput = { readonly sessionID: { readonly sessionID: string }["sessionID"] }
+
+export type SessionsPackOutput = {
+  readonly data: {
+    readonly mandate: { readonly system?: string; readonly user?: string }
+    readonly worktree: string
+    readonly pathset: ReadonlyArray<string>
+    readonly omitted: ReadonlyArray<{ readonly path: string; readonly provenance: ReadonlyArray<string> }>
+    readonly tokensBefore:
+      | {
+          readonly state: "measured"
+          readonly value: {
+            readonly input: number
+            readonly output: number
+            readonly reasoning: number
+            readonly cache: { readonly read: number; readonly write: number }
+          }
+          readonly provenance: ReadonlyArray<string>
+        }
+      | {
+          readonly state: "estimated"
+          readonly value: {
+            readonly input: number
+            readonly output: number
+            readonly reasoning: number
+            readonly cache: { readonly read: number; readonly write: number }
+          }
+          readonly provenance: ReadonlyArray<string>
+        }
+      | {
+          readonly state: "partial"
+          readonly value?: {
+            readonly input: number
+            readonly output: number
+            readonly reasoning: number
+            readonly cache: { readonly read: number; readonly write: number }
+          }
+          readonly provenance: ReadonlyArray<string>
+        }
+      | { readonly state: "unknown"; readonly provenance: ReadonlyArray<string> }
+    readonly tokensAfter:
+      | {
+          readonly state: "measured"
+          readonly value: {
+            readonly input: number
+            readonly output: number
+            readonly reasoning: number
+            readonly cache: { readonly read: number; readonly write: number }
+          }
+          readonly provenance: ReadonlyArray<string>
+        }
+      | {
+          readonly state: "estimated"
+          readonly value: {
+            readonly input: number
+            readonly output: number
+            readonly reasoning: number
+            readonly cache: { readonly read: number; readonly write: number }
+          }
+          readonly provenance: ReadonlyArray<string>
+        }
+      | {
+          readonly state: "partial"
+          readonly value?: {
+            readonly input: number
+            readonly output: number
+            readonly reasoning: number
+            readonly cache: { readonly read: number; readonly write: number }
+          }
+          readonly provenance: ReadonlyArray<string>
+        }
+      | { readonly state: "unknown"; readonly provenance: ReadonlyArray<string> }
+    readonly cachePrefix: { readonly cwd: string; readonly rulesHash: string; readonly toolsIdentity: string }
+  }
+}["data"]
+
 export type SessionsInterruptInput = { readonly sessionID: { readonly sessionID: string }["sessionID"] }
 
 export type SessionsInterruptOutput = void

@@ -39,7 +39,7 @@ import { Button } from "@opencode-ai/ui/button"
 import { showToast } from "@/utils/toast"
 import { base64Encode, checksum } from "@opencode-ai/core/util/encode"
 import { useLocation, useNavigate, useParams, useSearchParams } from "@solidjs/router"
-import { NewSessionView, SessionHeader } from "@/components/session"
+import { AgentBanner, NewSessionView, SessionHeader } from "@/components/session"
 import { ErrorPage } from "@/pages/error"
 import { CommentsProvider, useComments } from "@/context/comments"
 import { useCommand } from "@/context/command"
@@ -2264,6 +2264,18 @@ export default function Page() {
   return (
     <SessionRouteFrame>
       <SessionHeader />
+      <Show when={params.id}>
+        {(id) => (
+          <AgentBanner
+            sessionID={id()}
+            status={sync().data.session_status[id()]?.type}
+            cwd={info()?.directory}
+            messages={sync().data.message[id()] ?? []}
+            parts={sync().data.part}
+            onInterrupt={() => void halt(id())}
+          />
+        )}
+      </Show>
       <div
         ref={panelRow}
         class="flex-1 min-h-0 flex flex-col md:flex-row"

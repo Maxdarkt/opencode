@@ -81,4 +81,29 @@ describe("ContextPack", () => {
     expect(ContextPack.promptCacheKey(pack({ rules: "other rules" }).cachePrefix)).not.toBe(base)
     expect(ContextPack.promptCacheKey(pack({ toolsIdentity: "bash" }).cachePrefix)).not.toBe(base)
   })
+
+  test("fromSession observes worktree and keeps unknown tokens without value", () => {
+    const result = ContextPack.fromSession({ worktree })
+    expect(result.worktree).toBe(AbsolutePath.make(resolve(worktree)))
+    expect(result.pathset).toEqual([])
+    expect(result.tokensBefore).toEqual({ state: "unknown", provenance: ["Token.estimate"] })
+    expect(result.tokensAfter).toEqual({ state: "unknown", provenance: ["Token.estimate"] })
+    expect("value" in result.tokensBefore).toBe(false)
+  })
+
+  test("fromSession omits paths outside the worktree", () => {
+    const result = ContextPack.fromSession({
+      worktree,
+      paths: [
+        { path: `${worktree}/src/index.ts`, provenance: ["mandate"] },
+        { path: staging, provenance: ["staging"] },
+        { path: sibling, provenance: ["sibling"] },
+      ],
+    })
+    expect(result.pathset).toEqual([RelativePath.make("src/index.ts")])
+    expect(result.omitted).toEqual([
+      { path: staging, provenance: ["staging"] },
+      { path: sibling, provenance: ["sibling"] },
+    ])
+  })
 })

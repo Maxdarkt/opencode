@@ -992,6 +992,31 @@ const scenarios: Scenario[] = [
     }))
     .json(200, data(object)),
   http.protected
+    .get("/api/session/{sessionID}/pack", "v2.session.pack")
+    .seeded((ctx) => ctx.session({ title: "Session pack" }))
+    .at((ctx) => ({
+      path: route("/api/session/{sessionID}/pack", { sessionID: ctx.state.id }),
+      headers: ctx.headers(),
+    }))
+    .json(
+      200,
+      data((pack) => {
+        object(pack)
+        check(typeof pack.worktree === "string" && pack.worktree.length > 0, "pack should observe worktree")
+        check(Array.isArray(pack.pathset), "pathset should be an array")
+        object(pack.tokensBefore)
+        check(pack.tokensBefore.state === "unknown", "tokens without request stay unknown")
+        check(!("value" in pack.tokensBefore), "unknown tokens must omit value")
+      }),
+    ),
+  http.protected
+    .get("/api/session/{sessionID}/pack", "v2.session.pack.missing")
+    .at((ctx) => ({
+      path: route("/api/session/{sessionID}/pack", { sessionID: "ses_httpapi_missing" }),
+      headers: ctx.headers(),
+    }))
+    .json(404, object, "status"),
+  http.protected
     .post("/api/session/{sessionID}/agent", "v2.session.switchAgent")
     .seeded((ctx) => ctx.session({ title: "Switch agent" }))
     .at((ctx) => ({

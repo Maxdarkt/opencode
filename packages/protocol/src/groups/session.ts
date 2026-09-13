@@ -21,6 +21,7 @@ import { Model } from "@opencode-ai/schema/model"
 import { Location } from "@opencode-ai/schema/location"
 import { Revert } from "@opencode-ai/schema/revert"
 import { SessionEvent } from "@opencode-ai/schema/session-event"
+import { ContextPack } from "@opencode-ai/schema/context-pack"
 
 const SessionsQueryFields = {
   workspace: Workspace.ID.pipe(Schema.optional),
@@ -338,6 +339,22 @@ export const makeSessionGroup = <I extends HttpApiMiddleware.AnyId, S>(sessionLo
             identifier: "v2.session.events",
             summary: "Subscribe to session events",
             description: "Replay durable events after an aggregate sequence, then continue with new durable events.",
+          }),
+        ),
+    )
+    .add(
+      HttpApiEndpoint.get("session.pack", "/api/session/:sessionID/pack", {
+        params: { sessionID: Session.ID },
+        success: Schema.Struct({ data: ContextPack.Pack }),
+        error: SessionNotFoundError,
+      })
+        .middleware(sessionLocationMiddleware)
+        .annotateMerge(
+          OpenApi.annotations({
+            identifier: "v2.session.pack",
+            summary: "Get session context pack",
+            description:
+              "Assemble the current ContextPack for a session. Token metrics stay unknown until a request is measured.",
           }),
         ),
     )

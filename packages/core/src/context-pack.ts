@@ -24,6 +24,25 @@ export type Input = {
   requestAfter?: string
 }
 
+export const fromSession = (input: {
+  worktree: string
+  paths?: ReadonlyArray<Candidate>
+  mandate?: Input["mandate"]
+  rules?: string
+  toolsIdentity?: string
+  requestBefore?: string
+  requestAfter?: string
+}) =>
+  assemble({
+    mandate: input.mandate ?? {},
+    worktree: input.worktree,
+    paths: input.paths ?? [],
+    rules: input.rules ?? "",
+    toolsIdentity: input.toolsIdentity ?? "",
+    requestBefore: input.requestBefore,
+    requestAfter: input.requestAfter,
+  })
+
 export const assemble = (input: Input) => {
   const bounded = boundPathset(input.worktree, input.paths)
   const worktree = AbsolutePath.make(resolve(input.worktree))
