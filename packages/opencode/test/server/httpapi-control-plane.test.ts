@@ -4,6 +4,7 @@ import { Service } from "@opencode-ai/core/task-metrics"
 import { TaskOwnership } from "@opencode-ai/core/task-ownership"
 import { RepositoryTopology } from "@opencode-ai/core/repository-topology"
 import { TaskAuthority } from "@opencode-ai/core/task-authority"
+import { TaskBinding } from "@opencode-ai/core/task-binding"
 import { Session } from "@/session/session"
 import { NodeHttpServer } from "@effect/platform-node"
 import { describe, expect } from "bun:test"
@@ -52,6 +53,16 @@ const apiLayer = HttpRouter.serve(
   Layer.provide(Layer.mock(TaskOwnership.Service)({})),
   Layer.provide(Layer.mock(RepositoryTopology.Service)({})),
   Layer.provide(Layer.mock(Session.Service)({})),
+  Layer.provide(
+    Layer.mock(SessionV2.Service)({
+      revert: {
+        stage: () => Effect.die("unimplemented"),
+        clear: () => Effect.die("unimplemented"),
+        commit: () => Effect.die("unimplemented"),
+      },
+    }),
+  ),
+  Layer.provide(Layer.mock(TaskBinding.Service)({})),
   Layer.provide(Layer.mock(Installation.Service)({})),
   Layer.provide(
     Layer.mock(MoveSession.Service)({

@@ -1,11 +1,13 @@
 import { Button } from "@opencode-ai/ui/button"
 import { Spinner } from "@opencode-ai/ui/spinner"
+import { useNavigate } from "@solidjs/router"
 import { createMemo, createResource, For, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useServerSDK } from "@/context/server-sdk"
 import { type PreviewTab, type SensitiveAction } from "./sprint-cockpit-fixtures"
 import { sprintCockpitInput } from "./sprint-cockpit-input"
+import { confirmCockpitAction } from "./sprint-cockpit-launch"
 import { loadSprintCockpit } from "./sprint-cockpit-load"
 import type { CockpitTaskView, CockpitWorktreeView, DisplayFact } from "./sprint-cockpit-mapper"
 import { createCockpitLayoutState, reduceCockpitLayoutState, type RightPanelTab } from "./sprint-cockpit-state"
@@ -32,6 +34,7 @@ const panelLabel = (language: ReturnType<typeof useLanguage>, tab: RightPanelTab
 
 export function SprintCockpit() {
   const language = useLanguage()
+  const navigate = useNavigate()
   const serverSDK = useServerSDK()
   const [view] = createResource(() => loadSprintCockpit(serverSDK().client.global))
   const [state, setState] = createStore(createCockpitLayoutState())
@@ -41,6 +44,22 @@ export function SprintCockpit() {
 
   const dispatch = (intent: Parameters<typeof reduceCockpitLayoutState>[1]) => {
     setState(reduceCockpitLayoutState(state, intent))
+  }
+
+  const confirmAction = async () => {
+    const action = state.confirmation
+    dispatch({ type: "closeConfirmation" })
+    if (!action) return
+    const result = await confirmCockpitAction({
+      action,
+      task: selectedTask(),
+      global: serverSDK().client.global,
+    })
+    if (result.type === "opened") {
+      navigate(result.href)
+      return
+    }
+    if (result.type === "failed") dispatch({ type: "setLaunchError", message: language.t("sprint.cockpit.launchFailed") })
   }
 
   return (
@@ -82,7 +101,7 @@ export function SprintCockpit() {
               <div class="min-w-0">
                 <div class="text-16-medium truncate">{state.view === "cockpit" ? language.t("sprint.cockpit.title") : selectedTask()?.id}</div>
                 <div class="mt-1 text-12-regular text-text-weak">
-                  {state.view === "cockpit" ? language.t("sprint.cockpit.pilotChat") : language.t("sprint.cockpit.taskChat")}
+                  {state.view === "cockpit" ? language.t("sprint.cockpit.pilotChat") : selectedTask()?.worktreeLabel.text}
                 </div>
               </div>
               <Show when={state.view === "task"}>
@@ -136,6 +155,9 @@ export function SprintCockpit() {
                 )}
               </For>
             </div>
+            <Show when={state.launchError}>
+              <div class="text-12-medium text-red-300">{state.launchError}</div>
+            </Show>
           </div>
         </section>
 
@@ -199,12 +221,22 @@ export function SprintCockpit() {
         {(action) => (
           <div class="fixed inset-0 z-20 flex items-center justify-center bg-black/50 p-4" role="presentation">
             <div class="w-full max-w-md rounded border border-border-weak-base bg-background-base p-5 shadow-xl" role="dialog" aria-modal="true">
-              <div class="text-16-medium">{language.t("sprint.cockpit.confirmationTitle")}</div>
-              <div class="mt-2 text-13-regular text-text-weak">{language.t("sprint.cockpit.confirmationDescription", { action: actionLabel(language, action()) })}</div>
-              <div class="mt-4 rounded bg-yellow-500/10 p-3 text-12-medium text-yellow-200">{language.t("sprint.cockpit.simulationBanner")}</div>
+              <div class="text-16-medium">
+                {action() === "launch" ? language.t("sprint.cockpit.launchTitle") : language.t("sprint.cockpit.confirmationTitle")}
+              </div>
+              <div class="mt-2 text-13-regular text-text-weak">
+                {action() === "launch"
+                  ? language.t("sprint.cockpit.launchDescription")
+                  : language.t("sprint.cockpit.confirmationDescription", { action: actionLabel(language, action()) })}
+              </div>
+              <Show when={action() !== "launch"}>
+                <div class="mt-4 rounded bg-yellow-500/10 p-3 text-12-medium text-yellow-200">{language.t("sprint.cockpit.simulationBanner")}</div>
+              </Show>
               <div class="mt-5 flex justify-end gap-2">
                 <Button size="small" variant="ghost" onClick={() => dispatch({ type: "closeConfirmation" })}>{language.t("sprint.cockpit.cancel")}</Button>
-                <Button size="small" variant="secondary" onClick={() => dispatch({ type: "closeConfirmation" })}>{language.t("sprint.cockpit.confirmSimulation")}</Button>
+                <Button size="small" variant="secondary" onClick={() => void confirmAction()}>
+                  {action() === "launch" ? language.t("sprint.cockpit.confirmLaunch") : language.t("sprint.cockpit.confirmSimulation")}
+                </Button>
               </div>
             </div>
           </div>
@@ -240,6 +272,7 @@ function TaskRailItem(props: { task: CockpitTaskView; language: ReturnType<typeo
         <span class="truncate text-12-medium">{props.task.id}</span>
         <span class="shrink-0 text-11-medium text-text-weak">{props.task.status.text}</span>
       </div>
+      <div class="mt-1 truncate font-mono text-11-regular text-text-weak max-[1199px]:sr-only">{props.task.worktreeLabel.text}</div>
       <div class="mt-1 flex items-center gap-2 truncate text-11-regular text-text-weak max-[1199px]:sr-only">
         <Show when={props.task.isWorking}>
           <span class="inline-flex shrink-0 items-center gap-1 text-yellow-300">
