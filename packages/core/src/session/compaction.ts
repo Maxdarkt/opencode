@@ -11,7 +11,10 @@ import { Token } from "../util/token"
 
 const DEFAULT_BUFFER = 20_000
 const DEFAULT_KEEP_TOKENS = 8_000
+export const PRUNE_MINIMUM = 20_000
+export const PRUNE_PROTECT = 40_000
 const TOOL_OUTPUT_MAX_CHARS = 2_000
+const PRUNE_PROTECTED_TOOLS = ["skill"]
 const SUMMARY_OUTPUT_TOKENS = 4_096
 const SUMMARY_TEMPLATE = `Output exactly the Markdown structure shown inside <template> and keep the section order unchanged. Do not include the <template> tags in your response.
 <template>
@@ -91,6 +94,14 @@ export const serializeToolContent = (content: SessionMessage.ToolStateCompleted[
       item.type === "text" ? item.text : `[Attached ${item.mime}${item.name === undefined ? "" : `: ${item.name}`}]`,
     )
     .join("\n")
+
+export const prune = (messages: readonly SessionMessage.Message[]) => {
+  const tokensBefore = estimate(messages)
+  const truncated = pruneTargets(messages)
+  if (truncated.size === 0) return { messages, tokensBefore, tokensAfter: tokensBefore }
+  const next = messages.map((message) => pruneMessage(message, truncated))
+  return { messages: next, tokensBefore, tokensAfter: estimate(next) }
+}
 
 const serialize = (message: SessionMessage.Message) => {
   if (message.type === "user") {
@@ -245,4 +256,50 @@ export const make = (dependencies: Dependencies) => {
     compactIfNeeded,
     compactAfterOverflow,
   }
+}
+
+function pruneTargets(messages: readonly SessionMessage.Message[]) {
+  const truncated = new Map<string, string>()
+  let total = 0
+  let saved = 0
+  let turns = 0
+  loop: for (let index = messages.length - 1; index >= 0; index--) {
+    const message = messages[index]
+    if (message.type === "user") turns++
+    if (turns < 2) continue
+    if (message.type === "compaction") break
+    if (message.type !== "assistant") continue
+    for (let partIndex = message.content.length - 1; partIndex >= 0; partIndex--) {
+      const part = message.content[partIndex]
+      if (part.type !== "tool" || part.state.status !== "completed") continue
+      if (PRUNE_PROTECTED_TOOLS.includes(part.name)) continue
+      if (part.time.pruned) break loop
+      const output = serializeToolContent(part.state.content)
+      const tokens = Token.estimate(output)
+      total += tokens
+      if (total <= PRUNE_PROTECT) continue
+      const next = truncate(output)
+      const saving = tokens - Token.estimate(next)
+      if (saving <= 0) continue
+      truncated.set(part.id, next)
+      saved += saving
+    }
+  }
+  if (saved <= PRUNE_MINIMUM) return new Map<string, string>()
+  return truncated
+}
+
+function pruneMessage(message: SessionMessage.Message, truncated: ReadonlyMap<string, string>) {
+  if (message.type !== "assistant") return message
+  return SessionMessage.Assistant.make({
+    ...message,
+    content: message.content.map((part) => {
+      const next = truncated.get(part.id)
+      if (part.type !== "tool" || next === undefined || part.state.status !== "completed") return part
+      return SessionMessage.AssistantTool.make({
+        ...part,
+        state: { ...part.state, content: [{ type: "text", text: next }] },
+      })
+    }),
+  })
 }

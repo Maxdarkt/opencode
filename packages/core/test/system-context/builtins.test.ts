@@ -119,9 +119,9 @@ describe("SystemContextBuiltIns", () => {
           `  Platform: ${process.platform}`,
           "</env>",
           "",
-          `Today's date: ${localDate(timestamp)}`,
-          "",
           `Instructions from: ${instructionFile}\nBe precise.`,
+          "",
+          `Today's date: ${localDate(timestamp)}`,
         ].join("\n"),
       )
     }),

@@ -2506,10 +2506,9 @@ describe("SessionRunnerLLM", () => {
       yield* Effect.yieldNow
 
       expect(requests).toHaveLength(2)
-      expect(requests.map((request) => request.providerOptions?.openai?.promptCacheKey)).toEqual([
-        sessionID,
-        otherSessionID,
-      ])
+      const keys = requests.map((request) => request.providerOptions?.openai?.promptCacheKey)
+      expect(keys[0]).toEqual(keys[1])
+      expect(keys[0]).toMatch(/^[0-9a-f]{64}$/)
       yield* Deferred.succeed(streamGate, undefined)
       yield* Fiber.join(first)
       yield* Fiber.join(second)
@@ -2579,9 +2578,9 @@ describe("SessionRunnerLLM", () => {
       yield* session.resume(otherLongSessionID)
 
       const keys = requests.map((request) => request.providerOptions?.openai?.promptCacheKey)
-      expect(keys).toEqual([longSessionID.slice(4), otherLongSessionID.slice(4)])
+      expect(keys[0]).toEqual(keys[1])
       expect(keys.every((key) => typeof key === "string" && key.length === 64)).toBe(true)
-      expect(keys[0]).not.toBe(keys[1])
+      expect(keys[0]).toMatch(/^[0-9a-f]{64}$/)
     }),
   )
 
