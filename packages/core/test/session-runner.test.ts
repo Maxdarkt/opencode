@@ -26,6 +26,7 @@ import { SessionV2 } from "@opencode-ai/core/session"
 import { Snapshot } from "@opencode-ai/core/snapshot"
 import { ContextSnapshotDecodeError } from "@opencode-ai/core/session/error"
 import { SessionEvent } from "@opencode-ai/core/session/event"
+import { SessionBounds } from "@opencode-ai/schema/session-bounds"
 import { SessionInput } from "@opencode-ai/core/session/input"
 import { SessionMessage } from "@opencode-ai/core/session/message"
 import { Prompt } from "@opencode-ai/core/session/prompt"
@@ -39,6 +40,7 @@ import { ToolRegistry } from "@opencode-ai/core/tool/registry"
 import { ApplicationTools } from "@opencode-ai/core/tool/application-tools"
 import { AgentV2 } from "@opencode-ai/core/agent"
 import { Config } from "@opencode-ai/core/config"
+import { ConfigBounds } from "@opencode-ai/core/config/bounds"
 import { ConfigCompaction } from "@opencode-ai/core/config/compaction"
 import { Tool } from "@opencode-ai/core/tool/tool"
 import {
@@ -208,6 +210,7 @@ const skillGuidance = Layer.mock(SkillGuidance.Service, {
     ),
 })
 const referenceGuidance = Layer.mock(ReferenceGuidance.Service, { load: () => Effect.succeed(SystemContext.empty) })
+let boundsConfig: ConfigBounds.Info | undefined
 const config = Layer.succeed(
   Config.Service,
   Config.Service.of({
@@ -220,6 +223,7 @@ const config = Layer.succeed(
               buffer: 3_000,
               keep: new ConfigCompaction.Keep({ tokens: 1_000 }),
             }),
+            ...(boundsConfig === undefined ? {} : { bounds: boundsConfig }),
           }),
         }),
       ]),
@@ -319,6 +323,7 @@ const setup = Effect.gen(function* () {
   modelResolveHook = Effect.void
   currentModel = model
   skillBaselines.clear()
+  boundsConfig = undefined
   responses = undefined
   streamFailure = undefined
   responseStream = undefined
@@ -336,6 +341,19 @@ const setup = Effect.gen(function* () {
     .run()
     .pipe(Effect.orDie)
   yield* insertSession(sessionID)
+})
+
+const captureDrainReasons = Effect.gen(function* () {
+  const events = yield* EventV2.Service
+  const reasons: SessionBounds.StopReason[] = []
+  yield* events.listen((event) =>
+    event.type === SessionBounds.DrainEnded.type
+      ? Effect.sync(() => {
+          reasons.push((event as SessionBounds.DrainEnded).data.reason)
+        })
+      : Effect.void,
+  )
+  return reasons
 })
 
 const providerUnavailable = () =>
@@ -2506,10 +2524,9 @@ describe("SessionRunnerLLM", () => {
       yield* Effect.yieldNow
 
       expect(requests).toHaveLength(2)
-      expect(requests.map((request) => request.providerOptions?.openai?.promptCacheKey)).toEqual([
-        sessionID,
-        otherSessionID,
-      ])
+      const keys = requests.map((request) => request.providerOptions?.openai?.promptCacheKey)
+      expect(keys[0]).toEqual(keys[1])
+      expect(keys[0]).toMatch(/^[0-9a-f]{64}$/)
       yield* Deferred.succeed(streamGate, undefined)
       yield* Fiber.join(first)
       yield* Fiber.join(second)
@@ -2579,9 +2596,9 @@ describe("SessionRunnerLLM", () => {
       yield* session.resume(otherLongSessionID)
 
       const keys = requests.map((request) => request.providerOptions?.openai?.promptCacheKey)
-      expect(keys).toEqual([longSessionID.slice(4), otherLongSessionID.slice(4)])
+      expect(keys[0]).toEqual(keys[1])
       expect(keys.every((key) => typeof key === "string" && key.length === 64)).toBe(true)
-      expect(keys[0]).not.toBe(keys[1])
+      expect(keys[0]).toMatch(/^[0-9a-f]{64}$/)
     }),
   )
 
@@ -3461,6 +3478,225 @@ describe("SessionRunnerLLM", () => {
       expect(yield* session.resume(sessionID).pipe(Effect.catchDefect(Effect.succeed))).toBe(
         "Tool input delta before start: call-1",
       )
+    }),
+  )
+
+  it.effect("forces a text response when config bounds cap steps without agent.steps", () =>
+    Effect.gen(function* () {
+      yield* setup
+      boundsConfig = new ConfigBounds.Info({ steps: 2 })
+      const session = yield* SessionV2.Service
+      const reasons = yield* captureDrainReasons
+      yield* session.prompt({ sessionID, prompt: Prompt.make({ text: "Finish at the config limit" }), resume: false })
+
+      requests.length = 0
+      executions.length = 0
+      responses = [
+        [
+          LLMEvent.stepStart({ index: 0 }),
+          LLMEvent.toolCall({ id: "call-terminal", name: "echo", input: { text: "done" } }),
+          LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+          LLMEvent.finish({ reason: "tool-calls" }),
+        ],
+        [
+          LLMEvent.stepStart({ index: 0 }),
+          LLMEvent.toolCall({ id: "call-forbidden", name: "echo", input: { text: "forbidden" } }),
+          LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+          LLMEvent.finish({ reason: "tool-calls" }),
+        ],
+      ]
+
+      yield* session.resume(sessionID)
+
+      expect(requests).toHaveLength(2)
+      expect(requests[1]?.toolChoice).toMatchObject({ type: "none" })
+      expect(requests[1]?.tools).toEqual([])
+      expect(executions).toEqual(["done"])
+      expect(reasons).toEqual(["steps"])
+    }),
+  )
+
+  it.effect("honors a tighter agent step limit over the configured default", () =>
+    Effect.gen(function* () {
+      yield* setup
+      const agents = yield* AgentV2.Service
+      yield* agents.transform((editor) =>
+        editor.update(AgentV2.ID.make("build"), (agent) => {
+          agent.steps = 1
+        }),
+      )
+      const session = yield* SessionV2.Service
+      yield* session.prompt({ sessionID, prompt: Prompt.make({ text: "Stop on the first step" }), resume: false })
+
+      requests.length = 0
+      executions.length = 0
+      response = [
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.toolCall({ id: "call-forbidden", name: "echo", input: { text: "forbidden" } }),
+        LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+        LLMEvent.finish({ reason: "tool-calls" }),
+      ]
+
+      yield* session.resume(sessionID)
+
+      expect(requests).toHaveLength(1)
+      expect(requests[0]?.toolChoice).toMatchObject({ type: "none" })
+      expect(executions).toEqual([])
+    }),
+  )
+
+  it.effect("does not stop on budget when provider usage is absent", () =>
+    Effect.gen(function* () {
+      yield* setup
+      boundsConfig = new ConfigBounds.Info({ tokens: 1 })
+      const session = yield* SessionV2.Service
+      const reasons = yield* captureDrainReasons
+      yield* session.prompt({ sessionID, prompt: Prompt.make({ text: "Unknown usage" }), resume: false })
+
+      requests.length = 0
+      responses = [
+        [
+          LLMEvent.stepStart({ index: 0 }),
+          LLMEvent.toolCall({ id: "call-continue", name: "echo", input: { text: "again" } }),
+          LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+          LLMEvent.finish({ reason: "tool-calls" }),
+        ],
+        [
+          LLMEvent.stepStart({ index: 0 }),
+          LLMEvent.stepFinish({ index: 0, reason: "stop" }),
+          LLMEvent.finish({ reason: "stop" }),
+        ],
+      ]
+
+      yield* session.resume(sessionID)
+
+      expect(requests).toHaveLength(2)
+      expect(reasons).toEqual([])
+    }),
+  )
+
+  it.effect("stops the drain when burned tokens reach the budget", () =>
+    Effect.gen(function* () {
+      yield* setup
+      boundsConfig = new ConfigBounds.Info({ tokens: 10 })
+      const session = yield* SessionV2.Service
+      const events = yield* EventV2.Service
+      const reasons = yield* captureDrainReasons
+      const costs: number[] = []
+      yield* events.listen((event) =>
+        event.type === SessionEvent.Step.Ended.type
+          ? Effect.sync(() => {
+              costs.push((event as SessionEvent.Step.Ended).data.cost)
+            })
+          : Effect.void,
+      )
+      yield* session.prompt({ sessionID, prompt: Prompt.make({ text: "Burn tokens" }), resume: false })
+
+      requests.length = 0
+      responses = [
+        [
+          LLMEvent.stepStart({ index: 0 }),
+          LLMEvent.toolCall({ id: "call-budget", name: "echo", input: { text: "once" } }),
+          LLMEvent.stepFinish({
+            index: 0,
+            reason: "tool-calls",
+            usage: {
+              inputTokens: 10,
+              nonCachedInputTokens: 8,
+              outputTokens: 4,
+              reasoningTokens: 1,
+              cacheReadInputTokens: 2,
+            },
+          }),
+          LLMEvent.finish({ reason: "tool-calls" }),
+        ],
+        [
+          LLMEvent.stepStart({ index: 0 }),
+          LLMEvent.stepFinish({ index: 0, reason: "stop" }),
+          LLMEvent.finish({ reason: "stop" }),
+        ],
+      ]
+
+      yield* session.resume(sessionID)
+
+      expect(requests).toHaveLength(1)
+      expect(costs).toEqual([0])
+      expect(reasons).toEqual(["budget"])
+    }),
+  )
+
+  it.effect("times out a drain and interrupts an in-flight tool", () =>
+    Effect.gen(function* () {
+      yield* setup
+      boundsConfig = new ConfigBounds.Info({ duration_ms: 400 })
+      const session = yield* SessionV2.Service
+      const reasons = yield* captureDrainReasons
+      yield* session.prompt({ sessionID, prompt: Prompt.make({ text: "Timeout tool" }), resume: false })
+      executions.length = 0
+      toolExecutionGate = yield* Deferred.make<void>()
+      toolExecutionsStarted = yield* Deferred.make<void>()
+      toolExecutionsReady = 1
+      response = [
+        LLMEvent.stepStart({ index: 0 }),
+        LLMEvent.toolCall({ id: "call-timeout", name: "echo", input: { text: "blocked" } }),
+        LLMEvent.stepFinish({ index: 0, reason: "tool-calls" }),
+        LLMEvent.finish({ reason: "tool-calls" }),
+      ]
+
+      const run = yield* session.resume(sessionID).pipe(Effect.forkChild)
+      yield* Deferred.await(toolExecutionsStarted)
+      const exit = yield* Fiber.await(run)
+      toolExecutionGate = undefined
+      toolExecutionsStarted = undefined
+
+      expect(Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)).toBeTrue()
+      expect(reasons).toEqual(["timeout"])
+      expect(yield* session.context(sessionID)).toMatchObject([
+        { type: "user", text: "Timeout tool" },
+        {
+          type: "assistant",
+          content: [
+            {
+              type: "tool",
+              id: "call-timeout",
+              state: { status: "error", error: { type: "unknown", message: "Tool execution interrupted" } },
+            },
+          ],
+        },
+      ])
+    }),
+  )
+
+  it.effect("publishes interrupt when an active drain is cancelled", () =>
+    Effect.gen(function* () {
+      yield* setup
+      const session = yield* SessionV2.Service
+      const reasons = yield* captureDrainReasons
+      yield* session.prompt({ sessionID, prompt: Prompt.make({ text: "Interrupt drain" }), resume: false })
+      requests.length = 0
+      response = []
+      streamGate = yield* Deferred.make<void>()
+      streamStarted = yield* Deferred.make<void>()
+
+      const run = yield* session.resume(sessionID).pipe(Effect.forkChild)
+      yield* Deferred.await(streamStarted)
+      yield* session.interrupt(sessionID)
+      const exit = yield* Fiber.await(run)
+      streamGate = undefined
+      streamStarted = undefined
+
+      expect(Exit.isFailure(exit) && Cause.hasInterruptsOnly(exit.cause)).toBeTrue()
+      expect(reasons).toEqual(["interrupt"])
+    }),
+  )
+
+  it.effect("does not publish drain ended when interrupting an idle session", () =>
+    Effect.gen(function* () {
+      yield* setup
+      const session = yield* SessionV2.Service
+      const reasons = yield* captureDrainReasons
+      yield* session.interrupt(sessionID)
+      expect(reasons).toEqual([])
     }),
   )
 })

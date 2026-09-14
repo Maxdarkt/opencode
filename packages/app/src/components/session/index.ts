@@ -1,4 +1,6 @@
 export { SessionHeader } from "./session-header"
+export { AgentBanner } from "./session-agent-banner"
+export { PackInspector } from "./session-pack-inspector"
 export { SessionContextTab } from "./session-context-tab"
 export { SortableTab, FileVisual } from "./session-sortable-tab"
 export { SortableTabV2 } from "./session-sortable-tab-v2"

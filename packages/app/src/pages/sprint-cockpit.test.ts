@@ -1,10 +1,12 @@
 import { describe, expect, test } from "bun:test"
 import type { OpencodeClient, TaskOwnershipSnapshot } from "@opencode-ai/sdk/v2/client"
 import { sprintCockpitInput } from "./sprint-cockpit-input"
+import { confirmCockpitAction } from "./sprint-cockpit-launch"
 import { loadSprintCockpit } from "./sprint-cockpit-load"
-import { formatFact, inaccessibleCockpitView, mapCockpitView } from "./sprint-cockpit-mapper"
+import { formatFact, inaccessibleCockpitView, mapCockpitView, worktreeLabelFromPath } from "./sprint-cockpit-mapper"
 import { createCockpitLayoutState, reduceCockpitLayoutState } from "./sprint-cockpit-state"
 import type { SensitiveAction } from "./sprint-cockpit-fixtures"
+import { legacySessionHref } from "@/utils/session-route"
 
 const provenance = (source: "task_binding" | "runtime_snapshot" | "task_execution" | "attention_input", reference: string) => ({
   source,
@@ -71,9 +73,27 @@ describe("sprint cockpit mapper", () => {
     expect(view.tasks.map((task) => task.id)).toEqual(["DA40-015-A", "DA40-015-B"])
     expect(view.tasks[0].worktree.text.includes("0")).toBe(false)
     expect(view.tasks[0].sessionHref).toBeNull()
-    expect(view.tasks[1].sessionHref).toBe(`/session/${sprintCockpitInput.identities[1].sessionID}`)
+    expect(view.tasks[1].sessionHref).toBe(
+      legacySessionHref(sprintCockpitInput.identities[1].checkout.worktree, sprintCockpitInput.identities[1].sessionID),
+    )
+    expect(view.tasks[0].worktreeLabel).toEqual({
+      text: "features/tasks/DA40-015-candidate-integree",
+      state: "available",
+      source: "observed",
+    })
+    expect(view.tasks[1].worktreeLabel.text.startsWith("features/tasks/")).toBe(true)
     expect(view.tasks[1].hasUnread).toBe(true)
     expect(view.tasks[0].hasUnread).toBe(false)
+  })
+
+  test("labels an observed features/tasks suffix and tags unknown otherwise", () => {
+    expect(worktreeLabelFromPath("/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-007")).toEqual({
+      text: "features/tasks/DA10-007",
+      state: "available",
+      source: "observed",
+    })
+    expect(worktreeLabelFromPath("/tmp/other")).toEqual({ text: "unknown", state: "unknown", source: "worktree" })
+    expect(worktreeLabelFromPath(undefined)).toEqual({ text: "unknown", state: "unknown", source: "worktree" })
   })
 
   test("formats unavailable facts as labelled provenance instead of numeric zero", () => {
@@ -101,6 +121,49 @@ describe("sprint cockpit layout", () => {
     const selected = reduceCockpitLayoutState(createCockpitLayoutState(), { type: "selectTask", taskId: "DA40-015-B" })
     expect(selected.selectedTaskId).toBe("DA40-015-B")
     expect(createCockpitLayoutState().selectedTaskId).toBe("DA40-015-A")
+  })
+})
+
+describe("sprint cockpit launch", () => {
+  const task = {
+    id: "DA10-007",
+    apexExternalRef: ".project/tasks/DA10-007-chat-worktree",
+    worktreePath: "/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-007",
+  }
+
+  test("launch calls open once and commit or merge stay inert", async () => {
+    const calls: unknown[] = []
+    const global = {
+      taskChatOpen: async (payload: unknown) => {
+        calls.push(payload)
+        return { response: { ok: true }, data: { sessionID: "ses_open", created: true } }
+      },
+    }
+    const opened = await confirmCockpitAction({ action: "launch", task, global })
+    expect(calls).toHaveLength(1)
+    expect(opened).toEqual({
+      type: "opened",
+      href: legacySessionHref(task.worktreePath, "ses_open"),
+    })
+    expect(await confirmCockpitAction({ action: "commit", task, global })).toEqual({ type: "simulated" })
+    expect(await confirmCockpitAction({ action: "merge", task, global })).toEqual({ type: "simulated" })
+    expect(await confirmCockpitAction({ action: "production", task, global })).toEqual({ type: "simulated" })
+    expect(calls).toHaveLength(1)
+  })
+
+  test("launch reopen still goes through open without a local session.create", async () => {
+    const calls: number[] = []
+    const global = {
+      taskChatOpen: async () => {
+        calls.push(1)
+        return { response: { ok: true }, data: { sessionID: "ses_open", created: false } }
+      },
+    }
+    const first = await confirmCockpitAction({ action: "launch", task, global })
+    const second = await confirmCockpitAction({ action: "launch", task, global })
+    expect(calls).toEqual([1, 1])
+    expect(first).toEqual(second)
+    expect(first).toMatchObject({ type: "opened", href: legacySessionHref(task.worktreePath, "ses_open") })
   })
 })
 

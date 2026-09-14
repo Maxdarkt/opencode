@@ -3601,6 +3601,63 @@ export type RepositoryTopologySnapshot = {
   repositories: Array<RepositoryTopologyRepository>
 }
 
+export type TaskChatOpenInput = {
+  mtTaskID: string
+  apexExternalRef: string
+  worktree: string
+}
+
+export type TaskChatOpenResult = {
+  sessionID: string
+  created: boolean
+  binding: TaskBindingInfo
+}
+
+export type TaskChatWorktreeMissing = {
+  _tag: "TaskChat.WorktreeMissing"
+  worktree: string
+}
+
+export type TaskBindingSessionNotFoundError = {
+  _tag: "TaskBinding.SessionNotFoundError"
+  sessionID: string
+}
+
+export type TaskChatWorktreeNotCheckout = {
+  _tag: "TaskChat.WorktreeNotCheckout"
+  worktree: string
+}
+
+export type TaskChatWorktreeConvention = {
+  _tag: "TaskChat.WorktreeConvention"
+  worktree: string
+  mtTaskID: string
+}
+
+export type TaskChatInspectFailed = {
+  _tag: "TaskChat.InspectFailed"
+  worktree: string
+}
+
+export type TaskBindingField =
+  | "mtTaskID"
+  | "apexExternalRef"
+  | "sessionID"
+  | "projectID"
+  | "location.directory"
+  | "location.workspaceID"
+  | "repository"
+  | "branch"
+  | "worktree"
+  | "head"
+
+export type TaskBindingConflictError = {
+  _tag: "TaskBinding.ConflictError"
+  fields: Array<TaskBindingField>
+  expected: TaskBindingIdentity
+  observed: Array<TaskBindingIdentity>
+}
+
 export type TaskAuthorityObservation = {
   state: "available" | "absent" | "inaccessible" | "invalid" | "expired" | "divergent"
   provenance: "runtime_snapshot"
@@ -7922,6 +7979,39 @@ export type GlobalTopologyResponses = {
 }
 
 export type GlobalTopologyResponse = GlobalTopologyResponses[keyof GlobalTopologyResponses]
+
+export type GlobalTaskChatOpenData = {
+  body?: TaskChatOpenInput
+  path?: never
+  query?: never
+  url: "/global/task-chat/open"
+}
+
+export type GlobalTaskChatOpenErrors = {
+  /**
+   * TaskChat.WorktreeNotCheckout | TaskChat.WorktreeConvention | TaskChat.InspectFailed | InvalidRequestError
+   */
+  400: TaskChatWorktreeNotCheckout | TaskChatWorktreeConvention | TaskChatInspectFailed | InvalidRequestError
+  /**
+   * TaskChat.WorktreeMissing | TaskBinding.SessionNotFoundError
+   */
+  404: TaskChatWorktreeMissing | TaskBindingSessionNotFoundError
+  /**
+   * TaskBinding.ConflictError
+   */
+  409: TaskBindingConflictError
+}
+
+export type GlobalTaskChatOpenError = GlobalTaskChatOpenErrors[keyof GlobalTaskChatOpenErrors]
+
+export type GlobalTaskChatOpenResponses = {
+  /**
+   * TaskChat.OpenResult
+   */
+  200: TaskChatOpenResult
+}
+
+export type GlobalTaskChatOpenResponse = GlobalTaskChatOpenResponses[keyof GlobalTaskChatOpenResponses]
 
 export type GlobalContextData = {
   body?: never

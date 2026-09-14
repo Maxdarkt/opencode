@@ -1,11 +1,16 @@
 import { LocalContext } from "@opencode-ai/core/local-context"
 import { Database } from "@opencode-ai/core/database/database"
+import { Location } from "@opencode-ai/core/location"
+import { AbsolutePath } from "@opencode-ai/core/schema"
+import { SessionV2 } from "@opencode-ai/core/session"
+import { TaskBinding } from "@opencode-ai/core/task-binding"
 import { TaskBindingTable } from "@opencode-ai/core/task-binding/sql"
 import { TaskExecutionEffectTable, TaskExecutionOwnershipTable } from "@opencode-ai/core/task-execution/sql"
 import { TaskMetrics } from "@opencode-ai/core/task-metrics"
 import { TaskOwnership } from "@opencode-ai/core/task-ownership"
 import { RepositoryTopology } from "@opencode-ai/core/repository-topology"
 import { TaskAuthority } from "@opencode-ai/core/task-authority"
+import { TaskChat } from "@opencode-ai/schema/task-chat"
 import { Session } from "@/session/session"
 import { SessionID } from "@/session/schema"
 import { Config } from "@/config/config"
@@ -73,6 +78,8 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
     const localContext = yield* LocalContext.Service
     const { db } = yield* Database.Service
     const sessions = yield* Session.Service
+    const sessionV2 = yield* SessionV2.Service
+    const binding = yield* TaskBinding.Service
     const config = yield* Config.Service
     const installation = yield* Installation.Service
     const metrics = yield* TaskMetrics.Service
@@ -110,6 +117,76 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
 
     const topologyRead = Effect.fn("GlobalHttpApi.topology")(function* (ctx: { payload: RepositoryTopology.Input }) {
       return yield* topology.read(ctx.payload)
+    })
+
+    const taskChatOpen = Effect.fn("GlobalHttpApi.taskChatOpen")(function* (ctx: { payload: TaskChat.OpenInput }) {
+      const existing = yield* binding.get({ type: "mt_task", value: ctx.payload.mtTaskID })
+      if (existing)
+        return { sessionID: existing.sessionID, created: false, binding: existing }
+
+      if (!matchesWorktreeConvention(ctx.payload.worktree, ctx.payload.mtTaskID))
+        return yield* new TaskChat.WorktreeConvention({
+          worktree: ctx.payload.worktree,
+          mtTaskID: ctx.payload.mtTaskID,
+        })
+
+      const observed = yield* localContext.inspect({ directory: ctx.payload.worktree }).pipe(
+        Effect.catch(() => new TaskChat.InspectFailed({ worktree: ctx.payload.worktree })),
+      )
+      if (observed.availability === "inaccessible")
+        return yield* new TaskChat.InspectFailed({ worktree: ctx.payload.worktree })
+      if (observed.availability !== "available")
+        return yield* new TaskChat.WorktreeMissing({ worktree: ctx.payload.worktree })
+
+      const directory = observed.canonical_directory ?? ctx.payload.worktree
+      if (!matchesWorktreeConvention(directory, ctx.payload.mtTaskID))
+        return yield* new TaskChat.WorktreeConvention({
+          worktree: ctx.payload.worktree,
+          mtTaskID: ctx.payload.mtTaskID,
+        })
+      if (
+        !observed.git ||
+        observed.git.status !== "available" ||
+        !observed.git.top_level ||
+        !observed.git.branch ||
+        !observed.git.head
+      )
+        return yield* new TaskChat.WorktreeNotCheckout({ worktree: ctx.payload.worktree })
+
+      const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
+      const created = yield* sessionV2.create({ location })
+      const adopted = yield* binding
+        .adopt(
+          TaskBinding.Identity.make({
+            mtTaskID: ctx.payload.mtTaskID,
+            apexExternalRef: ctx.payload.apexExternalRef,
+            sessionID: created.id,
+            projectID: created.projectID,
+            location: created.location,
+            checkout: TaskBinding.Checkout.make({
+              repository: AbsolutePath.make(observed.git.top_level),
+              branch: observed.git.branch,
+              worktree: created.location.directory,
+              head: observed.git.head,
+            }),
+          }),
+        )
+        .pipe(
+          Effect.catchTag(
+            "TaskBinding.ConflictError",
+            (error) =>
+              new TaskChat.ConflictError({
+                fields: error.fields,
+                expected: error.expected,
+                observed: error.observed,
+              }),
+          ),
+          Effect.catchTag(
+            "TaskBinding.SessionNotFoundError",
+            (error) => new TaskChat.SessionNotFoundError({ sessionID: error.sessionID }),
+          ),
+        )
+      return { sessionID: adopted.sessionID, created: true, binding: adopted }
     })
 
     const metricsRead = Effect.fn("GlobalHttpApi.metrics")(function* (ctx: { payload: TaskMetrics.Request }) {
@@ -256,6 +333,12 @@ export const globalHandlers = HttpApiBuilder.group(RootHttpApi, "global", (handl
       .handle("metrics", metricsRead)
       .handle("ownership", ownershipRead)
       .handle("topology", topologyRead)
+      .handle("taskChatOpen", taskChatOpen)
       .handle("upgrade", upgrade)
   }),
 )
+
+function matchesWorktreeConvention(worktree: string, mtTaskID: string) {
+  const normalized = worktree.replaceAll("\\", "/").replace(/\/+$/, "")
+  return normalized.endsWith(`/features/tasks/${mtTaskID}`)
+}

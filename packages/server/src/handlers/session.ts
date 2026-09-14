@@ -1,3 +1,4 @@
+import { ContextPack } from "@opencode-ai/core/context-pack"
 import { SessionV2 } from "@opencode-ai/core/session"
 import { DateTime, Effect, Stream } from "effect"
 import { HttpApiBuilder, HttpApiSchema } from "effect/unstable/httpapi"
@@ -361,6 +362,24 @@ export const SessionHandler = HttpApiBuilder.group(Api, "server.session", (handl
             session.events({ sessionID: ctx.params.sessionID, after: ctx.query.after }).pipe(Stream.orDie),
           ),
         ),
+      )
+      .handle(
+        "session.pack",
+        Effect.fn(function* (ctx) {
+          const info = yield* session.get(ctx.params.sessionID).pipe(
+            Effect.catchTag(
+              "Session.NotFoundError",
+              (error) =>
+                new SessionNotFoundError({
+                  sessionID: error.sessionID,
+                  message: `Session not found: ${error.sessionID}`,
+                }),
+            ),
+          )
+          return {
+            data: ContextPack.fromSession({ worktree: info.location.directory }),
+          }
+        }),
       )
       .handle(
         "session.interrupt",

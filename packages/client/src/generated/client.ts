@@ -33,6 +33,8 @@ import type {
   SessionsHistoryOutput,
   SessionsEventsInput,
   SessionsEventsOutput,
+  SessionsPackInput,
+  SessionsPackOutput,
   SessionsInterruptInput,
   SessionsInterruptOutput,
   SessionsMessageInput,
@@ -470,6 +472,17 @@ export function make(options: ClientOptions) {
           },
           requestOptions,
         ),
+      pack: (input: SessionsPackInput, requestOptions?: RequestOptions) =>
+        request<{ readonly data: SessionsPackOutput }>(
+          {
+            method: "GET",
+            path: `/api/session/${encodeURIComponent(input.sessionID)}/pack`,
+            successStatus: 200,
+            declaredStatuses: [404, 400, 401],
+            empty: false,
+          },
+          requestOptions,
+        ).then((value) => value.data),
       interrupt: (input: SessionsInterruptInput, requestOptions?: RequestOptions) =>
         request<SessionsInterruptOutput>(
           {
