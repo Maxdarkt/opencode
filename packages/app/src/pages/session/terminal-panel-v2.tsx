@@ -23,11 +23,12 @@ import { useSettings } from "@/context/settings"
 import { useTerminal } from "@/context/terminal"
 import { useSDK } from "@/context/sdk"
 import { terminalTabLabel } from "@/pages/session/terminal-label"
+import { openTerminalSplit, type TerminalSplitPane } from "@/pages/session/terminal-split"
 import { createSizing, focusTerminalById } from "@/pages/session/helpers"
 import { getTerminalHandoff, setTerminalHandoff } from "@/pages/session/handoff"
 import { useSessionLayout } from "@/pages/session/session-layout"
 
-export function TerminalPanelV2(props: { stacked?: boolean } = {}) {
+export function TerminalPanelV2(props: { stacked?: boolean; split?: boolean } = {}) {
   const layout = useLayout()
   const terminal = useTerminal()
   const sdk = useSDK()
@@ -51,6 +52,7 @@ export function TerminalPanelV2(props: { stacked?: boolean } = {}) {
     autoCreated: false,
     recovered: {} as Record<string, boolean>,
     view: typeof window === "undefined" ? 1000 : (window.visualViewport?.height ?? window.innerHeight),
+    splitPanes: undefined as readonly [TerminalSplitPane, TerminalSplitPane] | undefined,
   })
 
   const max = () => store.view * 0.6
@@ -79,10 +81,28 @@ export function TerminalPanelV2(props: { stacked?: boolean } = {}) {
       return
     }
 
+    if (props.split) return
     if (!terminal.ready() || terminal.all().length !== 0 || store.autoCreated) return
-    terminal.new()
+    void terminal.new()
     setStore("autoCreated", true)
   })
+
+  createEffect(
+    on(
+      () => [props.split, opened(), terminal.ready()] as const,
+      ([split, next, ready]) => {
+        if (!split || !next || !ready) {
+          setStore("splitPanes", undefined)
+          return
+        }
+        if (store.splitPanes) return
+        void openTerminalSplit({
+          existingIds: terminal.all().map((pty) => pty.id),
+          create: () => terminal.new(),
+        }).then((panes) => setStore("splitPanes", panes))
+      },
+    ),
+  )
 
   createEffect(
     on(
@@ -256,6 +276,10 @@ export function TerminalPanelV2(props: { stacked?: boolean } = {}) {
             }}
           >
             <div class="flex flex-col h-full">
+              <Show
+                when={props.split}
+                fallback={
+                  <>
               <Tabs
                 variant={newLayout() ? "normal" : "alt"}
                 value={terminal.active()}
@@ -343,6 +367,47 @@ export function TerminalPanelV2(props: { stacked?: boolean } = {}) {
                   }}
                 </Show>
               </div>
+                  </>
+                }
+              >
+                <div data-component="session-terminal-split" class="flex h-full min-h-0">
+                  <For each={store.splitPanes ?? []}>
+                    {(pane) => (
+                      <div class="min-h-0 min-w-0 flex-1 border-l border-border-weak-base first:border-l-0">
+                        <Show
+                          when={pane.kind === "pty" ? all().find((pty) => pty.id === pane.id) : undefined}
+                          fallback={
+                            <div
+                              data-slot="terminal-split-unknown"
+                              class="h-full p-2 font-mono text-12-regular text-text-weak"
+                            >
+                              {language.t("session.workbench.tray.unknown")}
+                            </div>
+                          }
+                        >
+                          {(pty) => {
+                            const id = pty().id
+                            const ops = terminal.bind()
+                            return (
+                              <div id={`terminal-wrapper-${id}`} class="h-full">
+                                <Terminal
+                                  pty={pty()}
+                                  autoFocus={terminal.focusRequested(id)}
+                                  onAutoFocus={() => terminal.consumeFocus(id)}
+                                  class="!px-[14px]"
+                                  onConnect={() => markTerminalConnected(terminalRecoveryKey(pty()), id, ops.trim)}
+                                  onCleanup={ops.update}
+                                  onConnectError={() => recoverTerminal(terminalRecoveryKey(pty()), id, ops.clone)}
+                                />
+                              </div>
+                            )
+                          }}
+                        </Show>
+                      </div>
+                    )}
+                  </For>
+                </div>
+              </Show>
             </div>
           </DragDropProvider>
         </Show>
