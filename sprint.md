@@ -4,7 +4,7 @@ Mis à jour le 2026-09-14. MT Tasks fait autorité ; index documentaire synchron
 
 | Sprint | ID MT | État | Cartes | Document |
 |---|---|---|---|---|
-| Sprint 5 — Moteur de contexte et tests agentiques | 77ff44c7-23cd-44d7-89c1-32dfecaccd9a | completed | 5 cartes **archived** ; 31 SP acceptés ; candidate `c0df066c9` | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-5.md) |
+| Sprint 5 — Moteur de contexte et tests agentiques | 77ff44c7-23cd-44d7-89c1-32dfecaccd9a | completed | 5 cartes **archived** ; 31 SP acceptés ; merge `0014d62e1` | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-5.md) |
 | Sprint 4 — Cockpit Sprint lecture seule | 5059b73b-d8e8-40db-b9d5-1cbfb5c6424e | completed | 7 cartes **archived** ; 35 SP acceptés ; merge `b3aa79245` | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-4.md) |
 | Sprint 3 — Piloter une tâche de bout en bout | 415b28cf-2d9c-4162-9be7-f6502a453b8e | completed | 7 cartes archived ; 34 SP acceptés | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-3.md) |
 | Sprint 2 — Tâche, worktree et reprise fiables | ddc01132-b26a-446a-85a0-04d2d37a0a01 | completed | 5 cartes archived ; 29 SP acceptés | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-2.md) |

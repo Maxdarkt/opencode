@@ -1,6 +1,6 @@
 # Moteur de contexte — couche métier Daidalon
 
-**Statut :** livré en local le 2026-09-14 (Sprint 5, candidate `c0df066c9`)
+**Statut :** livré en local le 2026-09-14 (Sprint 5, merge `0014d62e1`)
 **Nom :** moteur de contexte (*context engine*). Pas « orchestrateur ». Pas le chrome.
 
 C’est ce que Cursor fait **avant** chaque appel LLM : choisir **peu** de tokens **utiles**, borner l’agent, réutiliser le cache. Sans ça, le workbench est un habillage.

@@ -6,7 +6,7 @@ Statut : **completed** le 2026-09-14. ID MT : `77ff44c7-23cd-44d7-89c1-32dfecacc
 
 Packer le contexte (worktree, compaction, cache), borner l’agent, coller chaque chat à un arbre de carte, puis recetter des tests de **codage agentique** isolés vs `staging`.
 
-Candidate locale : `c0df066c9` (`recette-agentique`), fusionnée dans `staging`. Pas de push `dev`/`main`/`master`.
+Candidate locale : `c0df066c9` (`recette-agentique`), fusionnée dans `staging` au merge `0014d62e1`. Pas de push `dev`/`main`/`master`.
 
 | Carte | Résultat accepté | SP | Commit |
 |---|---|---:|---|

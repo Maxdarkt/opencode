@@ -24,4 +24,8 @@ observed_at: 2026-09-14T09:16:00+02:00
 | 1 | Docs | bilan + plan sortant + PLAN-GENERAL vierge |
 | 2 | MT | sprint completed, 5 archived |
 | 3 | Git | commit docs, merge candidate, push origin staging |
-| 4 | Git | retirer 4 worktrees propres ; conserver DA10-008 tant que sale |
+## Conclusion
+
+- `reconciled` : sprint `completed`, 5 cartes `archived`, merge `0014d62e1`, docs `55bd46e14`.
+- DA10-008 : worktree conservé (`bun.lock` sale).
+- Sprint 6 non créé.
