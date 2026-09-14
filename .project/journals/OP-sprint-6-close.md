@@ -37,4 +37,5 @@ observed_at: 2026-09-14T16:30:00+02:00
 
 ## Conclusion
 
-(à remplir après observation)
+- `reconciled` : sprint `completed`, 3 cartes `archived`, merge `b7d70d3f8`, docs `16b5f1dc3`.
+- Sprint 7 non créé. Pas de push `dev`/`main`/`master`.

@@ -6,7 +6,7 @@ Statut : **completed** le 2026-09-14. ID MT : `804083e3-534a-4f81-8182-05fc21f15
 
 Aligner le chrome App sur la maquette figée : rail, chat, terminal, inspecteur, panneau secondaire Browser / Diff / Files, recette visuelle 1440 / 1024.
 
-Candidate locale : `e8723cb5b` (`recette-maquette`). Pas de push `dev`/`main`/`master`.
+Candidate locale : `e8723cb5b` (`recette-maquette`), fusionnée dans `staging` au merge `b7d70d3f8`. Pas de push `dev`/`main`/`master`.
 
 | Carte | Résultat accepté | SP | Commit |
 |---|---|---:|---|
