@@ -1,6 +1,6 @@
 # Daidalon — plan général
 
-Mis à jour le 2026-09-14. Projet MT DA. Source `staging` @ `b7d70d3f8`. [Index sprints](sprint.md).
+Mis à jour le 2026-09-14. Projet MT DA. Source `staging` @ `13b5545f0`. [Index sprints](sprint.md).
 
 ## Travail courant
 
@@ -21,6 +21,6 @@ Prochaine tranche : **0.4** (preview `make dev`), cartes hors tableau tant que s
 
 Sprints clos : [index](sprint.md) · [archives](.project/archives/index.md).
 
-Sprint 6 : 3 cartes archived, 19 SP, merge `b7d70d3f8` / tip `b7d70d3f8` ; [bilan](docs/product/sprints/sprint-6.md).
+Sprint 6 : 3 cartes archived, 19 SP, merge `b7d70d3f8` / tip `13b5545f0` ; [bilan](docs/product/sprints/sprint-6.md).
 Sprint 5 : 5 cartes archived, 31 SP, merge `0014d62e1` / tip `4bc70e689` ; [bilan](docs/product/sprints/sprint-5.md).
 Sprint 4 : 7 cartes archived, 35 SP, merge `b3aa79245` ; [bilan](docs/product/sprints/sprint-4.md).

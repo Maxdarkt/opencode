@@ -37,5 +37,6 @@ observed_at: 2026-09-14T16:30:00+02:00
 
 ## Conclusion
 
-- `reconciled` : sprint `completed`, 3 cartes `archived`, merge `b7d70d3f8`, docs `16b5f1dc3`.
-- Sprint 7 non créé. Pas de push `dev`/`main`/`master`.
+- `reconciled` : sprint `completed`, 3 cartes `archived`, merge `b7d70d3f8`, docs close `16b5f1dc3`, record `13b5545f0`.
+- `origin/staging` @ `13b5545f0`. Sprint 7 non créé. Pas de push `dev`/`main`/`master`.
+- Worktrees `features/tasks/DA10-009`, `DA10-010`, `DA40-018` retirés (propres). Residual dossier vide `features/tasks/DA10-010/packages` hors Git.
