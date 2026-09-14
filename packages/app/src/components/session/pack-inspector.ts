@@ -55,3 +55,85 @@ export function packInspectorView(input: { pack?: PackSnapshot; cost?: MetricSta
     cost: formatCost(input.cost),
   }
 }
+
+export type PackInspectorTab = "task" | "git" | "context" | "cost" | "servers" | "permissions"
+
+export const PACK_INSPECTOR_TABS: readonly PackInspectorTab[] = [
+  "task",
+  "git",
+  "context",
+  "cost",
+  "servers",
+  "permissions",
+]
+
+export type PackInspectorGitView = {
+  branch: string
+  head: string
+  dirty: string
+  review: string
+}
+
+export type PackInspectorTaskView = {
+  id: string
+  status: string
+  worktree: string
+  branch: string
+  head: string
+}
+
+type GitSnapshot = {
+  status: string
+  branch: string | null
+  head: string | null
+  dirty: boolean | null
+  review: string
+} | null
+
+export function packInspectorGitView(git: GitSnapshot | undefined): PackInspectorGitView {
+  if (!git || git.status !== "available") {
+    return { branch: "unknown", head: "unknown", dirty: "unknown", review: "unknown" }
+  }
+  return {
+    branch: git.branch || "unknown",
+    head: git.head || "unknown",
+    dirty: git.dirty === null ? "unknown" : git.dirty ? "dirty" : "clean",
+    review: git.review || "unknown",
+  }
+}
+
+export function packInspectorTaskView(input: {
+  currentSessionID: string | undefined
+  tasks: ReadonlyArray<{
+    id: string
+    sessionHref: string | null
+    status: { text: string }
+    worktreeLabel: { text: string }
+    branch: { text: string }
+    head: { text: string }
+  }>
+}): PackInspectorTaskView {
+  const unknown = { id: "unknown", status: "unknown", worktree: "unknown", branch: "unknown", head: "unknown" }
+  if (!input.currentSessionID) return unknown
+  const task = input.tasks.find((item) => {
+    if (!item.sessionHref) return false
+    const match = item.sessionHref.match(/\/session\/([^/?#]+)/)
+    return match?.[1] === input.currentSessionID
+  })
+  if (!task) return unknown
+  return {
+    id: task.id,
+    status: task.status.text,
+    worktree: task.worktreeLabel.text,
+    branch: task.branch.text,
+    head: task.head.text,
+  }
+}
+
+export function packInspectorUnknownBody() {
+  return "unknown"
+}
+
+export function packInspectorMergeAction() {
+  return { type: "simulated" as const }
+}

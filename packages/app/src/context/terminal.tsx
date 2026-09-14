@@ -331,7 +331,7 @@ function createWorkspaceTerminalSession(
         }
         return (await sdk.api.pty.create({ location, title: defaultTitle(nextNumber) })).data
       }
-      doCreate()
+      return doCreate()
         .then((data) => {
           const id = data?.id
           if (!id) {
@@ -350,10 +350,12 @@ function createWorkspaceTerminalSession(
               setUi("focus", { request: focusRequest, id, pending: false })
             }
           })
+          return id
         })
         .catch((error: unknown) => {
           if (focusRequest !== undefined) cancelFocus(focusRequest)
           console.error("Failed to create terminal", error)
+          return undefined
         })
     },
     update(pty: Partial<LocalPTY> & { id: string }) {
