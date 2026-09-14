@@ -33,11 +33,12 @@ Un agent qui tourne 30 minutes hors mandat n’est pas un outil. C’est une irr
 2. Conducteur de sprint (Daidalon)
    objectif, dépendances, prompts de lancement, candidate, merge vers staging
 
-3. Couche économie (Daidalon)
-   tokens, cache, coût, budget, modèle, device (CPU/RAM des process locaux)
+3. **Moteur de contexte** (Daidalon, sur OpenCode)
+   pack, compaction, cache, bornes d’agent, tokens visibles
+   (l’économie E1–E4 *mesure* ; le moteur *décide* ce qui part au LLM)
 ```
 
-Le look peut rester simple **jusqu’à la maquette**. Le chrome cible est figé dans [`maquette.md`](./maquette.md) / [`maquette/cockpit.html`](./maquette/cockpit.html). Les features à livrer : [`livrable.md`](./livrable.md).
+Le chrome cible est figé dans [`maquette.md`](./maquette.md). Le métier : [`contexte.md`](./contexte.md) · [`livrable.md`](./livrable.md).
 
 ## Principes
 
@@ -65,15 +66,15 @@ Mesurer pour **décider** : moins de contexte, autre modèle, arrêt, pas pour v
 
 ```text
 Daidalon
-├── Projet (dépôt source / staging)
-│   ├── chats (chaque fil affiche son worktree, comme Cursor)
-│   ├── fichiers, Git, terminaux
-│   └── serveurs du worktree (make dev) + navigateur intégré
-└── Sprint
-    ├── chat pilote : dépendances, prompts, merge candidate
-    ├── rail : tâches, activité, worktree, attention
-    ├── canvas : chat de la carte sélectionnée
-    └── panneaux : statut, Git vs staging, tokens/budget, process machine
+├── Bandeau agent : running / idle, outil, cwd, Interrupt
+├── Rail : carte + worktree + pastille (le pilote ne code pas)
+├── Centre : chat borné (tools dans le fil, pas d’onglets)
+├── Panneau secondaire (icône) : onglets Browser | Git Diff | Files
+│     Files = éditeur + fil d’Ariane + arbre à droite
+│     Git Diff = fichiers du chat + patch
+│     Browser = preview app
+├── Bas : terminal humain (bandeau VS Code, split)
+└── Inspecteur flottant : tâche, Git vs staging, coût, serveurs, permissions
 ```
 
 ## Succès

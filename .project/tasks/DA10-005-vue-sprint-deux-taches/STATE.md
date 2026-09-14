@@ -1,15 +1,15 @@
 # STATE — DA10-005
 
 - Schema: `apex-task/v1`
-- Generation: `6`
-- Updated: `2026-09-11T23:25:00+02:00`
+- Generation: `7`
+- Updated: `2026-09-13T09:48:00+02:00`
 - Card: `DA10-005`
-- MT: `in_progress`
+- MT: `archived`
 - Worktree: `/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-005-cockpit-sprint`
 - Branch: `task/DA10-005-cockpit-sprint`
 - HEAD: `35e7d83d5`
-- Phase: `verify-complete`
-- next_action: `return-to-sprint`
+- Phase: `archived`
+- next_action: `aucune`
 - read_set: `verify.md`
 
 ## Evidence

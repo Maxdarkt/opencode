@@ -1,9 +1,19 @@
 # Daidalon — livrable (outil à construire)
 
 **Statut :** catalogue de features, recadrage 2026-09-12
-**Autorités :** [`vision.md`](./vision.md) · [`conception.md`](./conception.md) · [`maquette.md`](./maquette.md)
+**Autorités :** [`vision.md`](./vision.md) · [`contexte.md`](./contexte.md) · [`maquette.md`](./maquette.md)
 
 Ce n’est pas un sprint. C’est **ce que l’outil doit devenir**. Chaque feature a une preuve. Look figé par la [maquette cliquable](./maquette/cockpit.html).
+
+## Moteur de contexte (priorité)
+
+| ID | Feature | Preuve |
+|---|---|---|
+| C1 | Pack visible avant envoi : tokens, fichiers, résumé | Inspecteur ≠ unknown inventé |
+| C2 | Sélection minimale : mandat + pathset du **worktree** | Pas de dump repo / fuite `staging` |
+| C3 | Compaction / prune / troncature d’outils (OpenCode) | Un tour ne recolle pas tout l’historique |
+| C4 | Agent borné : tours, budget, temps, Interrupt | Pas de course à vide 30 min |
+| C5 | Préfixe cache-stable (cwd, règles, outils) | Moins de tokens d’entrée à mandat égal |
 
 ## Workbench (Cursor)
 
@@ -35,4 +45,4 @@ Ce n’est pas un sprint. C’est **ce que l’outil doit devenir**. Chaque feat
 
 ## Hors livrable (pour l’instant)
 
-Parallélisme d’écrivains, look « agence », worktrees métier figés, prod `master` automatique, capter un fournisseur unique.
+Parallélisme d’écrivains, look « agence », worktrees métier figés, prod `master` automatique, capter un fournisseur unique, polish du panneau secondaire (onglets Browser/Diff/Files) — maquette OK, implémentation plus tard.

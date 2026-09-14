@@ -1,52 +1,41 @@
 # Daidalon — roadmap fonctionnelle
 
 **Statut :** backlog de cadrage
-**Sources :** [`vision.md`](./vision.md), [`conception.md`](./conception.md)
+**Sources :** [`vision.md`](./vision.md), [`contexte.md`](./contexte.md)
 **Dernière mise à jour :** 2026-09-12
 
-Les sprints M0–4 sont **faits** (voir `sprint.md`). Ce fichier ordonne les **capacités restantes**. MT Tasks porte le statut ; APEX les preuves.
+Les sprints M0–4 sont **faits** (voir `sprint.md`). MT Tasks porte le statut ; APEX les preuves.
 
 ## Ordre de construction (après Sprint 4)
 
-### W1 — workbench Cursor
+### C — moteur de contexte (d’abord)
 
-- rail de chats avec **worktree visible** ;
-- une tâche = un arbre = un fil ;
-- identité Git vs `staging` ;
-- lancer / arrêter `make dev` du worktree et ouvrir le navigateur intégré.
+Pack, compaction OpenCode, cache, bornes, inspecteur tokens (C1–C5).
+
+### W1 — workbench (chrome, plus tard)
+
+Rail worktree, preview `make dev`, panneau secondaire (maquette déjà OK).
 
 ### W2 — conducteur de sprint
 
-- dépendances et tâches éligibles ;
-- prompt collable pour lancer une carte ;
-- candidate, merge vers `staging`, retrait des arbres de cartes ;
-- le pilote ne code pas.
+Dépendances, prompt collable, candidate, le pilote ne code pas.
 
-### W3 — économie et couche smart
+### E — économie (mesure)
 
-- tokens, cache, coût, modèle, fournisseur par tour / tâche / sprint ;
-- budgets et alertes (contexte trop large, retries, course à vide) ;
-- adaptateurs d’abonnement **sans** en faire l’identité du produit ;
-- charge machine : CPU / RAM des process locaux (serveur, Vite, agent).
-
-### W4 — contexte maîtrisé
-
-- compaction, cache, sélection minimale, provenance ;
-- bornes de mandat (temps, budget, pathset) pour qu’un agent ne « parte pas 30 min ».
+Tokens / coût / budget visibles ; adaptateurs abo ; CPU/RAM. Distinguer de C : mesurer ≠ packer.
 
 ### W5 — communauté et sorties
 
-- `develop` preview / `master` prod = portes explicites ;
-- sync amont OpenCode, extensions, multi-OS.
+`develop` / `master` portes explicites ; sync amont OpenCode.
 
 ## Règles de priorisation
 
 1. Le développeur garde la main.
-2. État visible (Git, sprint, coût).
-3. Preview locale rapide.
-4. Coût et contexte.
+2. Contexte et coût honnêtes.
+3. Chrome ensuite (maquette déjà figée).
+4. Preview locale.
 5. Parallélisme en dernier.
 
 ## Hors chemin critique
 
-`DA30-011` (hygiène métriques Sprint 3). Worktrees métier `10-*`… : geler, ne pas reconstruire.
+`DA30-011`. Worktrees métier `10-*`… : geler. Polish panneau secondaire.

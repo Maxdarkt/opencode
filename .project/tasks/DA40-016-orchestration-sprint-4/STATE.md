@@ -4,13 +4,13 @@
 - Generation: `50`
 - Updated: `2026-09-12T00:10:00+02:00`
 - Objective: `Livrer un cockpit Sprint réel en lecture seule, à partir de la maquette validée, en isolant MT/APEX/session/worktree/métriques entre A et B.`
-- Freshness: `archived` — Sprint 4 closed 2026-09-12 ; no successor sprint created.
+- Freshness: `archived` — Sprint 4 closed 2026-09-12 ; successor Sprint 5 `77ff44c7-23cd-44d7-89c1-32dfecaccd9a` active.
 - Runtime: `.project/runtime/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/CURRENT.json` generation `8`
 - Parent thread: Cursor `30dae365-e035-4604-9113-53767fcb9c05`
 - Parent context: `closing`
 - Active children: `0`
 - Capacity target: `0`
-- Under-capacity reason: `closed` — Sprint 4 en rotation ; Sprint 5 non créé.
+- Under-capacity reason: `closed` — Sprint 4 rotated 2026-09-13 ; plan courant = Sprint 5 seulement.
 - Pending remittances: `0`
 - Remittance ledger: `.project/sprints/5059b73b-d8e8-40db-b9d5-1cbfb5c6424e/remittances.md`
 - Queue depth: `0`
@@ -18,7 +18,7 @@
 - Next event: `closed`
 - Watcher: `not-required`
 - Watcher owner: `none`
-- Successor: `none`
+- Successor: `Sprint 5 77ff44c7-23cd-44d7-89c1-32dfecaccd9a`
 
 ## Children
 
@@ -88,7 +88,7 @@
 
 ## Next action
 
-Clôture mandatée 2026-09-12 : 7 cartes produit `done` (35 SP), candidate `545718268` non fusionnée. `DA40-016` absente de MT. Sprint 5 = proposition seulement. Archiver les chats tâche Cursor à la main.
+Rotation 2026-09-13 : 7 cartes produit MT `archived`, candidate mergée `b3aa79245`. `DA40-016` absente de MT. Plan courant = Sprint 5. Aucune action depuis ce STATE.
 
 ## Resume
 

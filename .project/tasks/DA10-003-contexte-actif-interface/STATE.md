@@ -1,7 +1,11 @@
 # STATE — DA10-003
 
+- rotation: archived 2026-09-13 (MT archived, Sprint 2 clos). Snapshot ci-dessous périmé.
+- phase: archived
+- mt: archived
+- next_action: aucune
 - Génération : `2` — attestation de routage parent, `2026-09-07T12:53:06+02:00`.
-- Tracking / statut MT observé : `tracked` / `todo`.
+- Tracking / statut MT observé : `tracked` / `todo` (périmé ; MT = archived).
 - Phase APEX : cadrée ; Analyze non commencé. Statut local : attente ordonnée des dépendances, sans blocage MT.
 - Worktree / branche / base / HEAD : `features/s2-10-context-ui` / `active-context-ui` / `9ba850b68b49bd20e2e40d24ceba39dd5fb19af2` / `9ba850b68b49bd20e2e40d24ceba39dd5fb19af2`.
 - Git préflight : divergence base…HEAD `0 derrière / 0 devant`; modifications déjà présentes hors code produit : `PLAN-GENERAL.md`, `docs/product/releases/0.1.md`, `sprint.md`, `docs/product/sprints/sprint-2.md` et ce dossier APEX non suivi. Aucun changement de code DA10-003.

@@ -3,10 +3,10 @@
 - schema: `apex-state/v2`
 - generation: `10`
 - updated_at: `2026-09-07T14:12:36+02:00`
-- phase: `DONE`
+- phase: `archived`
 - status: `complete`
 - tracking: `tracked`
-- MT: `done`; réception parent et transition `review → done` par requête `5753311e-c8f4-42fb-88a0-92d3fbbb725e`, relue `done` par `eb6a5c0b-3f39-4ed0-a88a-9ff7fd85f273`.
+- MT: `archived` (done Sprint 2, 2026-09-07).
 - Sprint: `da-release-0.1-sprint-2` (`ddc01132-b26a-446a-85a0-04d2d37a0a01`).
 - Git: branche `execution-ownership`; HEAD/commit accepté DA30-004 `1de05c0239357fb5796935460b89bfd9deec939b`; parent `eceeb7dd7734f60491e09cdac72fa297993f4c4b` après cherry-pick exact de DA20-003.
 - Dirty à préserver sans nouveau commit: ce checkpoint `STATE.md`, plus les projections préexistantes `PLAN-GENERAL.md`, `docs/product/releases/0.1.md`, `sprint.md` et `docs/product/sprints/sprint-2.md`; aucun staged.
@@ -18,5 +18,5 @@
 - blockers: aucun.
 - debts: dette `event-manifest` DA20-003 préexistante et hors périmètre; aucune dette DA30-004 observée.
 - chat/routage: `01a07b7b-4a62-7842-80fa-4d645525df4c`; `gpt-5.6-sol/high` attesté par le parent depuis `01a076a4-b458-72a3-8e2b-bf975091a840`.
-- next_action: aucune action enfant; DA10-003 consomme désormais les commits acceptés et le parent poursuit le Sprint.
+- next_action: aucune
 - resume: tâche terminée et MT relue `done`; ne reprendre que sur correction explicite parent, sans rejouer les transitions ni modifier les projections Sprint.

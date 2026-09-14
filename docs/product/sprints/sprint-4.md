@@ -30,7 +30,7 @@ Candidate locale : `545718268`, fusionnée dans `staging` au merge `b3aa79245`, 
 - Candidate non promue vers `develop`/`master` (preview/prod facultatives).
 - `DA40-016` manquante dans MT.
 - Worktrees métier permanents encore présents (legacy).
-- `DA30-011` reste backlog.
-- Sprint 5 : proposition non créée — [briefing](./sprint-5-proposal.md). Pas de 0.3 (parallélisme / commandes Git-agent mutatives).
+- `DA30-011` **archived** le 2026-09-12 (hors 0.2).
+- Sprint 5 **active** : [suivi](./sprint-5.md). 0.3 hors sprint.
 
 Preuves : [STATE parent](../../../.project/tasks/DA40-016-orchestration-sprint-4/STATE.md), [plan sortant](../../../.project/archives/sprint-4/plan-sortant.md).

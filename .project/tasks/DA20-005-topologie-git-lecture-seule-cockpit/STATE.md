@@ -1,9 +1,9 @@
 # STATE — DA20-005 — Topologie Git lecture seule
 
 - schema: `apex-state/v2`
-- generation: `7`
-- updated_at: `2026-09-11T21:55:00+02:00`
-- phase: `VERIFY`
+- generation: `8`
+- updated_at: `2026-09-13T09:48:00+02:00`
+- phase: `archived`
 - status: `waiting-decision`
 - tracking: `tracked`
 - git:
@@ -27,7 +27,8 @@
 - checks: typecheck schema/core PASS ; tests 14/14 PASS ; `git diff --check` PASS
 - blockers: commit local si autorisé ; MT reste `in_progress`
 - debts: `packages/core/bunfig.toml` `test.root = "."`
-- next_action: sprint support relit `verify.md` / `handoff.md` ; commit seulement sur ordre
+- mt: archived (done Sprint 4, commit `cfa081ca8`, 2026-09-12)
+- next_action: aucune
 - resume: relire ce STATE + `verify.md` seulement. HEAD `7df15b2cd`. Pas de push/merge.
 
 ## Context

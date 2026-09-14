@@ -4,7 +4,7 @@
 - Generation: `26`
 - Updated: `2026-09-08T10:10:00+02:00`
 - Objective: `Achever la candidate locale 0.1 : piloter une tâche APEX depuis une vue Sprint, avec phases, worktree et coûts honnêtes, puis recette intégrée.`
-- Freshness: `fresh`
+- Freshness: `archived`
 - Runtime path: `.project/runtime/sprints/415b28cf-2d9c-4162-9be7-f6502a453b8e/CURRENT.json`
 - Runtime generation: `26`
 - Parent thread: `01a07d34-6e02-7a81-a3ed-0287a9ad3690`

@@ -1,33 +1,33 @@
-# Proposition Sprint 5 — Workbench Cursor + conducteur + économie visible
+# Proposition — découpage ultérieur (cartes déjà en MT)
 
-Statut : **proposition**. Aucun sprint MT créé. Vision : [`../vision.md`](../vision.md).
+Statut : **créé et actif** `da-release-0.1-sprint-5` / `77ff44c7-23cd-44d7-89c1-32dfecaccd9a`. Membres = release 0.2. Suivi : [`sprint-5.md`](./sprint-5.md).
 
-## Objectif
+Autorités : [`../contexte.md`](../contexte.md) · [`../livrable.md`](../livrable.md) · maquette figée.
 
-Look figé par la [maquette](../maquette.md). Features : [`livrable.md`](../livrable.md).
+`DA30-011` archived (obsolète).
 
-Base : `staging` `b2241f14c`.
+## 0.2 — tests de codage agentique (31 SP)
 
-## Lots (~24 SP)
+| ID | Titre | SP |
+|---|---|---:|
+| DA30-013 | Packer le contexte : worktree, compaction, cache | 8 |
+| DA30-012 | Borner l’agent : tours, budget, Interrupt | 5 |
+| DA10-007 | Lier chaque chat à un worktree de carte | 8 |
+| DA10-008 | Bandeau agent et inspecteur de pack | 5 |
+| DA40-017 | Recette : tests de codage agentique isolés | 5 |
 
-| Ordre | Thème | Résultat | SP |
-|---:|---|---:|---:|
-| 1 | DA10 | Rail + panneaux : carte, phase, worktree, branche vs `staging`, tokens/coût (`unknown` si absent) | 8 |
-| 2 | DA10 | Conducteur : tâches éligibles (dépendances), prompt à coller, pas de second chat | 5 |
-| 3 | DA40 | Start/stop `make dev` du worktree + ouvrir le navigateur sur l’UI | 5 |
-| 4 | DA40 | Candidate + recette 1440 / 1024 | 3 |
-| 5 | DA40 | Orchestration | 3 |
+Ordre : DA30-013 ∥ DA10-007 → DA30-012 → DA10-008 → DA40-017.
 
-`DA30-011` hors chemin. Worktrees métier : ne pas les recréer.
+## 0.3 — maquette (19 SP)
 
-## Contrat
+DA10-009 (8) → DA10-010 (8) → DA40-018 (3).
 
-1. Faits = projections fraîches.
-2. Isolation A/B.
-3. Le rail montre le worktree.
-4. Serveurs bornés à **cet** arbre / ces ports.
-5. Pas de Git/agent mutatif depuis le cockpit (sauf start/stop preview).
+## 0.4 — preview + conducteur (15 SP)
 
-## Chat suivant
+DA40-019 (5), DA10-011 (5), DA20-006 (5).
 
-`sprint-support` + `task-scope`. Créer `da-release-0.1-sprint-5`. Worktrees depuis `b2241f14c`. Pas de Build sur `staging`.
+## 0.5 — économie (13 SP)
+
+DA30-014 (5), DA30-015 (5), DA40-020 (3).
+
+Créer `da-release-0.1-sprint-5` seulement après choix du périmètre (souvent 0.2 seul).

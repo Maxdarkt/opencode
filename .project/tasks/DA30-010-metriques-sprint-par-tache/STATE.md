@@ -1,9 +1,9 @@
 # STATE — DA30-010 — Métriques Sprint par tâche et provenance
 
 - schema: `apex-state/v2`
-- generation: `8`
-- updated_at: `2026-09-11T21:58:00+02:00`
-- phase: `VERIFY`
+- generation: `9`
+- updated_at: `2026-09-13T09:48:00+02:00`
+- phase: `archived`
 - status: `complete`
 - tracking: `tracked`
 - git:
@@ -19,7 +19,8 @@
   - MT : sprint passe `done` sur la remise (cette carte ne le fait pas).
 - blockers: `none`
 - debts: `PLAN-GENERAL.md` / `sprint.md` canoniques encore `todo` — parent DA40-016.
-- next_action: sprint (remise Verify+commit).
+- mt: archived (done Sprint 4, 2026-09-12)
+- next_action: aucune
 
 ## Read set
 

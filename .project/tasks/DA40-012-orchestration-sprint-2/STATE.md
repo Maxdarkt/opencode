@@ -4,7 +4,7 @@
 - Generation: `33`
 - Updated: `2026-09-07T20:45:00+02:00`
 - Objective: `Lier durablement carte MT, dossier APEX, session et worktree, garantir exclusivite et reprise, exposer le contexte actif, puis livrer la candidate integree Sprint 2.`
-- Freshness: `fresh`
+- Freshness: `archived`
 - Runtime path: `.project/runtime/sprints/ddc01132-b26a-446a-85a0-04d2d37a0a01/CURRENT.json`
 - Runtime generation: `33`
 - Parent thread: `01a076a4-b458-72a3-8e2b-bf975091a840`

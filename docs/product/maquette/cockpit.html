@@ -6,12 +6,12 @@
   <title>Daidalon — maquette workbench</title>
   <style>
     :root {
-      --bg: #0c0c0e;
-      --panel: #141416;
-      --elev: #1c1c20;
-      --line: #2a2a30;
+      --bg: #0b0b0d;
+      --panel: #121214;
+      --elev: #1a1a1e;
+      --line: #2c2c32;
       --text: #f4f4f5;
-      --mute: #a1a1aa;
+      --mute: #9b9ba3;
       --blue: #60a5fa;
       --green: #4ade80;
       --amber: #fbbf24;
@@ -22,16 +22,31 @@
     button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
     .app { display: flex; flex-direction: column; height: 100vh; min-height: 640px; }
     .top {
-      display: flex; align-items: center; gap: 16px; height: 40px; padding: 0 12px;
+      display: flex; align-items: center; gap: 14px; height: 38px; padding: 0 10px;
       border-bottom: 1px solid var(--line); background: var(--panel); flex-shrink: 0;
     }
     .brand { font-weight: 600; letter-spacing: -0.02em; }
     .pill { color: var(--mute); font-size: 12px; font-family: ui-monospace, monospace; }
     .pill strong { color: var(--text); font-weight: 500; }
-    .top-right { margin-left: auto; display: flex; gap: 12px; align-items: center; font-size: 12px; color: var(--mute); }
+    .top-right { margin-left: auto; display: flex; gap: 8px; align-items: center; font-size: 12px; color: var(--mute); }
+    .ico {
+      width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--line);
+      display: grid; place-items: center; color: var(--mute); padding: 0;
+    }
+    .ico.on, .ico:hover { color: var(--text); background: var(--elev); }
+    .agent {
+      display: flex; align-items: center; gap: 12px; height: 32px; padding: 0 12px;
+      border-bottom: 1px solid var(--line); background: #101014; flex-shrink: 0; font-size: 12px;
+    }
+    .agent .st { font-weight: 600; }
+    .agent .st.run { color: var(--amber); }
+    .agent .st.idle { color: var(--green); }
+    .agent .st.wait { color: var(--mute); }
+    .agent .cwd { font-family: ui-monospace, monospace; color: var(--mute); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .agent .stop { margin-left: auto; padding: 4px 8px; border-radius: 6px; border: 1px solid #7f1d1d; color: var(--red); }
     .shell { display: flex; flex: 1; min-height: 0; }
     .rail {
-      width: 252px; flex-shrink: 0; border-right: 1px solid var(--line); background: var(--panel);
+      width: 244px; flex-shrink: 0; border-right: 1px solid var(--line); background: var(--panel);
       display: flex; flex-direction: column;
     }
     .rail h2 { margin: 0; padding: 12px 12px 8px; font-size: 11px; font-weight: 600; color: var(--mute); text-transform: uppercase; letter-spacing: 0.06em; }
@@ -45,26 +60,110 @@
     .dot { width: 7px; height: 7px; border-radius: 99px; display: inline-block; }
     .dot.run { background: var(--amber); }
     .dot.attn { background: var(--blue); }
+    .work { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
+    .row-main { display: flex; flex: 1; min-height: 0; }
     .mid { flex: 1; min-width: 0; display: flex; flex-direction: column; background: var(--bg); }
-    .tabs { display: flex; gap: 4px; padding: 8px 12px; border-bottom: 1px solid var(--line); }
-    .tabs button { padding: 6px 10px; border-radius: 6px; color: var(--mute); }
-    .tabs button.on { background: var(--elev); color: var(--text); }
-    .canvas { flex: 1; overflow: auto; padding: 16px 20px 80px; }
+    .canvas { flex: 1; overflow: auto; padding: 16px 20px 24px; }
     .msg { max-width: 720px; margin: 0 auto 14px; }
     .msg .who { font-size: 11px; color: var(--mute); margin-bottom: 4px; }
-    .composer {
-      border-top: 1px solid var(--line); padding: 10px 16px 14px; background: var(--panel);
+    .tool {
+      max-width: 720px; margin: 0 auto 14px; padding: 8px 10px; border-radius: 8px;
+      border: 1px solid var(--line); background: var(--elev); font-size: 12px; color: var(--mute);
+      font-family: ui-monospace, monospace;
     }
+    .composer { border-top: 1px solid var(--line); padding: 10px 16px 12px; background: var(--panel); }
     .composer .box {
       max-width: 720px; margin: 0 auto; border: 1px solid var(--line); border-radius: 10px;
       background: var(--elev); padding: 10px 12px; color: var(--mute);
     }
-    .right {
-      width: 320px; flex-shrink: 0; border-left: 1px solid var(--line); background: var(--panel);
-      display: flex; flex-direction: column; overflow: hidden;
+    .split {
+      width: 5px; flex-shrink: 0; cursor: col-resize; background: var(--bg);
+      border-left: 1px solid var(--line); border-right: 1px solid transparent;
     }
-    .right .tabs { flex-wrap: wrap; }
-    .pane { flex: 1; overflow: auto; padding: 12px; }
+    .split:hover, .split.drag { border-right-color: var(--blue); background: #1e3a5f; }
+    .sec {
+      width: 52%; min-width: 280px; flex-shrink: 0; display: none;
+      flex-direction: column; min-height: 0; background: var(--panel);
+    }
+    .sec.open { display: flex; overflow: visible; }
+    .sec-tabs {
+      display: flex; align-items: center; gap: 2px; min-height: 36px; padding: 0 6px;
+      border-bottom: 1px solid var(--line); flex-shrink: 0; overflow: visible;
+      position: relative; z-index: 20;
+    }
+    #etabs { display: flex; gap: 2px; flex: 0 1 auto; min-width: 0; overflow: auto; }
+    .etab {
+      display: flex; align-items: center; gap: 6px; padding: 6px 8px; border-radius: 6px 6px 0 0;
+      color: var(--mute); font-size: 12px; max-width: 160px;
+    }
+    .etab.on { background: var(--bg); color: var(--text); }
+    .etab .x { color: var(--mute); padding: 0 2px; }
+    .add { position: relative; }
+    .add > button { padding: 4px 8px; color: var(--mute); }
+    .menu {
+      display: none; position: absolute; top: 28px; left: 0; z-index: 30;
+      background: var(--elev); border: 1px solid var(--line); border-radius: 8px; min-width: 160px; padding: 4px;
+    }
+    .menu.open { display: block; }
+    .menu button { display: block; width: 100%; text-align: left; padding: 8px 10px; border-radius: 6px; }
+    .menu button:hover { background: var(--panel); }
+    .crumb {
+      padding: 6px 12px; border-bottom: 1px solid var(--line); color: var(--mute);
+      font-size: 11px; font-family: ui-monospace, monospace; flex-shrink: 0;
+    }
+    .crumb span { color: var(--text); }
+    .sec-body { flex: 1; min-height: 0; display: flex; }
+    .view { flex: 1; min-width: 0; overflow: auto; background: var(--bg); padding: 12px 14px; }
+    .code, .diff, .url { font-family: ui-monospace, monospace; font-size: 12px; white-space: pre-wrap; }
+    .addc { color: var(--green); }
+    .delc { color: var(--red); }
+    .hunk { color: var(--blue); }
+    .tree {
+      width: 220px; flex-shrink: 0; border-left: 1px solid var(--line); overflow: auto;
+      background: var(--panel); padding: 8px 0;
+    }
+    .tree h3 { margin: 0 10px 6px; font-size: 11px; color: var(--mute); text-transform: uppercase; letter-spacing: 0.06em; }
+    .tree button {
+      display: block; width: 100%; text-align: left; padding: 4px 12px; color: var(--mute); font-size: 12px;
+    }
+    .tree button.on, .tree button:hover { background: var(--elev); color: var(--text); }
+    .changed {
+      display: flex; justify-content: space-between; width: 100%; text-align: left;
+      padding: 7px 10px; border-bottom: 1px solid var(--line); font-size: 12px;
+    }
+    .changed.on { background: var(--elev); }
+    .stat { font-family: ui-monospace, monospace; }
+    .browser-bar { display: flex; gap: 8px; margin-bottom: 10px; }
+    .browser-bar .urlbar {
+      flex: 1; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px;
+      background: var(--elev); font-family: ui-monospace, monospace; font-size: 12px; color: var(--mute);
+    }
+    .page {
+      min-height: 180px; border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: #0e0e12;
+    }
+    .tray { flex-shrink: 0; border-top: 1px solid var(--line); background: var(--panel); }
+    .tray-bar {
+      display: flex; align-items: center; gap: 8px; height: 28px; padding: 0 10px; color: var(--mute); font-size: 11px;
+    }
+    .tray-bar button { padding: 3px 8px; border-radius: 4px; }
+    .tray-bar button.on { background: var(--elev); color: var(--text); }
+    .terms { display: none; height: 140px; border-top: 1px solid var(--line); }
+    .tray.open .terms { display: flex; }
+    .term {
+      flex: 1; min-width: 0; padding: 8px 10px; font-family: ui-monospace, monospace;
+      font-size: 12px; color: #c4c4c8; background: #0a0a0c; overflow: auto;
+    }
+    .term + .term { border-left: 1px solid var(--line); }
+    .float {
+      display: none; position: fixed; top: 78px; right: 16px; width: 320px; max-height: calc(100vh - 120px);
+      overflow: auto; z-index: 30; background: var(--panel); border: 1px solid var(--line);
+      border-radius: 12px; box-shadow: 0 18px 50px rgba(0,0,0,.55);
+    }
+    .float.open { display: flex; flex-direction: column; }
+    .float .tabs { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px; border-bottom: 1px solid var(--line); }
+    .float .tabs button { padding: 5px 8px; border-radius: 6px; color: var(--mute); font-size: 12px; }
+    .float .tabs button.on { background: var(--elev); color: var(--text); }
+    .pane { padding: 12px; }
     .kv { margin-bottom: 10px; padding: 10px; border-radius: 8px; background: var(--elev); border: 1px solid var(--line); }
     .kv dt { font-size: 11px; color: var(--mute); }
     .kv dd { margin: 4px 0 0; font-size: 12px; word-break: break-word; }
@@ -75,15 +174,15 @@
     .ok { color: var(--green); }
     .warn { color: var(--amber); }
     .toast {
-      display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      display: none; position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%);
       background: var(--elev); border: 1px solid var(--amber); color: var(--amber);
-      padding: 10px 14px; border-radius: 8px; z-index: 20; font-size: 12px;
+      padding: 10px 14px; border-radius: 8px; z-index: 40; font-size: 12px;
     }
     .toast.show { display: block; }
     @media (max-width: 1024px) {
       .rail { width: 64px; }
       .card .wt, .rail h2 span, .card .id span:last-child { position: absolute; width: 1px; height: 1px; overflow: hidden; }
-      .right { width: 260px; }
+      .tree { width: 160px; }
     }
   </style>
 </head>
@@ -96,8 +195,16 @@
       <div class="top-right">
         <span>Grok · API</span>
         <span>budget <strong class="ok">$12.40 / $40</strong></span>
+        <button class="ico" id="btn-insp" type="button" title="Inspecteur">☰</button>
+        <button class="ico" id="btn-sec" type="button" title="Panneau secondaire" aria-label="Panneau secondaire">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M9.5 2.5v11" stroke="currentColor" stroke-width="1.2"/>
+          </svg>
+        </button>
       </div>
     </header>
+    <div class="agent" id="agent"></div>
     <div class="shell">
       <aside class="rail">
         <h2><span>Sprint · chats</span></h2>
@@ -114,31 +221,75 @@
           <div class="wt">features/tasks/DA40-018-preview</div>
         </button>
       </aside>
-      <section class="mid">
-        <div class="tabs" id="canvas-tabs">
-          <button class="on" data-tab="chat" type="button">Chat</button>
-          <button data-tab="term" type="button">Terminal</button>
-          <button data-tab="git" type="button">Diff</button>
-          <button data-tab="web" type="button">Preview</button>
+      <div class="work">
+        <div class="row-main">
+          <section class="mid">
+            <div class="canvas" id="canvas"></div>
+            <div class="composer">
+              <div class="box" id="composer">Coller le prompt · l’agent reste dans ce worktree</div>
+            </div>
+          </section>
+          <div class="split" id="split" hidden></div>
+          <aside class="sec" id="sec">
+            <div class="sec-tabs">
+              <div id="etabs"></div>
+              <div class="add">
+                <button id="btn-plus" type="button">+</button>
+                <div class="menu" id="kind-menu">
+                  <button type="button" data-kind="browser">Browser</button>
+                  <button type="button" data-kind="diff">Git Diff</button>
+                  <button type="button" data-kind="files">Files</button>
+                </div>
+              </div>
+            </div>
+            <div id="sec-rest"></div>
+          </aside>
         </div>
-        <div class="canvas" id="canvas"></div>
-        <div class="composer">
-          <div class="box" id="composer">Coller le prompt de lancement · l’agent reste dans ce worktree</div>
+        <div class="tray" id="tray">
+          <div class="tray-bar">
+            <button class="on" id="btn-term" type="button">Terminal</button>
+            <button id="btn-split" type="button">Split</button>
+            <span style="margin-left:auto">humain · pas la trace agent</span>
+          </div>
+          <div class="terms" id="terms"></div>
         </div>
-      </section>
-      <aside class="right">
-        <div class="tabs" id="right-tabs">
-          <button class="on" data-p="task" type="button">Tâche</button>
-          <button data-p="git" type="button">Git</button>
-          <button data-p="cost" type="button">Coût</button>
-          <button data-p="srv" type="button">Serveurs</button>
-        </div>
-        <div class="pane" id="pane"></div>
-      </aside>
+      </div>
     </div>
   </div>
+  <aside class="float" id="float">
+    <div class="tabs" id="insp-tabs">
+      <button class="on" data-p="task" type="button">Tâche</button>
+      <button data-p="git" type="button">Git</button>
+      <button data-p="cost" type="button">Coût</button>
+      <button data-p="srv" type="button">Serveurs</button>
+      <button data-p="perm" type="button">Permissions</button>
+    </div>
+    <div class="pane" id="pane"></div>
+  </aside>
   <div class="toast" id="toast">Simulation — aucun effet Git / agent</div>
   <script>
+    const files = {
+      "docs/product/maquette/cockpit.html": `export function Cockpit() {\n  return <Rail worktree={cwd} />\n}`,
+      "packages/app/src/pages/sprint-cockpit.tsx": `export function SprintCockpit() {\n  return <Identity worktree={session.cwd} />\n}`,
+      "docs/product/vision.md": `# Daidalon — vision produit\nChat collé à un worktree.`
+    };
+    const tree = [
+      "docs/product/maquette/cockpit.html",
+      "docs/product/vision.md",
+      "packages/app/src/pages/sprint-cockpit.tsx"
+    ];
+    const diffs = [
+      {
+        path: "packages/app/src/pages/sprint-cockpit.tsx",
+        plus: 18, minus: 4,
+        patch: `@@ sprint-cockpit.tsx\n- <Tabs>Chat Terminal Diff Preview</Tabs>\n+ <Chat thread={session} />\n+ <AgentStrip cwd={worktree} />`
+      },
+      {
+        path: "docs/product/maquette/cockpit.html",
+        plus: 40, minus: 12,
+        patch: `@@ cockpit.html\n+ secondary panel (Browser | Git Diff | Files)\n+ explorer tree on the right`
+      }
+    ];
     const tasks = {
       pilot: {
         title: "Pilote Sprint 5",
@@ -148,9 +299,11 @@
         vs: "source · 0 ahead",
         next: "Lancer DA10-017 (dépendances OK)",
         prompt: "Skill apex-task. Carte DA10-017. cwd = features/tasks/DA10-017-identites. Base b2241f14c.",
+        agent: { st: "idle", label: "Idle", tool: "conducteur · pas de tools", cwd: "staging" },
+        perm: "Aucune : le pilote ne code pas.",
         chat: [
-          ["Toi", "Objectif : identités réelles, worktree visible, pas d’orchestrateur Codex."],
-          ["Pilote", "Éligible : DA10-017. DA40-018 attend W1. Copie le prompt, ouvre un chat, ne code pas ici."]
+          ["h", "Toi", "Objectif : identités réelles, worktree visible, pas d’orchestrateur Codex."],
+          ["h", "Pilote", "Éligible : DA10-017. DA40-018 attend W1. Copie le prompt, ouvre un chat, ne code pas ici."]
         ]
       },
       a: {
@@ -161,9 +314,12 @@
         vs: "staging · +4 / −0",
         next: "Analyze validé → Plan",
         prompt: "(déjà dans ce fil)",
+        agent: { st: "run", label: "Running", tool: "Write · sprint-cockpit.tsx", cwd: "features/tasks/DA10-017-identites" },
+        perm: "Write pathset packages/app/** — en attente",
         chat: [
-          ["Toi", "Analyze. Un chat = un worktree. Rail comme Cursor."],
-          ["Agent", "Contrat : facts fail-closed. Pathset App rail + panneaux. Stop après analyze.md."]
+          ["h", "Toi", "Analyze. Un chat = un worktree. Rail comme Cursor."],
+          ["t", "Write", "packages/app/src/pages/sprint-cockpit.tsx"],
+          ["h", "Agent", "Contrat : facts fail-closed. Pathset App rail + panneaux. Stop après analyze.md."]
         ]
       },
       b: {
@@ -174,13 +330,24 @@
         vs: "non alloué",
         next: "Attend DA10-017",
         prompt: "(bloqué : dépendance)",
-        chat: [["Système", "Carte non lancée. Le pilote ne crée pas ce worktree tant que W1 n’est pas done."]]
+        agent: { st: "wait", label: "Blocked", tool: "—", cwd: "(pas encore d’arbre)" },
+        perm: "—",
+        chat: [["h", "Système", "Carte non lancée. Le pilote ne crée pas ce worktree tant que W1 n’est pas done."]]
       }
     };
     let id = "pilot";
-    let tab = "chat";
     let panel = "task";
     let serverOn = false;
+    let trayOpen = true;
+    let splitTerm = false;
+    let secOpen = false;
+    let inspOpen = false;
+    let menuOpen = false;
+    let n = 1;
+    let tabs = [];
+    let active = null;
+    let fileSel = "docs/product/maquette/cockpit.html";
+    let diffSel = 0;
     const canvas = document.getElementById("canvas");
     const pane = document.getElementById("pane");
     const composer = document.getElementById("composer");
@@ -189,25 +356,122 @@
       t.classList.add("show");
       setTimeout(() => t.classList.remove("show"), 1800);
     }
-    function renderCanvas() {
+    function kv(k, v, mono) {
+      return `<dl class="kv"><dt>${k}</dt><dd class="${mono ? "mono" : ""}">${v}</dd></dl>`;
+    }
+    function titleOf(kind) {
+      if (kind === "browser") return "Browser";
+      if (kind === "diff") return "Git Diff";
+      return fileSel.split("/").pop();
+    }
+    function openSec(kind) {
+      secOpen = true;
+      tabs.push({ id: "t" + n++, kind });
+      active = tabs[tabs.length - 1].id;
+      renderSec();
+    }
+    function renderAgent() {
+      const a = tasks[id].agent;
+      document.getElementById("agent").innerHTML =
+        `<span class="st ${a.st}">${a.label}</span><span>${a.tool}</span><span class="cwd">${a.cwd}</span>` +
+        (a.st === "run" ? `<button class="stop" id="stop" type="button">Interrupt</button>` : "");
+      const s = document.getElementById("stop");
+      if (s) s.onclick = toast;
+    }
+    function renderChat() {
       const t = tasks[id];
-      if (tab === "chat") {
-        canvas.innerHTML = t.chat.map(([w, m]) => `<div class="msg"><div class="who">${w}</div><div>${m}</div></div>`).join("");
-        composer.textContent = t.prompt;
+      canvas.innerHTML = t.chat.map((row) => {
+        if (row[0] === "t") return `<div class="tool">outil ${row[1]} · ${row[2]}</div>`;
+        return `<div class="msg"><div class="who">${row[1]}</div><div>${row[2]}</div></div>`;
+      }).join("");
+      composer.textContent = t.prompt;
+    }
+    function renderSec() {
+      document.getElementById("sec").classList.toggle("open", secOpen);
+      document.getElementById("split").hidden = !secOpen;
+      document.getElementById("btn-sec").classList.toggle("on", secOpen);
+      const tab = tabs.find((x) => x.id === active);
+      document.getElementById("etabs").innerHTML = tabs.map((x) =>
+        `<button class="etab ${x.id === active ? "on" : ""}" data-id="${x.id}" type="button">${titleOf(x.kind)} <span class="x" data-close="${x.id}">×</span></button>`
+      ).join("");
+      const rest = document.getElementById("sec-rest");
+      if (!tab) {
+        rest.innerHTML = `<div class="view" style="color:var(--mute)">+ Browser · Git Diff · Files</div>`;
+        bindTabs();
         return;
       }
-      if (tab === "term") {
-        canvas.innerHTML = `<div class="msg mono" style="color:var(--mute)">$ make dev<br/>worktree_code=17 backend=4117 ui=4417<br/>${serverOn ? "VITE ready http://127.0.0.1:4417/sprint/cockpit" : "(arrêté)"}</div>`;
-        return;
+      if (tab.kind === "files") {
+        const parts = fileSel.split("/");
+        const leaf = parts[parts.length - 1];
+        rest.innerHTML =
+          `<div class="crumb">${parts.slice(0, -1).join(" / ")} / <span>${leaf}</span></div>` +
+          `<div class="sec-body"><div class="view"><div class="code">${files[fileSel]}</div></div>` +
+          `<aside class="tree"><h3>Explorer</h3>${tree.map((p) =>
+            `<button class="${p === fileSel ? "on" : ""}" data-file="${p}" type="button">${p.split("/").pop()}</button>`
+          ).join("")}</aside></div>`;
+      } else if (tab.kind === "diff") {
+        const d = diffs[diffSel];
+        const patchHtml = d.patch.split("\n").map((line) => {
+          if (line.startsWith("+")) return `<span class="addc">${line}</span>`;
+          if (line.startsWith("-")) return `<span class="delc">${line}</span>`;
+          if (line.startsWith("@@")) return `<span class="hunk">${line}</span>`;
+          return line;
+        }).join("\n");
+        rest.innerHTML =
+          `<div class="crumb">Modifs de ce chat · ${diffs.length} fichiers</div>` +
+          `<div class="sec-body"><div style="width:240px;border-right:1px solid var(--line);overflow:auto">` +
+          diffs.map((x, i) =>
+            `<button class="changed ${i === diffSel ? "on" : ""}" data-diff="${i}" type="button"><span>${x.path.split("/").pop()}</span><span class="stat"><span class="addc">+${x.plus}</span> <span class="delc">−${x.minus}</span></span></button>`
+          ).join("") +
+          `</div><div class="view"><div class="diff">${patchHtml}</div></div></div>`;
+      } else {
+        rest.innerHTML =
+          `<div class="crumb">Browser</div><div class="sec-body"><div class="view">` +
+          `<div class="browser-bar"><div class="urlbar">${serverOn ? "http://127.0.0.1:4417/sprint/cockpit" : "about:blank"}</div>` +
+          `<button class="btn" id="add-url" type="button">+ onglet</button></div>` +
+          `<div class="page">${serverOn ? "Preview worktree · recette visuelle" : "Démarre make dev dans l’inspecteur Serveurs."}</div>` +
+          `</div></div>`;
+        const addUrl = document.getElementById("add-url");
+        if (addUrl) addUrl.onclick = toast;
       }
-      if (tab === "git") {
-        canvas.innerHTML = `<div class="msg"><div class="who">${t.branch} vs staging</div><div class="mono">${t.vs}<br/>packages/app/src/pages/sprint-cockpit.tsx</div></div>`;
-        return;
-      }
-      canvas.innerHTML = `<div class="msg">${serverOn ? "Preview 4417 · /sprint/cockpit (simulé)" : "Démarre les serveurs dans le panneau Serveurs."}</div>`;
+      bindTabs();
+      rest.querySelectorAll("[data-file]").forEach((el) => {
+        el.onclick = () => { fileSel = el.dataset.file; renderSec(); };
+      });
+      rest.querySelectorAll("[data-diff]").forEach((el) => {
+        el.onclick = () => { diffSel = Number(el.dataset.diff); renderSec(); };
+      });
+    }
+    function bindTabs() {
+      document.getElementById("etabs").onclick = (e) => {
+        const close = e.target.closest("[data-close]");
+        if (close) {
+          e.stopPropagation();
+          tabs = tabs.filter((x) => x.id !== close.dataset.close);
+          active = tabs[0] ? tabs[0].id : null;
+          if (!tabs.length) secOpen = false;
+          renderSec();
+          return;
+        }
+        const b = e.target.closest("[data-id]");
+        if (!b) return;
+        active = b.dataset.id;
+        renderSec();
+      };
+    }
+    function renderTerms() {
+      document.getElementById("tray").classList.toggle("open", trayOpen);
+      document.getElementById("btn-term").classList.toggle("on", trayOpen);
+      const line = serverOn
+        ? "$ make dev\nworktree_code=17 backend=4117 ui=4417\nVITE ready"
+        : "$ pwd\n" + tasks[id].wt + "\n$";
+      document.getElementById("terms").innerHTML = `<div class="term">${line.replace(/\n/g, "<br/>")}</div>` +
+        (splitTerm ? `<div class="term">$ git status -sb<br/>## ${tasks[id].branch}</div>` : "");
     }
     function renderPane() {
       const t = tasks[id];
+      document.getElementById("float").classList.toggle("open", inspOpen);
+      document.getElementById("btn-insp").classList.toggle("on", inspOpen);
       if (panel === "task") {
         pane.innerHTML = kv("Carte", t.title) + kv("Worktree", t.wt, true) + kv("Prochaine action", t.next) +
           `<div class="row"><button class="btn pri" id="copy" type="button">Copier le prompt</button></div>`;
@@ -225,38 +489,86 @@
           `<p class="warn" style="font-size:12px">Pas de faux zéro : session absente → unknown</p>`;
         return;
       }
+      if (panel === "perm") {
+        pane.innerHTML = kv("Pathset / tools", t.perm) + `<div class="row"><button class="btn" type="button" id="deny">Refuser</button></div>`;
+        document.getElementById("deny").onclick = toast;
+        return;
+      }
       pane.innerHTML = kv("make dev", serverOn ? "ON · 4117 / 4417" : "OFF") + kv("CPU / RAM", serverOn ? "12% · 410 Mo" : "—") +
         `<div class="row"><button class="btn pri" id="srv" type="button">${serverOn ? "Arrêter" : "Démarrer"}</button></div>`;
-      document.getElementById("srv").onclick = () => { serverOn = !serverOn; renderPane(); renderCanvas(); };
+      document.getElementById("srv").onclick = () => { serverOn = !serverOn; renderAll(); };
     }
-    function kv(k, v, mono) {
-      return `<dl class="kv"><dt>${k}</dt><dd class="${mono ? "mono" : ""}">${v}</dd></dl>`;
+    function renderAll() {
+      renderAgent();
+      renderChat();
+      renderSec();
+      renderTerms();
+      renderPane();
     }
     document.querySelectorAll(".card").forEach((el) => {
       el.onclick = () => {
         document.querySelectorAll(".card").forEach((c) => c.classList.remove("on"));
         el.classList.add("on");
         id = el.dataset.id;
-        renderCanvas();
-        renderPane();
+        renderAll();
       };
     });
-    document.getElementById("canvas-tabs").onclick = (e) => {
+    document.getElementById("insp-tabs").onclick = (e) => {
       const b = e.target.closest("button");
       if (!b) return;
-      document.querySelectorAll("#canvas-tabs button").forEach((x) => x.classList.toggle("on", x === b));
-      tab = b.dataset.tab;
-      renderCanvas();
-    };
-    document.getElementById("right-tabs").onclick = (e) => {
-      const b = e.target.closest("button");
-      if (!b) return;
-      document.querySelectorAll("#right-tabs button").forEach((x) => x.classList.toggle("on", x === b));
+      document.querySelectorAll("#insp-tabs button").forEach((x) => x.classList.toggle("on", x === b));
       panel = b.dataset.p;
       renderPane();
     };
-    renderCanvas();
-    renderPane();
+    document.getElementById("btn-sec").onclick = () => {
+      if (secOpen) {
+        secOpen = false;
+        renderSec();
+        return;
+      }
+      if (!tabs.length) openSec("files");
+      else { secOpen = true; renderSec(); }
+    };
+    document.getElementById("btn-insp").onclick = () => { inspOpen = !inspOpen; renderPane(); };
+    document.getElementById("btn-term").onclick = () => { trayOpen = !trayOpen; renderTerms(); };
+    document.getElementById("btn-split").onclick = () => { splitTerm = !splitTerm; trayOpen = true; renderTerms(); };
+    document.getElementById("btn-plus").onclick = (e) => {
+      e.stopPropagation();
+      if (!secOpen) secOpen = true;
+      menuOpen = !menuOpen;
+      document.getElementById("kind-menu").classList.toggle("open", menuOpen);
+    };
+    document.getElementById("kind-menu").onclick = (e) => {
+      const b = e.target.closest("[data-kind]");
+      if (!b) return;
+      menuOpen = false;
+      document.getElementById("kind-menu").classList.remove("open");
+      openSec(b.dataset.kind);
+    };
+    document.body.addEventListener("click", () => {
+      menuOpen = false;
+      document.getElementById("kind-menu").classList.remove("open");
+    });
+    const splitEl = document.getElementById("split");
+    const secEl = document.getElementById("sec");
+    let drag = false;
+    splitEl.addEventListener("mousedown", (e) => {
+      drag = true;
+      splitEl.classList.add("drag");
+      e.preventDefault();
+    });
+    window.addEventListener("mousemove", (e) => {
+      if (!drag) return;
+      const row = document.querySelector(".row-main").getBoundingClientRect();
+      const w = Math.min(Math.max(row.right - e.clientX, 280), row.width - 280);
+      secEl.style.width = w + "px";
+      secEl.style.flex = "0 0 " + w + "px";
+    });
+    window.addEventListener("mouseup", () => {
+      drag = false;
+      splitEl.classList.remove("drag");
+    });
+    renderAll();
   </script>
 </body>
 </html>
