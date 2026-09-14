@@ -1,7 +1,7 @@
 # Verify — DA40-018 — Recette 0.3 : maquette visuelle 1440 / 1024
 
 - HEAD base: `fecaf044c`
-- SHA commit: *(après commit local)*
+- SHA commit: `debc685d8`
 - Branche: `recette-maquette`
 - Worktree: `/Users/leanbot/Documents/40_Daidalon/features/tasks/DA40-018`
 - Pathset: `.project/tasks/DA40-018-recette-maquette/**` (plan, blocs, ecarts,
@@ -24,4 +24,5 @@
 
 ## Commit
 
-`docs: recette visuelle maquette 1440/1024` — local, pas de push/merge.
+`docs: recette visuelle maquette 1440/1024` — `debc685d8` local, pas de
+push/merge.
