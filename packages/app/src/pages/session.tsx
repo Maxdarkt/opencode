@@ -84,11 +84,12 @@ import {
   sessionPanelWidthMax,
 } from "@/pages/session/session-panel-width"
 import { SessionSidePanel } from "@/pages/session/session-side-panel"
-import { sessionPanelLayout } from "@/pages/session/session-panel-layout"
+import { SessionSecondaryPanel } from "@/pages/session/session-secondary-panel"
 import { SessionSprintRail } from "@/pages/session/session-sprint-rail-view"
+import { SECONDARY_WIDTH_MIN } from "@/pages/session/session-workbench-layout"
+import { secondaryDiffsFromTurn } from "@/pages/session/session-secondary"
 import { SessionReviewEmptyChangesV2 } from "@opencode-ai/session-ui/v2/session-review-empty-changes-v2"
 import { SessionReviewEmptyNoGitV2 } from "@opencode-ai/session-ui/v2/session-review-empty-no-git-v2"
-import { SessionReviewV2SidebarToggle } from "@opencode-ai/session-ui/v2/session-review-v2"
 import { ReviewPanelV2 } from "@/pages/session/v2/review-panel-v2"
 import { createReviewPanelV2State } from "@/pages/session/v2/review-panel-v2-state"
 import { reviewDiffDirectory, reviewDiffNeedsLoad, reviewRootDirectory } from "@/pages/session/v2/review-diff-kinds"
@@ -502,13 +503,11 @@ export default function Page() {
     return `calc(100% - ${layout.fileTree.width()}px)`
   })
   const centered = createMemo(() => isDesktop() && (newSessionDesign() || !desktopReviewOpen()))
-  const desktopV2PanelLayout = createMemo(() =>
-    sessionPanelLayout({
-      review: desktopV2ReviewOpen(),
-      terminal: false,
-      files: desktopFileTreeOpen(),
-    }),
-  )
+  const secondaryMax = createMemo(() => {
+    const available = sessionPanelAvailable()
+    if (available === undefined) return 1200
+    return Math.max(SECONDARY_WIDTH_MIN, available - 280)
+  })
 
   function normalizeTab(tab: string) {
     if (!tab.startsWith("file://")) return tab
@@ -2294,12 +2293,14 @@ export default function Page() {
 
             <div
               classList={{
-                "@container relative shrink-0 flex flex-col min-h-0 h-full flex-1 md:flex-none transition-[width]": true,
+                "@container relative flex flex-col min-h-0 h-full transition-[width]": true,
+                "shrink-0 flex-1 md:flex-none": !newSessionDesign(),
+                "min-w-0 flex-1": newSessionDesign(),
                 "duration-[240ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[width] motion-reduce:transition-none":
                   !size.active() && !ui.reviewSnap,
               }}
               style={{
-                width: sessionPanelWidth(),
+                width: newSessionDesign() ? undefined : sessionPanelWidth(),
               }}
             >
               {settings.general.newLayoutDesigns() ? (
@@ -2353,35 +2354,24 @@ export default function Page() {
                 />
               </Suspense>
             </Show>
-            <Show when={newSessionDesign() && isDesktop() && desktopV2PanelLayout().visible}>
-              <div class="min-w-0 h-full flex flex-1 flex-col">
-                <div class="min-h-0 flex-1">
-                  <Suspense>
-                    <SessionSidePanel
-                      canReview={canReview}
-                      diffs={reviewDiffs}
-                      diffsReady={reviewReady}
-                      empty={reviewEmptyText}
-                      hasReview={hasReview}
-                      reviewHasFocusableContent={() => hasReview() || reviewV2State.sidebarOpened()}
-                      reviewCount={reviewCount}
-                      reviewPanel={reviewPanelV2}
-                      reviewSidebarToggle={(disabled) => (
-                        <SessionReviewV2SidebarToggle
-                          opened={reviewV2State.sidebarOpened()}
-                          disabled={disabled}
-                          onToggle={reviewV2State.toggleSidebar}
-                        />
-                      )}
-                      fileBrowserState={reviewV2State}
-                      activeDiff={activeReviewFile()}
-                      focusReviewDiff={focusReviewDiff}
-                      reviewSnap={ui.reviewSnap}
-                      size={size}
-                      stacked={false}
-                    />
-                  </Suspense>
-                </div>
+            <Show when={newSessionDesign() && isDesktop() && layout.secondary.opened()}>
+              <div
+                class="relative h-full shrink-0"
+                style={{ width: `${layout.secondary.width()}px` }}
+                onPointerDown={() => size.start()}
+              >
+                <ResizeHandle
+                  direction="horizontal"
+                  edge="start"
+                  size={layout.secondary.width()}
+                  min={SECONDARY_WIDTH_MIN}
+                  max={secondaryMax()}
+                  onResize={(width) => {
+                    size.touch()
+                    layout.secondary.resize(width)
+                  }}
+                />
+                <SessionSecondaryPanel diffs={() => secondaryDiffsFromTurn(turnDiffs())} />
               </div>
             </Show>
           </div>

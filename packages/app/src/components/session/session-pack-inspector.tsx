@@ -1,8 +1,10 @@
 import { For, Show, createResource, createSignal } from "solid-js"
 import { Button } from "@opencode-ai/ui/button"
 import { useLanguage } from "@/context/language"
+import { useLayout } from "@/context/layout"
 import { useSDK } from "@/context/sdk"
 import { useServerSDK } from "@/context/server-sdk"
+import { useSettings } from "@/context/settings"
 import { readProjectContext } from "@/components/project-context-request"
 import { loadSprintCockpit } from "@/pages/sprint-cockpit-load"
 import { showToast } from "@/utils/toast"
@@ -19,8 +21,10 @@ import {
 
 export function PackInspector(props: { sessionID: string }) {
   const language = useLanguage()
+  const layout = useLayout()
   const sdk = useSDK()
   const serverSDK = useServerSDK()
+  const settings = useSettings()
   const [open, setOpen] = createSignal(false)
   const [tab, setTab] = createSignal<PackInspectorTab>("task")
   const [pack] = createResource(
@@ -71,18 +75,37 @@ export function PackInspector(props: { sessionID: string }) {
 
   return (
     <div class="relative" data-component="pack-inspector">
-      <Button
-        type="button"
-        size="small"
-        variant="ghost"
-        data-testid="pack-inspector-toggle"
-        aria-expanded={open()}
-        aria-label={language.t("session.inspector.toggle")}
-        title={language.t("session.inspector.toggle")}
-        onClick={() => setOpen((value) => !value)}
-      >
-        ☰
-      </Button>
+      <div class="flex items-center">
+        <Button
+          type="button"
+          size="small"
+          variant="ghost"
+          data-testid="pack-inspector-toggle"
+          aria-expanded={open()}
+          aria-label={language.t("session.inspector.toggle")}
+          title={language.t("session.inspector.toggle")}
+          onClick={() => setOpen((value) => !value)}
+        >
+          ☰
+        </Button>
+        <Show when={settings.general.newLayoutDesigns()}>
+          <Button
+            type="button"
+            size="small"
+            variant="ghost"
+            data-testid="session-secondary-toggle"
+            aria-pressed={layout.secondary.opened()}
+            aria-label={language.t("session.secondary.toggle")}
+            title={language.t("session.secondary.toggle")}
+            onClick={() => layout.secondary.toggle()}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <rect x="1.5" y="2.5" width="13" height="11" rx="1.5" stroke="currentColor" stroke-width="1.2" />
+              <path d="M9.5 2.5v11" stroke="currentColor" stroke-width="1.2" />
+            </svg>
+          </Button>
+        </Show>
+      </div>
       <Show when={open()}>
         <div
           data-testid="pack-inspector-panel"

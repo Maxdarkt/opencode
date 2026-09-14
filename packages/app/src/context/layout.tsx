@@ -21,15 +21,30 @@ import { createSessionKeyReader, ensureSessionKey, pruneSessionKeys } from "./la
 import { requireServerKey } from "@/utils/session-route"
 import { type DraftTab, useTabs } from "./tabs"
 import { closeSessionTab, openSessionTab, previewSessionTab, type SessionTabs } from "./layout-tabs"
+import {
+  addSecondaryTab,
+  closeSecondaryTab,
+  emptySecondaryTabs,
+  focusSecondaryTab,
+  openSecondary,
+  openSecondaryFiles,
+  toggleSecondary,
+  type SecondaryKind,
+} from "@/pages/session/session-secondary"
+import {
+  clampSecondaryWidth,
+  DEFAULT_SECONDARY_WIDTH,
+  DEFAULT_SESSION_WIDTH,
+} from "@/pages/session/session-workbench-layout"
 
 export { createSessionKeyReader, ensureSessionKey, pruneSessionKeys }
 
 export type { ProjectAvatarVariant }
 
 const AVATAR_COLOR_KEYS = ["pink", "mint", "orange", "purple", "cyan", "lime"] as const
+
 const DEFAULT_SIDEBAR_WIDTH = 344
 const DEFAULT_FILE_TREE_WIDTH = 200
-const DEFAULT_SESSION_WIDTH = 600
 const DEFAULT_TERMINAL_HEIGHT = 280
 const DEFAULT_REVIEW_PANEL_OPENED = false
 export type AvatarColorKey = (typeof AVATAR_COLOR_KEYS)[number]
@@ -293,6 +308,10 @@ export const { use: useLayout, provider: LayoutProvider } = createSimpleContext(
         session: {
           width: DEFAULT_SESSION_WIDTH,
         },
+        secondary: {
+          opened: false,
+          width: DEFAULT_SECONDARY_WIDTH,
+        },
         mobileSidebar: {
           opened: false,
         },
@@ -309,6 +328,13 @@ export const { use: useLayout, provider: LayoutProvider } = createSimpleContext(
     const [ephemeral, setEphemeral] = createStore({
       reviewPanelSource: "other" as ReviewPanelSource,
       sessionTabPreview: {} as Record<string, string | undefined>,
+      secondaryTabs: emptySecondaryTabs(),
+    })
+
+    createEffect(() => {
+      if (!store.secondary?.opened) return
+      if (ephemeral.secondaryTabs.tabs.length > 0) return
+      setEphemeral("secondaryTabs", openSecondary(ephemeral.secondaryTabs))
     })
 
     const MAX_SESSION_KEYS = 50
@@ -749,6 +775,83 @@ export const { use: useLayout, provider: LayoutProvider } = createSimpleContext(
             return
           }
           setStore("session", "width", width)
+        },
+      },
+      secondary: {
+        opened: createMemo(() => store.secondary?.opened ?? false),
+        width: createMemo(() => clampSecondaryWidth(store.secondary?.width ?? DEFAULT_SECONDARY_WIDTH)),
+        tabs: createMemo(() => ephemeral.secondaryTabs.tabs),
+        active: createMemo(() => ephemeral.secondaryTabs.active),
+        open() {
+          const next = openSecondary(ephemeral.secondaryTabs)
+          batch(() => {
+            setStore("secondary", { opened: true, width: store.secondary?.width ?? DEFAULT_SECONDARY_WIDTH })
+            setEphemeral("secondaryTabs", next)
+          })
+        },
+        close() {
+          setStore("secondary", "opened", false)
+        },
+        toggle() {
+          const next = toggleSecondary({
+            ...ephemeral.secondaryTabs,
+            opened: store.secondary?.opened ?? false,
+          })
+          batch(() => {
+            setStore("secondary", {
+              opened: next.opened,
+              width: store.secondary?.width ?? DEFAULT_SECONDARY_WIDTH,
+            })
+            setEphemeral("secondaryTabs", next)
+          })
+        },
+        resize(width: number) {
+          const next = clampSecondaryWidth(width)
+          if (!store.secondary) {
+            setStore("secondary", { opened: true, width: next })
+            return
+          }
+          setStore("secondary", "width", next)
+        },
+        add(kind: SecondaryKind) {
+          const next = addSecondaryTab({ ...ephemeral.secondaryTabs, opened: true }, kind)
+          batch(() => {
+            setStore("secondary", {
+              opened: true,
+              width: store.secondary?.width ?? DEFAULT_SECONDARY_WIDTH,
+            })
+            setEphemeral("secondaryTabs", next)
+          })
+        },
+        closeTab(id: string) {
+          const next = closeSecondaryTab(ephemeral.secondaryTabs, id)
+          batch(() => {
+            setStore("secondary", {
+              opened: next.opened,
+              width: store.secondary?.width ?? DEFAULT_SECONDARY_WIDTH,
+            })
+            setEphemeral("secondaryTabs", next)
+          })
+        },
+        focus(id: string) {
+          const next = focusSecondaryTab(ephemeral.secondaryTabs, id)
+          batch(() => {
+            setStore("secondary", {
+              opened: true,
+              width: store.secondary?.width ?? DEFAULT_SECONDARY_WIDTH,
+            })
+            setEphemeral("secondaryTabs", next)
+          })
+        },
+        openFiles() {
+          const next = openSecondaryFiles(ephemeral.secondaryTabs)
+          batch(() => {
+            setStore("secondary", {
+              opened: true,
+              width: store.secondary?.width ?? DEFAULT_SECONDARY_WIDTH,
+            })
+            setEphemeral("secondaryTabs", next)
+          })
         },
       },
       mobileSidebar: {

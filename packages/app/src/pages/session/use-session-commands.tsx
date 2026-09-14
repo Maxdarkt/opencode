@@ -571,7 +571,13 @@ export const useSessionCommands = (actions: SessionCommandContext) => {
             id: "fileTree.toggle",
             title: language.t("command.fileTree.toggle"),
             keybind: "mod+\\",
-            onSelect: () => layout.fileTree.toggle(),
+            onSelect: () => {
+              if (settings.general.newLayoutDesigns()) {
+                layout.secondary.openFiles()
+                return
+              }
+              layout.fileTree.toggle()
+            },
           }),
         ]
       : []),
