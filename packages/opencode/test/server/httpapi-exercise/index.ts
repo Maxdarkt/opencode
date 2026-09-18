@@ -772,6 +772,9 @@ const scenarios: Scenario[] = [
     .at((ctx) => ({ path: "/api/fs/find?query=hello&type=file", headers: ctx.headers() }))
     .json(200, locationData(array)),
   http.protected.get("/api/pty", "v2.pty.list").json(200, locationData(array)),
+  http.protected.get("/api/make-dev", "v2.makeDev.status").json(200, locationData(object)),
+  http.protected.post("/api/make-dev/start", "v2.makeDev.start").json(200, locationData(object)),
+  http.protected.post("/api/make-dev/stop", "v2.makeDev.stop").json(200, locationData(object)),
   http.protected
     .post("/api/pty", "v2.pty.create")
     .mutating()

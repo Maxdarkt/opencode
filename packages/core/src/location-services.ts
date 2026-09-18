@@ -21,6 +21,7 @@ import { PluginInternal } from "./plugin/internal"
 import { Policy } from "./policy"
 import { ProjectCopy } from "./project/copy"
 import { Pty } from "./pty"
+import { MakeDev } from "./make-dev"
 import { QuestionV2 } from "./question"
 import { Reference } from "./reference"
 import { ReferenceGuidance } from "./reference/guidance"
@@ -57,6 +58,7 @@ export const locationServices = LayerNode.group([
   FileSystem.node,
   Watcher.node,
   Pty.node,
+  MakeDev.node,
   SkillV2.node,
   SystemContextRegistry.node,
   SystemContextBuiltIns.node,

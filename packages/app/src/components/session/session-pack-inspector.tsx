@@ -18,6 +18,7 @@ import {
   type PackInspectorTab,
   type PackSnapshot,
 } from "./pack-inspector"
+import { useMakeDev } from "@/pages/session/session-make-dev-context"
 
 export function PackInspector(props: { sessionID: string }) {
   const language = useLanguage()
@@ -50,6 +51,7 @@ export function PackInspector(props: { sessionID: string }) {
     () => (open() ? true : undefined),
     () => loadSprintCockpit(serverSDK().client.global),
   )
+  const makeDev = useMakeDev()
   const view = () => packInspectorView({ pack: pack() })
   const git = () => packInspectorGitView(context()?.git)
   const task = () =>
@@ -228,7 +230,35 @@ export function PackInspector(props: { sessionID: string }) {
               </dl>
             </Show>
             <Show when={tab() === "servers"}>
-              <div data-slot="inspector-servers">{packInspectorUnknownBody()}</div>
+              <div data-slot="inspector-servers" data-testid="inspector-servers">
+                <dl class="flex flex-col gap-2 text-12-regular text-text-strong">
+                  <div>
+                    <dt class="text-text-weak">{language.t("session.inspector.servers.makeDev")}</dt>
+                    <dd data-slot="inspector-servers-state">{makeDev.servers().label}</dd>
+                  </div>
+                  <div>
+                    <dt class="text-text-weak">{language.t("session.inspector.servers.cpuRam")}</dt>
+                    <dd data-slot="inspector-servers-cpu">{makeDev.servers().cpuRam}</dd>
+                  </div>
+                  <Show when={makeDev.servers().error}>
+                    <div>
+                      <dt class="text-text-weak">{language.t("session.inspector.status")}</dt>
+                      <dd class="whitespace-pre-wrap font-mono">{makeDev.servers().error}</dd>
+                    </div>
+                  </Show>
+                </dl>
+                <Button
+                  type="button"
+                  size="small"
+                  class="mt-3"
+                  disabled={!makeDev.servers().startEnabled && !makeDev.servers().stopEnabled}
+                  onClick={() => (makeDev.servers().stopEnabled ? makeDev.stop() : makeDev.start())}
+                >
+                  {makeDev.servers().stopEnabled
+                    ? language.t("session.inspector.servers.stop")
+                    : language.t("session.inspector.servers.start")}
+                </Button>
+              </div>
             </Show>
             <Show when={tab() === "permissions"}>
               <div data-slot="inspector-permissions">{packInspectorUnknownBody()}</div>

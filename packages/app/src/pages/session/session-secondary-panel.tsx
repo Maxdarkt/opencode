@@ -8,7 +8,6 @@ import { useSDK } from "@/context/sdk"
 import { showToast } from "@/utils/toast"
 import {
   SECONDARY_KINDS,
-  secondaryBrowserView,
   secondaryDiffView,
   secondaryFileBody,
   secondaryFileCrumb,
@@ -16,6 +15,7 @@ import {
   type SecondaryDiff,
   type SecondaryKind,
 } from "./session-secondary"
+import { useMakeDev } from "./session-make-dev-context"
 
 export function SessionSecondaryPanel(props: { diffs: () => readonly SecondaryDiff[] }) {
   const language = useLanguage()
@@ -195,7 +195,8 @@ function SecondaryDiffPane(props: { diffs: () => readonly SecondaryDiff[] }) {
 
 function SecondaryBrowserPane() {
   const language = useLanguage()
-  const view = secondaryBrowserView()
+  const makeDev = useMakeDev()
+  const view = makeDev.browser()
   const simulateTab = () => {
     showToast({
       title: language.t("session.secondary.browser.simulated"),
@@ -217,7 +218,17 @@ function SecondaryBrowserPane() {
             {language.t("session.secondary.browser.addTab")}
           </Button>
         </div>
-        <div class="text-12-regular text-text-weak">{language.t("session.secondary.browser.hint")}</div>
+        <Show
+          when={view.iframe}
+          fallback={<div class="text-12-regular text-text-weak">{language.t("session.secondary.browser.hint")}</div>}
+        >
+          <iframe
+            data-testid="session-secondary-browser-frame"
+            class="min-h-0 min-w-0 flex-1 rounded-md border border-border-weak-base bg-background-base"
+            src={view.url}
+            title={language.t("session.secondary.browser")}
+          />
+        </Show>
       </div>
     </div>
   )

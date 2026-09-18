@@ -83,6 +83,12 @@ import type {
   FilesListOutput,
   FilesFindInput,
   FilesFindOutput,
+  MakeDevStatusInput,
+  MakeDevStatusOutput,
+  MakeDevStartInput,
+  MakeDevStartOutput,
+  MakeDevStopInput,
+  MakeDevStopOutput,
   CommandsListInput,
   CommandsListOutput,
   SkillsListInput,
@@ -786,6 +792,44 @@ export function make(options: ClientOptions) {
             method: "GET",
             path: `/api/fs/find`,
             query: { location: input["location"], query: input["query"], type: input["type"], limit: input["limit"] },
+            successStatus: 200,
+            declaredStatuses: [401, 400],
+            empty: false,
+          },
+          requestOptions,
+        ),
+    },
+    makeDev: {
+      status: (input?: MakeDevStatusInput, requestOptions?: RequestOptions) =>
+        request<MakeDevStatusOutput>(
+          {
+            method: "GET",
+            path: `/api/make-dev`,
+            query: { location: input?.["location"] },
+            successStatus: 200,
+            declaredStatuses: [401, 400],
+            empty: false,
+          },
+          requestOptions,
+        ),
+      start: (input?: MakeDevStartInput, requestOptions?: RequestOptions) =>
+        request<MakeDevStartOutput>(
+          {
+            method: "POST",
+            path: `/api/make-dev/start`,
+            query: { location: input?.["location"] },
+            successStatus: 200,
+            declaredStatuses: [401, 400],
+            empty: false,
+          },
+          requestOptions,
+        ),
+      stop: (input?: MakeDevStopInput, requestOptions?: RequestOptions) =>
+        request<MakeDevStopOutput>(
+          {
+            method: "POST",
+            path: `/api/make-dev/stop`,
+            query: { location: input?.["location"] },
             successStatus: 200,
             declaredStatuses: [401, 400],
             empty: false,
