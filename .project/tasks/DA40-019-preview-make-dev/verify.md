@@ -1,6 +1,7 @@
 # Verify — DA40-019 — Start/stop make dev et preview du worktree
 
 Status: PASS
+SHA: `390de4e2c`
 
 ## Checks
 
@@ -15,3 +16,4 @@ Status: PASS
 HttpApi location-scopé + inspecteur Serveurs + iframe Browser si ON.
 Pas de PTY, pas de CPU/RAM réel, pas de push/merge.
 `.make.env` local ignoré, non commité.
+Commit local `390de4e2c` sur `preview-make-dev`. Pas de push/merge.
