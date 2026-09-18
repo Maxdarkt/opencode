@@ -1,10 +1,10 @@
 import { For, Show, createMemo, createResource } from "solid-js"
-import { A } from "@solidjs/router"
+import { A, useLocation } from "@solidjs/router"
 import { createMediaQuery } from "@solid-primitives/media"
 import { useLanguage } from "@/context/language"
 import { useServerSDK } from "@/context/server-sdk"
 import { loadSprintCockpit } from "@/pages/sprint-cockpit-load"
-import type { CockpitTaskView } from "@/pages/sprint-cockpit-mapper"
+import { cockpitEligibilityBadge, type CockpitTaskView } from "@/pages/sprint-cockpit-mapper"
 import {
   SESSION_RAIL_COMPACT_MAX_WIDTH,
   SESSION_RAIL_WIDTH_COMPACT,
@@ -19,9 +19,18 @@ import {
 
 export function SessionSprintRail(props: { currentSessionID: string | undefined }) {
   const language = useLanguage()
+  const location = useLocation()
   const serverSDK = useServerSDK()
   const compact = createMediaQuery(`(max-width: ${SESSION_RAIL_COMPACT_MAX_WIDTH}px)`)
   const [view] = createResource(() => loadSprintCockpit(serverSDK().client.global))
+  const pilotSelected = createMemo(() =>
+    sessionSprintRailSelected({
+      kind: "pilot",
+      href: SESSION_SPRINT_COCKPIT_HREF,
+      currentSessionID: props.currentSessionID,
+      pathname: location.pathname,
+    }),
+  )
 
   return (
     <aside
@@ -36,7 +45,9 @@ export function SessionSprintRail(props: { currentSessionID: string | undefined 
         <A
           href={SESSION_SPRINT_COCKPIT_HREF}
           data-component="session-sprint-rail-pilot"
+          aria-current={pilotSelected() ? "page" : undefined}
           class="mb-1 block w-full rounded-lg px-2.5 py-2 text-left hover:bg-background-stronger"
+          classList={{ "bg-background-stronger outline outline-1 outline-border-weak-base": pilotSelected() }}
         >
           <div class="flex items-center justify-between gap-2">
             <span class="truncate text-12-medium">{language.t("session.workbench.rail.pilot")}</span>
@@ -74,6 +85,7 @@ function SessionSprintRailCard(props: {
       currentSessionID: props.currentSessionID,
     }),
   )
+  const badge = createMemo(() => cockpitEligibilityBadge(props.task.eligibility))
   const indicators = createMemo(() =>
     sessionSprintRailIndicators({
       isWorking: props.task.isWorking,
@@ -109,6 +121,16 @@ function SessionSprintRailCard(props: {
       <div class="flex items-center justify-between gap-2">
         <span class="truncate text-12-medium">{props.task.id}</span>
         <span class="flex shrink-0 items-center gap-1">
+          <Show when={badge() === "eligible"}>
+            <span data-testid="sprint-rail-eligibility" data-eligibility="eligible" class="text-11-medium text-green-300">
+              {props.language.t("sprint.cockpit.rail.eligible")}
+            </span>
+          </Show>
+          <Show when={badge() === "blocked"}>
+            <span data-testid="sprint-rail-eligibility" data-eligibility="blocked" class="text-11-medium text-yellow-200">
+              {props.language.t("sprint.cockpit.rail.blocked")}
+            </span>
+          </Show>
           <Show when={indicators().includes("working")}>
             <span class="size-1.5 rounded-full bg-yellow-400" aria-hidden="true" />
             <span class="sr-only">{props.language.t("sprint.cockpit.rail.working")}</span>

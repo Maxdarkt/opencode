@@ -97,14 +97,32 @@ describe("packInspectorTaskView", () => {
         id: "DA10-009",
         sessionHref: "/d2lya3RyZWU=/session/ses_bound",
         status: { text: "in_progress" },
-        worktreeLabel: { text: "features/tasks/DA10-009" },
+        worktreeLabel: { text: "features/tasks/DA10-009", state: "available" },
         branch: { text: "chrome-cockpit" },
-        head: { text: "4bc70e689" },
+        head: { text: "4bc70e689", state: "available" },
       },
     ]
     expect(packInspectorTaskView({ currentSessionID: "ses_bound", tasks }).id).toBe("DA10-009")
+    expect(packInspectorTaskView({ currentSessionID: "ses_bound", tasks }).prompt).toBe(
+      "Skill apex-task. Carte DA10-009. cwd = features/tasks/DA10-009. Base 4bc70e689.",
+    )
     expect(packInspectorTaskView({ currentSessionID: "ses_other", tasks }).id).toBe("unknown")
+    expect(packInspectorTaskView({ currentSessionID: "ses_other", tasks }).prompt).toBeNull()
     expect(packInspectorTaskView({ currentSessionID: undefined, tasks }).head).toBe("unknown")
+  })
+
+  test("omits a prompt when HEAD is not an observed fact", () => {
+    const tasks = [
+      {
+        id: "DA10-009",
+        sessionHref: "/d2lya3RyZWU=/session/ses_bound",
+        status: { text: "in_progress" },
+        worktreeLabel: { text: "features/tasks/DA10-009", state: "available" },
+        branch: { text: "chrome-cockpit" },
+        head: { text: "unknown (task_binding)", state: "unknown" },
+      },
+    ]
+    expect(packInspectorTaskView({ currentSessionID: "ses_bound", tasks }).prompt).toBeNull()
   })
 })
 

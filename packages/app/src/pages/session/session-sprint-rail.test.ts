@@ -45,11 +45,23 @@ describe("sessionSprintRailSelected", () => {
         currentSessionID: "ses_other",
       }),
     ).toBe(false)
+  })
+
+  test("marks Pilot current only on the cockpit path", () => {
     expect(
       sessionSprintRailSelected({
         kind: "pilot",
         href: SESSION_SPRINT_COCKPIT_HREF,
         currentSessionID: "ses_current",
+        pathname: SESSION_SPRINT_COCKPIT_HREF,
+      }),
+    ).toBe(true)
+    expect(
+      sessionSprintRailSelected({
+        kind: "pilot",
+        href: SESSION_SPRINT_COCKPIT_HREF,
+        currentSessionID: "ses_current",
+        pathname: "/session/ses_current",
       }),
     ).toBe(false)
   })

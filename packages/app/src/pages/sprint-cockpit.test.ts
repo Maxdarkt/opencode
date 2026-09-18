@@ -1,9 +1,10 @@
 import { describe, expect, test } from "bun:test"
 import type { OpencodeClient, TaskOwnershipSnapshot } from "@opencode-ai/sdk/v2/client"
 import { sprintCockpitInput } from "./sprint-cockpit-input"
-import { confirmCockpitAction } from "./sprint-cockpit-launch"
+import { cockpitLaunchEnabled, confirmCockpitAction } from "./sprint-cockpit-launch"
 import { loadSprintCockpit } from "./sprint-cockpit-load"
-import { formatFact, inaccessibleCockpitView, mapCockpitView, worktreeLabelFromPath } from "./sprint-cockpit-mapper"
+import { cockpitEligibilityBadge, formatFact, inaccessibleCockpitView, mapCockpitView, worktreeLabelFromPath } from "./sprint-cockpit-mapper"
+import { cockpitPromptText } from "./sprint-cockpit-prompt"
 import { createCockpitLayoutState, reduceCockpitLayoutState } from "./sprint-cockpit-state"
 import type { SensitiveAction } from "./sprint-cockpit-fixtures"
 import { legacySessionHref } from "@/utils/session-route"
@@ -19,12 +20,23 @@ const missing = (state: "absent" | "unknown" | "inaccessible" | "invalid", sourc
   freshness: {},
 })
 
-const snapshot = (entries: TaskOwnershipSnapshot["entries"]): TaskOwnershipSnapshot => ({
+const snapshot = (
+  entries: TaskOwnershipSnapshot["entries"],
+  result: TaskOwnershipSnapshot["result"] = { kind: "complete" },
+): TaskOwnershipSnapshot => ({
   state: "available",
   provenance: provenance("runtime_snapshot", "fixture"),
   freshness: {},
-  result: { kind: "complete" },
+  result,
   entries,
+})
+
+const stubEntry = (index: 0 | 1): TaskOwnershipSnapshot["entries"][number] => ({
+  identity: sprintCockpitInput.identities[index],
+  binding: missing("absent", "task_binding", sprintCockpitInput.identities[index].mtTaskID),
+  authority: missing("unknown", "runtime_snapshot", sprintCockpitInput.identities[index].mtTaskID),
+  execution: missing("absent", "task_execution", sprintCockpitInput.identities[index].mtTaskID),
+  attention: missing("unknown", "attention_input", sprintCockpitInput.identities[index].mtTaskID),
 })
 
 describe("sprint cockpit mapper", () => {
@@ -111,6 +123,40 @@ describe("sprint cockpit mapper", () => {
     expect(view.tasks.map((task) => task.id)).toEqual(["DA40-015-A", "DA40-015-B"])
     expect(view.tasks.every((task) => task.sessionHref === null)).toBe(true)
     expect(view.tasks.every((task) => task.status.state === "inaccessible")).toBe(true)
+    expect(view.tasks.every((task) => task.eligibility === "none")).toBe(true)
+  })
+
+  test("marks the selected task eligible and the rest waiting on the sequential queue", () => {
+    const view = mapCockpitView({
+      ownership: snapshot([stubEntry(0), stubEntry(1)], {
+        kind: "selected",
+        id: "DA40-015-A",
+        action: "start_analyze",
+      }),
+    })
+    expect(view.tasks[0].eligibility).toBe("eligible")
+    expect(view.tasks[1].eligibility).toBe("waiting")
+    expect(view.tasks[1].eligibilityReason).toEqual({ text: "DA40-015-A", state: "available", source: "task_queue" })
+    expect(cockpitEligibilityBadge(view.tasks[0].eligibility)).toBe("eligible")
+    expect(cockpitEligibilityBadge(view.tasks[1].eligibility)).toBe("blocked")
+  })
+
+  test("fail-closes every card when the queue is blocked", () => {
+    const view = mapCockpitView({
+      ownership: snapshot([stubEntry(0), stubEntry(1)], {
+        kind: "blocked",
+        reason: "predecessor_not_closed",
+      }),
+    })
+    expect(view.tasks.map((task) => task.eligibility)).toEqual(["blocked", "blocked"])
+    expect(view.tasks[0].eligibilityReason.text).toBe("predecessor_not_closed")
+    expect(view.tasks.every((task) => cockpitEligibilityBadge(task.eligibility) === "blocked")).toBe(true)
+  })
+
+  test("complete queue has no eligible card", () => {
+    const view = mapCockpitView({ ownership: snapshot([stubEntry(0), stubEntry(1)]) })
+    expect(view.tasks.every((task) => task.eligibility === "none")).toBe(true)
+    expect(view.tasks.every((task) => cockpitEligibilityBadge(task.eligibility) === undefined)).toBe(true)
   })
 })
 
@@ -129,6 +175,7 @@ describe("sprint cockpit launch", () => {
     id: "DA10-007",
     apexExternalRef: ".project/tasks/DA10-007-chat-worktree",
     worktreePath: "/Users/leanbot/Documents/40_Daidalon/features/tasks/DA10-007",
+    eligibility: "eligible" as const,
   }
 
   test("launch calls open once and commit or merge stay inert", async () => {
@@ -164,6 +211,52 @@ describe("sprint cockpit launch", () => {
     expect(calls).toEqual([1, 1])
     expect(first).toEqual(second)
     expect(first).toMatchObject({ type: "opened", href: legacySessionHref(task.worktreePath, "ses_open") })
+  })
+
+  test("launch stays closed when the card is not eligible or the worktree is unknown", async () => {
+    const calls: unknown[] = []
+    const global = {
+      taskChatOpen: async (payload: unknown) => {
+        calls.push(payload)
+        return { response: { ok: true }, data: { sessionID: "ses_open" } }
+      },
+    }
+    expect(
+      await confirmCockpitAction({
+        action: "launch",
+        task: { ...task, eligibility: "waiting" },
+        global,
+      }),
+    ).toEqual({ type: "failed", message: "unknown" })
+    expect(
+      await confirmCockpitAction({
+        action: "launch",
+        task: { ...task, worktreePath: null },
+        global,
+      }),
+    ).toEqual({ type: "failed", message: "unknown" })
+    expect(cockpitLaunchEnabled(task)).toBe(true)
+    expect(cockpitLaunchEnabled({ ...task, eligibility: "blocked" })).toBe(false)
+    expect(calls).toEqual([])
+  })
+})
+
+describe("sprint cockpit prompt", () => {
+  test("builds the collable prompt from observed facts only", () => {
+    expect(
+      cockpitPromptText({
+        id: "DA40-015-A",
+        worktreeLabel: { text: "features/tasks/DA40-015-candidate-integree", state: "available" },
+        head: { text: "03f621743", state: "available" },
+      }),
+    ).toBe("Skill apex-task. Carte DA40-015-A. cwd = features/tasks/DA40-015-candidate-integree. Base 03f621743.")
+    expect(
+      cockpitPromptText({
+        id: "DA40-015-A",
+        worktreeLabel: { text: "features/tasks/DA40-015-candidate-integree", state: "available" },
+        head: { text: "unknown (task_binding)", state: "unknown" },
+      }),
+    ).toBeNull()
   })
 })
 

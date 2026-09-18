@@ -1,16 +1,24 @@
 import { legacySessionHref } from "@/utils/session-route"
 import type { SensitiveAction } from "./sprint-cockpit-fixtures"
+import type { TaskEligibility } from "./sprint-cockpit-mapper"
 
 export type LaunchTask = {
   readonly id: string
   readonly apexExternalRef: string
   readonly worktreePath: string | null
+  readonly eligibility?: TaskEligibility
 }
 
 export type CockpitActionResult =
   | { readonly type: "simulated" }
   | { readonly type: "opened"; readonly href: string }
   | { readonly type: "failed"; readonly message: string }
+
+export function cockpitLaunchEnabled(task: LaunchTask | undefined) {
+  if (!task) return false
+  if (task.eligibility !== "eligible") return false
+  return Boolean(task.worktreePath)
+}
 
 export async function confirmCockpitAction(input: {
   action: SensitiveAction
@@ -25,7 +33,7 @@ export async function confirmCockpitAction(input: {
   }
 }): Promise<CockpitActionResult> {
   if (input.action !== "launch") return { type: "simulated" }
-  if (!input.task?.worktreePath) return { type: "failed", message: "unknown" }
+  if (!cockpitLaunchEnabled(input.task) || !input.task?.worktreePath) return { type: "failed", message: "unknown" }
   const opened = await input.global.taskChatOpen(
     {
       taskChatOpenInput: {

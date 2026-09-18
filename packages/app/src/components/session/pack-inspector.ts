@@ -1,3 +1,5 @@
+import { cockpitPromptText } from "@/pages/sprint-cockpit-prompt"
+
 export type MetricState = {
   state: string
   value?: unknown
@@ -80,6 +82,7 @@ export type PackInspectorTaskView = {
   worktree: string
   branch: string
   head: string
+  prompt: string | null
 }
 
 type GitSnapshot = {
@@ -108,12 +111,19 @@ export function packInspectorTaskView(input: {
     id: string
     sessionHref: string | null
     status: { text: string }
-    worktreeLabel: { text: string }
+    worktreeLabel: { text: string; state: string }
     branch: { text: string }
-    head: { text: string }
+    head: { text: string; state: string }
   }>
 }): PackInspectorTaskView {
-  const unknown = { id: "unknown", status: "unknown", worktree: "unknown", branch: "unknown", head: "unknown" }
+  const unknown = {
+    id: "unknown",
+    status: "unknown",
+    worktree: "unknown",
+    branch: "unknown",
+    head: "unknown",
+    prompt: null,
+  }
   if (!input.currentSessionID) return unknown
   const task = input.tasks.find((item) => {
     if (!item.sessionHref) return false
@@ -127,6 +137,11 @@ export function packInspectorTaskView(input: {
     worktree: task.worktreeLabel.text,
     branch: task.branch.text,
     head: task.head.text,
+    prompt: cockpitPromptText({
+      id: task.id,
+      worktreeLabel: task.worktreeLabel,
+      head: task.head,
+    }),
   }
 }
 
