@@ -11,4 +11,4 @@ Checks :
 - `git diff --check` PASS
 - smoke cockpit PASS (`unknown`, pas un faux zéro)
 
-Commit local ensuite. Pas de push, pas de merge.
+Commit local `ca0aec2ca`. Pas de push, pas de merge.
