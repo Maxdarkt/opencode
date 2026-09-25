@@ -2,7 +2,7 @@
 
 Archivé le 2026-09-25 après mandat de promotion. Sprint MT `c9e19429-6cef-4a38-b737-e0147ff5053d` / `da-release-0.1-sprint-8` : quatre cartes, 18 SP acceptés, aucune inachevée.
 
-Candidate `cbdf61e67` fusionnée dans `staging` @ `6d6de081f`. Cartes 014, 015, 020, 007 MT `archived`. Sprint `completed`, `end_date` 2026-09-25. Un worktree restant : source `Daidalon` / `staging`. APEX uniques legacy copiés sur staging. Branches locales conservées.
+Candidate `cbdf61e67` fusionnée dans `staging` @ `6d6de081f`. Cartes 014, 015, 020, 007 MT `archived`. Sprint `completed`, `end_date` 2026-09-25. `develop` / `master` créés depuis `staging`. `origin/dev` non touché. 0 worktree de carte.
 
 | Carte | SHA produit | HEAD worktree |
 |---|---|---|

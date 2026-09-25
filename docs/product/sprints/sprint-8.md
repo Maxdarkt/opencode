@@ -6,7 +6,7 @@ Statut : **completed** le 2026-09-25 (`end_date` MT). ID MT : `c9e19429-6cef-4a3
 
 E1–E2 coûts et budgets honnêtes (DA30-014) + E3 adaptateurs d’abonnement LLM (DA30-015) + E4 CPU/RAM des process du worktree (DA40-020) + candidate unique (DA20-007).
 
-Candidate locale : `cbdf61e67` (ancêtres `7da410789`, `584401a7e`, `27146219b`). Merge `staging` : `6d6de081f`. Preview/prod non faites.
+Candidate locale : `cbdf61e67` (ancêtres `7da410789`, `584401a7e`, `27146219b`). Merge `staging` : `6d6de081f`. `develop` (preview) et `master` (prod) créés depuis `staging` (mandat 2026-09-25). `origin/dev` non touché.
 
 | Carte | Résultat accepté | SP | Commit |
 |---|---|---:|---|
@@ -24,7 +24,7 @@ DA30-015 : Smoke cockpit FAIL puis scope recadré (session + catalogue affiché)
 ## Dettes et suite
 
 - Worktrees S8 `features/tasks/` retirés (014, 015, 020, 007). 020 retiré avec `--force` : locaux `.apex/runtime.env` + fixture smoke `code-91`, hors produit. Branches locales conservées.
-- Preview/prod (`develop`/`master`) facultatives, non faites.
+- Preview/prod : `develop` et `master` créés depuis `staging` (même SHA). `origin/dev` (OpenCode) non touché.
 - Worktrees métier et `s2`/`s3` retirés après copie APEX sur `staging` (`58706d8f1`). Plus de worktree hors source.
 - Backlog cockpit V2 : DA10-012 … DA10-018, hors ce sprint.
 

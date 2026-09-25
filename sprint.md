@@ -14,5 +14,5 @@ Mis à jour le 2026-09-25. MT Tasks fait autorité ; index documentaire synchron
 | Sprint 1 — Projet et environnement fiables | a3fac11a-49ed-455f-9d7c-dcd213467b6a | completed | 7 cartes archived ; 26 SP acceptés | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-1.md) |
 | M0 — Audit et validation | 8e4da9b4-a13a-465a-8c0b-850eb385c266 | completed | 6 archived ; 17 SP acceptés | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/m0.md) |
 
-Release courante : 0.5 livré ([Sprint 8](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-8.md)). Pas de sprint MT actif. Merge `6d6de081f`. Un worktree : source `staging`.
+Release courante : 0.5 livré ([Sprint 8](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-8.md)). Pas de sprint MT actif. `staging` (intégration) · `develop` (preview) · `master` (prod). `origin/dev` = OpenCode, hors palier.
 Routine : [suivi](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/workflow/suivi-sprints.md). Plan : [PLAN-GENERAL](/Users/leanbot/Documents/40_Daidalon/Daidalon/PLAN-GENERAL.md).

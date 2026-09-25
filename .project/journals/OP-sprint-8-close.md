@@ -46,7 +46,13 @@ Effet : `git worktree remove --force` 020 (locaux smoke/runtime, pas du produit)
 - APEX : STATE 014/015/020/007 `archived`, worktrees notés retirés
 - Pas de `mt_close_sprint` (déjà clos). Pas de Sprint 9.
 
+## Checkpoint 2026-09-25T17:30 — mandat créer `master` et `develop`
+
+- `staging` = intégration des worktrees
+- `develop` = preview, `master` = prod, créés **depuis** `staging`
+- jamais `origin/dev` (OpenCode amont)
+
 ## Conclusion
 
-- **reconciled** : Sprint 8 Git-clos et documentaire aligné ; `end_date` MT 2026-09-25 ; 4 archived ; 0 worktree carte. Push `origin staging` dans le même palier.
+- **reconciled** : Sprint 8 clos ; 4 archived ; 0 worktree carte. `staging` / `develop` / `master` au même SHA après push. `origin/dev` intact.
 
