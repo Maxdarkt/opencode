@@ -210,7 +210,8 @@ export function update(adapter: Adapter, event: SessionEvent.Event) {
         return updateOwnedAssistant(event.data.assistantMessageID, (draft) => {
           draft.time.completed = event.data.timestamp
           draft.finish = event.data.finish
-          draft.cost = event.data.cost
+          if (event.data.cost !== undefined) draft.cost = event.data.cost
+          if (event.data.costState !== undefined) draft.costState = event.data.costState
           draft.tokens = event.data.tokens
           if (event.data.snapshot || event.data.files)
             draft.snapshot = {
