@@ -6,7 +6,7 @@ Statut : **completed** le 2026-09-25. ID MT : `c9e19429-6cef-4a38-b737-e0147ff50
 
 E1–E2 coûts et budgets honnêtes (DA30-014) + E3 adaptateurs d’abonnement LLM (DA30-015) + E4 CPU/RAM des process du worktree (DA40-020) + candidate unique (DA20-007).
 
-Candidate locale : `cbdf61e67` (ancêtres `7da410789`, `584401a7e`, `27146219b`). Promotion `staging` : merge de cette SHA seulement. Preview/prod non faites.
+Candidate locale : `cbdf61e67` (ancêtres `7da410789`, `584401a7e`, `27146219b`). Merge `staging` : `6d6de081f`. Preview/prod non faites.
 
 | Carte | Résultat accepté | SP | Commit |
 |---|---|---:|---|

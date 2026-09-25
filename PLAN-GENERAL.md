@@ -1,6 +1,6 @@
 # Daidalon — plan général
 
-Mis à jour le 2026-09-25. Projet MT DA. Source `staging` après promotion Sprint 8. [Index sprints](sprint.md).
+Mis à jour le 2026-09-25. Projet MT DA. Source `staging` @ `6d6de081f`. [Index sprints](sprint.md).
 
 ## Travail courant
 
@@ -30,7 +30,7 @@ Hors sprint. Feature [`cockpit-v2`](.project/features/cockpit-v2/STORIES.md). Co
 
 Sprints clos : [index](sprint.md) · [archives](.project/archives/index.md).
 
-Sprint 8 : 4 archived, 18 SP, candidate `cbdf61e67` ; [bilan](docs/product/sprints/sprint-8.md).
+Sprint 8 : 4 archived, 18 SP, merge `6d6de081f` (candidate `cbdf61e67`) ; [bilan](docs/product/sprints/sprint-8.md).
 Sprint 7 : 4 archived, 15 SP + 021, merge candidate `4f1764b59` puis 021 `e9e2aed10` ; [bilan](docs/product/sprints/sprint-7.md).
 Sprint 6 : 3 archived, 19 SP, merge `b7d70d3f8` ; [bilan](docs/product/sprints/sprint-6.md).
 Sprint 5 : 5 archived, 31 SP, merge `0014d62e1` ; [bilan](docs/product/sprints/sprint-5.md).

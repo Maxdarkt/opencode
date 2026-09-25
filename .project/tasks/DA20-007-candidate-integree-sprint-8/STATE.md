@@ -4,7 +4,7 @@
 - phase: verify
 - next_action: none (Verify PASS, promotion staging)
 - display_id: DA20-007
-- mt: done
+- mt: archived
 - sprint_ref: da-release-0.1-sprint-8
 - runtime_profile: none
 - external_ref: .project/tasks/DA20-007-candidate-integree-sprint-8
