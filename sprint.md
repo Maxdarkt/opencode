@@ -1,10 +1,11 @@
 # Daidalon — suivi des sprints
 
-Mis à jour le 2026-09-14. MT Tasks fait autorité ; index documentaire synchronisé.
+Mis à jour le 2026-09-25. MT Tasks fait autorité ; index documentaire synchronisé.
 
 | Sprint | ID MT | État | Cartes | Document |
 |---|---|---|---|---|
-| Sprint 6 — Chrome cockpit = maquette | 804083e3-534a-4f81-8182-05fc21f15dfb | **completed** | 3 cartes **archived** ; 19 SP acceptés ; merge `b7d70d3f8` | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-6.md) |
+| Sprint 7 — Preview make dev et conducteur | c6ac90e2-78ea-4955-a13e-7a64ab9d490d | **closing** | 4 done ; 15 SP + 021 ; candidate `df2885ba1` + 021 `f13b0ecff` | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-7.md) |
+| Sprint 6 — Chrome cockpit = maquette | 804083e3-534a-4f81-8182-05fc21f15dfb | completed | 3 cartes **archived** ; 19 SP acceptés ; merge `b7d70d3f8` | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-6.md) |
 | Sprint 5 — Moteur de contexte et tests agentiques | 77ff44c7-23cd-44d7-89c1-32dfecaccd9a | completed | 5 cartes **archived** ; 31 SP acceptés ; merge `0014d62e1` | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-5.md) |
 | Sprint 4 — Cockpit Sprint lecture seule | 5059b73b-d8e8-40db-b9d5-1cbfb5c6424e | completed | 7 cartes **archived** ; 35 SP acceptés ; merge `b3aa79245` | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-4.md) |
 | Sprint 3 — Piloter une tâche de bout en bout | 415b28cf-2d9c-4162-9be7-f6502a453b8e | completed | 7 cartes archived ; 34 SP acceptés | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-3.md) |
@@ -12,5 +13,5 @@ Mis à jour le 2026-09-14. MT Tasks fait autorité ; index documentaire synchron
 | Sprint 1 — Projet et environnement fiables | a3fac11a-49ed-455f-9d7c-dcd213467b6a | completed | 7 cartes archived ; 26 SP acceptés | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-1.md) |
 | M0 — Audit et validation | 8e4da9b4-a13a-465a-8c0b-850eb385c266 | completed | 6 archived ; 17 SP acceptés | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/m0.md) |
 
-Release courante : [0.3](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-6.md) via Sprint 6 (merge `b7d70d3f8`). 0.2 livré (Sprint 5).
+Release courante : [0.4](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-7.md) via Sprint 7. 0.3 livré (Sprint 6).
 Routine : [suivi](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/workflow/suivi-sprints.md). Plan : [PLAN-GENERAL](/Users/leanbot/Documents/40_Daidalon/Daidalon/PLAN-GENERAL.md).

@@ -1,11 +1,12 @@
 # Index global des archives Daidalon
 
-Mis à jour : 2026-09-14. Plan vivant = aucun sprint actif (0.3 clos). Cet index est une
+Mis à jour : 2026-09-25. Plan vivant = aucun sprint actif (0.4 clos, promotion en cours). Cet index est une
 aide de retrouvabilité ; cartes MT et dossiers APEX restent en place. Aucun
 archivage ne déplace ni ne supprime les preuves.
 
 | Période / carte | Résultat | Dossier APEX stable | Bilan / trace | Chat ID | Visibilité |
 |---|---|---|---|---|---|
+| Sprint 7 | 4 cartes, 15 SP + 021, candidate `df2885ba1` + 021 `f13b0ecff` | `.project/tasks/DA40-019-*` … `DA40-021-*` | `sprint-7/`, `docs/product/sprints/sprint-7.md` | parent Cursor `3668b277-3781-4430-afef-920874b35ada` | 4 MT archived à clôture ; 4 worktrees `features/tasks/` S7 à retirer |
 | Sprint 6 | 3 cartes, 19 SP, merge `b7d70d3f8` | `.project/tasks/DA10-009-*` … `DA40-018-*` | `sprint-6/`, `docs/product/sprints/sprint-6.md` | parent Cursor `cc8b71bf-fc44-4c64-a875-c5806924b9fb` | 3 MT archived ; 3 worktrees `features/tasks/` S6 retirés |
 | Sprint 5 | 5 cartes, 31 SP, merge `0014d62e1` | `.project/tasks/DA30-013-*` … `DA40-017-*` | `sprint-5/`, `docs/product/sprints/sprint-5.md` | parent Cursor sprint-support | 5 MT archived ; 4 worktrees propres retirés ; DA10-008 conservé tant que `bun.lock` sale |
 | Sprint 4 | 7 cartes, 35 SP, merge `b3aa79245` | dossiers APEX dans le source et historiques | `sprint-4/`, `docs/product/sprints/sprint-4.md` | parent Cursor `30dae365-e035-4604-9113-53767fcb9c05` | 7 MT archived ; worktrees cartes retirés |
