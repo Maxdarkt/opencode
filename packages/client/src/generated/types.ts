@@ -2590,6 +2590,8 @@ export type MakeDevStatusOutput = {
     readonly uiPort?: number
     readonly worktreeCode?: number
     readonly error?: string
+    readonly cpuPercent?: number
+    readonly rssBytes?: number
   }
 }
 
@@ -2612,6 +2614,8 @@ export type MakeDevStartOutput = {
     readonly uiPort?: number
     readonly worktreeCode?: number
     readonly error?: string
+    readonly cpuPercent?: number
+    readonly rssBytes?: number
   }
 }
 
@@ -2634,6 +2638,8 @@ export type MakeDevStopOutput = {
     readonly uiPort?: number
     readonly worktreeCode?: number
     readonly error?: string
+    readonly cpuPercent?: number
+    readonly rssBytes?: number
   }
 }
 

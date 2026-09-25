@@ -4,7 +4,7 @@ import { describe, expect, test } from "bun:test"
 import { Context, Effect, Layer } from "effect"
 import { LayerNode } from "@opencode-ai/core/effect/layer-node"
 import { Location } from "@opencode-ai/core/location"
-import { MakeDev, parseMakeEnv } from "@opencode-ai/core/make-dev"
+import { MakeDev, parseMakeEnv, sumProcessTree } from "@opencode-ai/core/make-dev"
 import { AbsolutePath } from "@opencode-ai/core/schema"
 import { location } from "./fixture/location"
 import { tmpdir } from "./fixture/tmpdir"
@@ -57,6 +57,25 @@ const listen = (port: number) =>
     Effect.sync(() => Bun.serve({ hostname: "127.0.0.1", port, fetch: () => new Response("ok") })),
     (server) => Effect.sync(() => server.stop(true)),
   )
+
+describe("sumProcessTree", () => {
+  test("sums the owned tree and ignores a foreign pid", () => {
+    expect(
+      sumProcessTree(
+        [
+          { pid: 10, ppid: 1, cpuPercent: 40, rssKilobytes: 100 },
+          { pid: 11, ppid: 10, cpuPercent: 70.5, rssKilobytes: 50 },
+          { pid: 99, ppid: 1, cpuPercent: 5, rssKilobytes: 999 },
+        ],
+        10,
+      ),
+    ).toEqual({ cpuPercent: 110.5, rssBytes: 150 * 1024 })
+  })
+
+  test("omits a sample when the root pid is absent", () => {
+    expect(sumProcessTree([{ pid: 11, ppid: 10, cpuPercent: 1, rssKilobytes: 1 }], 10)).toBeUndefined()
+  })
+})
 
 describe("parseMakeEnv", () => {
   test("reads ports without guessing", () => {
