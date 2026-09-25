@@ -1,12 +1,12 @@
 # STATE — DA40-021 — Ports 6400 et bind réseau
 
-- generation: 6
+- generation: 7
 - phase: verify
-- next_action: commit local du worktree
+- next_action: remise sprint
 - read_set: verify.md
 - display_id: DA40-021
 - branch: task/DA40-021-ports-6400-bind
-- head: 03f621743
+- head: 801e783ac
 - mt: in_progress
 - external_ref: .project/tasks/DA40-021-ports-6400-bind
 - runtime_profile: none

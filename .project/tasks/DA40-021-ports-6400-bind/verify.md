@@ -8,4 +8,4 @@
 - `.make.env` ignoré, hors commit.
 - Registre Codex déjà commité : `e8f573c8c`, fichier unique, bloc DA seul.
 
-SHA worktree : pending
+SHA worktree : `801e783ac` (`feat(opencode): bind local servers on 6400`). Pas de push.
