@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test"
 import type { OpencodeClient, TaskOwnershipSnapshot } from "@opencode-ai/sdk/v2/client"
+import { dict } from "@/i18n/en"
 import { sprintCockpitInput } from "./sprint-cockpit-input"
 import { cockpitLaunchEnabled, confirmCockpitAction } from "./sprint-cockpit-launch"
 import { loadSprintCockpit } from "./sprint-cockpit-load"
@@ -196,6 +197,16 @@ describe("sprint cockpit launch", () => {
     expect(await confirmCockpitAction({ action: "merge", task, global })).toEqual({ type: "simulated" })
     expect(await confirmCockpitAction({ action: "production", task, global })).toEqual({ type: "simulated" })
     expect(calls).toHaveLength(1)
+  })
+
+  test("copy states staging-only promotion and refuses force-push and master", () => {
+    expect(sprintCockpitInput.repositories[0].mergeTarget).toBe("dev")
+    expect(dict["sprint.cockpit.contextNote"]).toContain("staging only")
+    expect(dict["sprint.cockpit.contextNote"]).toContain("Force-push")
+    expect(dict["sprint.cockpit.contextNote"]).toContain("master/develop")
+    expect(dict["sprint.cockpit.confirmationDescription"]).toContain("staging only")
+    expect(dict["sprint.cockpit.confirmationDescription"]).toContain("never force-push")
+    expect(dict["sprint.cockpit.confirmationDescription"]).toContain("never master or develop")
   })
 
   test("launch reopen still goes through open without a local session.create", async () => {
