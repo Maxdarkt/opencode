@@ -41,5 +41,5 @@ Effet : `git worktree remove --force` 020 (locaux smoke/runtime, pas du produit)
 
 ## Conclusion
 
-- **reconciled** : merge `6d6de081f` ; `origin/staging` `ca93ddc68` au préflight reliquat ; 4 MT archived ; sprint `completed` ; worktrees S8 014/015/007/020 retirés. `?? .cursor/permissions.json` hors clôture. Dossier orphelin `DA10-010` non worktree, hors S8.
+- **reconciled** : merge `6d6de081f` ; docs reliquat `2a290fd15` poussé SSH ; 4 MT archived ; sprint `completed` ; worktrees S8 014/015/007/020 retirés. `?? .cursor/permissions.json` hors clôture. Dossier orphelin `DA10-010` non worktree, hors S8.
 
