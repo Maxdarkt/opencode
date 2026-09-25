@@ -12,4 +12,4 @@
 
 ## Commit
 
-SHA renseigné après le commit local. Pas de push, pas de merge.
+SHA `232bfaedb`. Pas de push, pas de merge.
