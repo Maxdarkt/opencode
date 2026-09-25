@@ -25,7 +25,7 @@ DA30-015 : Smoke cockpit FAIL puis scope recadré (session + catalogue affiché)
 
 - Worktrees S8 `features/tasks/` retirés (014, 015, 020, 007). 020 retiré avec `--force` : locaux `.apex/runtime.env` + fixture smoke `code-91`, hors produit. Branches locales conservées.
 - Preview/prod (`develop`/`master`) facultatives, non faites.
-- Worktrees métier `s3-*` propres retirés. APEX uniques (004, 003, 005–009, 013, prototype) copiés sur `staging`. 9 `10-*`…`s2-*` : retrait après commit de ces copies.
+- Worktrees métier et `s2`/`s3` retirés après copie APEX sur `staging` (`58706d8f1`). Plus de worktree hors source.
 - Backlog cockpit V2 : DA10-012 … DA10-018, hors ce sprint.
 
 Preuves : [plan sortant](../../../.project/archives/sprint-8/plan-sortant.md).

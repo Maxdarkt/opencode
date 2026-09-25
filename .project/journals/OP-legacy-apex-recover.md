@@ -24,4 +24,8 @@ observed_at: 2026-09-25T16:04:00+02:00
 | 30-agent-runtime | `DA30-003`, `DA30-005`, `DA30-006`, `DA30-008` + symlink `debt-schema-event-manifest` |
 | 40-tooling | `DA40-005`, `DA40-008`, `DA40-009`, `DA40-013` |
 
-Sautés : `DA10-006` vide ; caches runtime DA30-003.
+Sautés : `DA10-006` vide ; caches runtime DA30-003 ; dump `source-lines.txt` (whitespace).
+
+## Conclusion
+
+- **reconciled** : copies APEX sur `staging` `58706d8f1` ; 9 worktrees `--force` retirés ; orphelin `DA10-010` supprimé. Checkout restant : `Daidalon` / `staging`. Branches locales conservées.
