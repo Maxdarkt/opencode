@@ -7,6 +7,7 @@ import { useServerSDK } from "@/context/server-sdk"
 import { useSettings } from "@/context/settings"
 import { readProjectContext } from "@/components/project-context-request"
 import { loadSprintCockpit } from "@/pages/sprint-cockpit-load"
+import { copyCockpitPrompt } from "@/pages/sprint-cockpit-prompt"
 import { showToast } from "@/utils/toast"
 import {
   PACK_INSPECTOR_TABS,
@@ -72,6 +73,15 @@ export function PackInspector(props: { sessionID: string }) {
     showToast({
       title: language.t("session.inspector.mergeSimulated"),
       description: language.t("sprint.cockpit.simulationBanner"),
+    })
+  }
+  const copyPrompt = () => {
+    const text = task().prompt
+    if (!text) return
+    void copyCockpitPrompt(text).then((copied) => {
+      showToast({
+        title: copied ? language.t("sprint.cockpit.copyPromptSuccess") : language.t("sprint.cockpit.copyPromptFailed"),
+      })
     })
   }
 
@@ -153,6 +163,16 @@ export function PackInspector(props: { sessionID: string }) {
                   <dd class="font-mono">{task().head}</dd>
                 </div>
               </dl>
+              <Button
+                type="button"
+                size="small"
+                class="mt-3"
+                disabled={!task().prompt}
+                data-testid="pack-inspector-copy-prompt"
+                onClick={copyPrompt}
+              >
+                {language.t("sprint.cockpit.copyPrompt")}
+              </Button>
             </Show>
             <Show when={tab() === "git"}>
               <dl class="flex flex-col gap-2 text-12-regular text-text-strong">

@@ -22,8 +22,9 @@ export function sessionSprintRailSelected(input: {
   kind: "pilot" | "task"
   href: string
   currentSessionID: string | undefined
+  pathname?: string
 }) {
-  if (input.kind === "pilot") return false
+  if (input.kind === "pilot") return input.pathname === SESSION_SPRINT_COCKPIT_HREF
   const id = sessionIDFromHref(input.href)
   if (!id || !input.currentSessionID) return false
   return id === input.currentSessionID
