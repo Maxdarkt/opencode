@@ -28,7 +28,18 @@ observed_at: 2026-09-25T15:02:00+02:00
 
 merge-base `staging`/`cbdf61e67` = `8db56f535`.
 
+## Reliquat 2026-09-25T15:40 — mandat « finir commit, merge, staging, fermer worktrees »
+
+Préflight relus :
+- MT Sprint 8 `completed` ; 014/015/020/007 `archived`
+- `origin/staging` = `staging` = `ca93ddc68` ; merge produit `6d6de081f` ; rien à merger depuis `task/DA40-020-process-cpu-ram` (`merge-base` = `27146219b`)
+- Worktree 020 encore présent, sale uniquement de locaux : `.apex/runtime.env`, fixture smoke `code-91` (Makefile + `.started`)
+- `?? .cursor/permissions.json` hors clôture (config Cursor locale)
+- Dossier orphelin `features/tasks/DA10-010` : pas un worktree Git, hors Sprint 8
+
+Effet : `git worktree remove --force` 020 (locaux smoke/runtime, pas du produit) ; docs clôture ; push `origin staging`. Pas de merge de branche carte. Pas de commit dans le worktree 020.
+
 ## Conclusion
 
-- **reconciled** : docs `0e66cd58f` puis merge `6d6de081f` puis docs `334bec18d` ; `origin/staging` `334bec18d` (SSH) ; DA20-007 archived ; sprint `completed` ; worktrees 014, 015, 007 retirés ; 020 conservé (sale). `?? .cursor/permissions.json` hors clôture.
+- **reconciled** : merge `6d6de081f` ; `origin/staging` `ca93ddc68` au préflight reliquat ; 4 MT archived ; sprint `completed` ; worktrees S8 014/015/007/020 retirés. `?? .cursor/permissions.json` hors clôture. Dossier orphelin `DA10-010` non worktree, hors S8.
 

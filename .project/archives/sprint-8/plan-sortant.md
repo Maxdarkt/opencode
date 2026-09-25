@@ -2,7 +2,7 @@
 
 Archivé le 2026-09-25 après mandat de promotion. Sprint MT `c9e19429-6cef-4a38-b737-e0147ff5053d` / `da-release-0.1-sprint-8` : quatre cartes, 18 SP acceptés, aucune inachevée.
 
-Candidate `cbdf61e67` fusionnée dans `staging` @ `6d6de081f`. Cartes 014, 015, 020, 007 MT `archived`.
+Candidate `cbdf61e67` fusionnée dans `staging` @ `6d6de081f`. Cartes 014, 015, 020, 007 MT `archived`. Worktrees S8 `features/tasks/` retirés (020 en dernier, `--force` sur locaux).
 
 | Carte | SHA produit | HEAD worktree |
 |---|---|---|
