@@ -2571,6 +2571,72 @@ export type FilesFindOutput = {
   readonly data: ReadonlyArray<{ readonly path: string; readonly type: "file" | "directory" }>
 }
 
+export type MakeDevStatusInput = {
+  readonly location?: {
+    readonly location?: { readonly directory?: string | undefined; readonly workspace?: string | undefined } | undefined
+  }["location"]
+}
+
+export type MakeDevStatusOutput = {
+  readonly location: {
+    readonly directory: string
+    readonly workspaceID?: string
+    readonly project: { readonly id: string; readonly directory: string }
+  }
+  readonly data: {
+    readonly state: "off" | "on" | "unknown"
+    readonly host?: string
+    readonly backendPort?: number
+    readonly uiPort?: number
+    readonly worktreeCode?: number
+    readonly error?: string
+  }
+}
+
+export type MakeDevStartInput = {
+  readonly location?: {
+    readonly location?: { readonly directory?: string | undefined; readonly workspace?: string | undefined } | undefined
+  }["location"]
+}
+
+export type MakeDevStartOutput = {
+  readonly location: {
+    readonly directory: string
+    readonly workspaceID?: string
+    readonly project: { readonly id: string; readonly directory: string }
+  }
+  readonly data: {
+    readonly state: "off" | "on" | "unknown"
+    readonly host?: string
+    readonly backendPort?: number
+    readonly uiPort?: number
+    readonly worktreeCode?: number
+    readonly error?: string
+  }
+}
+
+export type MakeDevStopInput = {
+  readonly location?: {
+    readonly location?: { readonly directory?: string | undefined; readonly workspace?: string | undefined } | undefined
+  }["location"]
+}
+
+export type MakeDevStopOutput = {
+  readonly location: {
+    readonly directory: string
+    readonly workspaceID?: string
+    readonly project: { readonly id: string; readonly directory: string }
+  }
+  readonly data: {
+    readonly state: "off" | "on" | "unknown"
+    readonly host?: string
+    readonly backendPort?: number
+    readonly uiPort?: number
+    readonly worktreeCode?: number
+    readonly error?: string
+  }
+}
+
 export type CommandsListInput = {
   readonly location?: {
     readonly location?: { readonly directory?: string | undefined; readonly workspace?: string | undefined } | undefined

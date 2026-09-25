@@ -156,9 +156,4 @@ export function secondaryDiffView(diffs: readonly SecondaryDiff[], selected?: st
   }
 }
 
-export function secondaryBrowserView() {
-  return {
-    url: "about:blank",
-    iframe: false,
-  }
-}
+export { secondaryBrowserView } from "./session-make-dev"
