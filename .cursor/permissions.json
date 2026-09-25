@@ -1,0 +1,12 @@
+{
+  "mcpAllowlist": [
+    "cursor-ide-browser:*",
+    "*:browser_*"
+  ],
+  "autoRun": {
+    "allow_instructions": [
+      "Allow all Cursor built-in browser tools without asking: tabs, navigate, snapshot, screenshot, click, type, scroll, lock, unlock, Take Control, and CDP inspect.",
+      "Used for APEX smoke tests on localhost, 127.0.0.1, and worktree make-dev ports from .make.env."
+    ]
+  }
+}
