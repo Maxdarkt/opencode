@@ -27,7 +27,7 @@ observed_at: 2026-09-25T10:12:00+02:00
 | DA20-006 | candidate-merge | `df2885ba1` | propre |
 | DA40-021 | task/DA40-021-ports-6400-bind | `f13b0ecff` | propre |
 
-`staging` @ `e9e2aed10` après merges. Candidate merge-base était `03f621743`. `origin/staging` à créer au push.
+`staging` @ `9ab5e15fa` (docs après merges `4f1764b59` + `e9e2aed10`). Candidate merge-base était `03f621743`. `origin/staging` encore `03f621743` — push restant.
 
 ## Étapes
 
@@ -39,5 +39,5 @@ observed_at: 2026-09-25T10:12:00+02:00
 
 ## Conclusion
 
-- **reconciled** : docs `b4ed778b1`, candidate `4f1764b59`, 021 `e9e2aed10` ; 4 cartes MT archived ; sprint `completed`
-- push / worktree remove : à observer après
+- **reconciled** (2026-09-25T11:01+02) : docs `9ab5e15fa`, candidate `4f1764b59`, 021 `e9e2aed10` ; 4 cartes MT archived ; sprint `completed` ; `origin/staging` `9ab5e15fa` (SSH, pas HTTPS) ; 4 worktrees `features/tasks/` retirés, branches conservées.
+- `?? .cursor/permissions.json` hors clôture (non commité).

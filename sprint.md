@@ -13,5 +13,5 @@ Mis à jour le 2026-09-25. MT Tasks fait autorité ; index documentaire synchron
 | Sprint 1 — Projet et environnement fiables | a3fac11a-49ed-455f-9d7c-dcd213467b6a | completed | 7 cartes archived ; 26 SP acceptés | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-1.md) |
 | M0 — Audit et validation | 8e4da9b4-a13a-465a-8c0b-850eb385c266 | completed | 6 archived ; 17 SP acceptés | [Bilan](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/m0.md) |
 
-Release courante : [0.4](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-7.md) livré sur `staging` @ `e9e2aed10`. 0.3 livré (Sprint 6).
+Release courante : [0.4](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/product/sprints/sprint-7.md) livré sur `staging` / `origin/staging` @ `9ab5e15fa`. 0.3 livré (Sprint 6).
 Routine : [suivi](/Users/leanbot/Documents/40_Daidalon/Daidalon/docs/workflow/suivi-sprints.md). Plan : [PLAN-GENERAL](/Users/leanbot/Documents/40_Daidalon/Daidalon/PLAN-GENERAL.md).

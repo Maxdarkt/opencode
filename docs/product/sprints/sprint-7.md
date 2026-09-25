@@ -6,7 +6,7 @@ Statut : **completed** le 2026-09-25. ID MT : `c6ac90e2-78ea-4955-a13e-7a64ab9d4
 
 W5 preview `make dev` du worktree + S1/S2/S4 conducteur (éligibles, prompt collable, pilote ne code pas) + S3 candidate merge `staging` + ports 6400 / bind `0.0.0.0` (DA40-021).
 
-Candidate locale : `df2885ba1` (`candidate-merge`, 011+019). DA40-021 livrée à part : `f13b0ecff`. Merges `staging` : candidate `4f1764b59`, puis 021 `e9e2aed10`.
+Candidate locale : `df2885ba1` (`candidate-merge`, 011+019). DA40-021 livrée à part : `f13b0ecff`. Merges `staging` : candidate `4f1764b59`, puis 021 `e9e2aed10`. Tip poussé : `origin/staging` @ `9ab5e15fa`. Worktrees `features/tasks/` Sprint 7 retirés ; branches conservées.
 
 | Carte | Résultat accepté | SP | Commit |
 |---|---|---:|---|

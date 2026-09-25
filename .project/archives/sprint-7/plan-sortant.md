@@ -2,7 +2,7 @@
 
 Archivé le 2026-09-25 après mandat de clôture. Sprint MT `c6ac90e2-78ea-4955-a13e-7a64ab9d490d` / `da-release-0.1-sprint-7` : quatre cartes, 15 SP acceptés (DA40-021 SP MT non renseignés), aucune inachevée.
 
-Candidate `4f1764b59` + DA40-021 `e9e2aed10` fusionnées dans `staging`. Cartes MT `archived`.
+Candidate `4f1764b59` + DA40-021 `e9e2aed10` fusionnées dans `staging`. `origin/staging` @ `9ab5e15fa`. Cartes MT `archived`. Worktrees `features/tasks/` Sprint 7 retirés.
 
 | Carte | SHA produit | HEAD worktree |
 |---|---|---|
