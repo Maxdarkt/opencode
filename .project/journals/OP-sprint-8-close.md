@@ -39,7 +39,14 @@ Préflight relus :
 
 Effet : `git worktree remove --force` 020 (locaux smoke/runtime, pas du produit) ; docs clôture ; push `origin staging`. Pas de merge de branche carte. Pas de commit dans le worktree 020.
 
+## Clôture finale 2026-09-25T17:19 — mandat « cloture ce sprint 8 »
+
+- MT : déjà `completed` ; `end_date` posée 2026-09-25 ; 4 cartes `archived` ; 0 inachevée
+- Git : merge produit `6d6de081f` ; local `6dec1019b` (permissions) à pousser ; 1 worktree `staging`
+- APEX : STATE 014/015/020/007 `archived`, worktrees notés retirés
+- Pas de `mt_close_sprint` (déjà clos). Pas de Sprint 9.
+
 ## Conclusion
 
-- **reconciled** : merge `6d6de081f` ; docs reliquat `2a290fd15` poussé SSH ; 4 MT archived ; sprint `completed` ; worktrees S8 014/015/007/020 retirés. `?? .cursor/permissions.json` hors clôture. Dossier orphelin `DA10-010` non worktree, hors S8.
+- **reconciled** : Sprint 8 Git-clos et documentaire aligné ; `end_date` MT 2026-09-25 ; 4 archived ; 0 worktree carte. Push `origin staging` dans le même palier.
 

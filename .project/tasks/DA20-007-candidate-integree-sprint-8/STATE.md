@@ -2,13 +2,14 @@
 
 - generation: 3
 - phase: verify
-- next_action: none (Verify PASS, promotion staging)
+- next_action: none (Verify PASS, archived, merge staging `6d6de081f`)
 - display_id: DA20-007
 - mt: archived
+- status: archived
 - sprint_ref: da-release-0.1-sprint-8
 - runtime_profile: none
 - external_ref: .project/tasks/DA20-007-candidate-integree-sprint-8
-- worktree: /Users/leanbot/Documents/40_Daidalon/features/tasks/DA20-007-candidate-integree-sprint-8
+- worktree: retiré 2026-09-25
 - branch: task/DA20-007-candidate-integree-sprint-8
 - HEAD: cbdf61e67
 - assemblage: efb74290b

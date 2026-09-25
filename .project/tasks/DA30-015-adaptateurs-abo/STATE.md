@@ -5,10 +5,11 @@
 - next_action: none (Verify PASS, archived)
 - display_id: DA30-015
 - mt: archived
+- status: archived
 - sprint_ref: da-release-0.1-sprint-8
 - runtime_profile: none
 - external_ref: .project/tasks/DA30-015-adaptateurs-abo
-- worktree: /Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-015-adaptateurs-abo
+- worktree: retiré 2026-09-25
 - branch: task/DA30-015-adaptateurs-abo
 - HEAD: 584401a7e
 - feat: 232bfaedb

@@ -1,6 +1,6 @@
 # Sprint 8 — Économie
 
-Statut : **completed** le 2026-09-25. ID MT : `c9e19429-6cef-4a38-b737-e0147ff5053d` ; référence : `da-release-0.1-sprint-8`. Quatre cartes, 18 SP acceptés, 0 inachevée. Périmètre = **release 0.5** + candidate Git.
+Statut : **completed** le 2026-09-25 (`end_date` MT). ID MT : `c9e19429-6cef-4a38-b737-e0147ff5053d` ; référence : `da-release-0.1-sprint-8`. Quatre cartes, 18 SP acceptés, 0 inachevée. Périmètre = **release 0.5** + candidate Git. Git-clos : merge `6d6de081f`, un worktree `staging`.
 
 ## Objectif et résultat
 

@@ -1,6 +1,6 @@
 # Daidalon — plan général
 
-Mis à jour le 2026-09-25. Projet MT DA. Source `staging` @ merge `6d6de081f`. [Index sprints](sprint.md).
+Mis à jour le 2026-09-25. Projet MT DA. Source `staging` merge `6d6de081f`. Sprint 8 **clos** (`end_date` 2026-09-25). [Index sprints](sprint.md).
 
 ## Travail courant
 
