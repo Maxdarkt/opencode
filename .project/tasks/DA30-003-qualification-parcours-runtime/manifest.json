@@ -1,0 +1,23 @@
+{
+  "observed_at": "2026-09-06T13:22:02.879091+00:00",
+  "qualification_root": "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime",
+  "branch": "30-agent-runtime",
+  "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+  "bun_version": "1.3.14",
+  "bun_sha256": "e0c90ec15d33363e6b70713d56bc3b2c7585c17f40a0fe0f8fd9305901d4e233",
+  "lockfile_sha256": "dfd3eb5187a4211c3c4eb5b24f6a8980a86e74c47b3369346daa1ee0ed30c385",
+  "served_root": "/Users/leanbot/Documents/40_Daidalon/features/40-tooling",
+  "served_head": "1b327889841111256dfbc88f9cb063f848cc661b",
+  "served_branch": "40-tooling",
+  "client": "packages/app, Vite, http://127.0.0.1:4440",
+  "backend": "packages/opencode, http://127.0.0.1:4140",
+  "session_version": "V1 for selected client protocol",
+  "protocol_selection": "GET /global/health healthy:true => v1, server-protocol.ts:28",
+  "pilot_route": "POST /session/{sessionID}/prompt_async",
+  "pilot_location": "persisted session directory/workspace takes precedence, otherwise explicit query/header directory, then process.cwd fallback",
+  "llm_adapter": "AI SDK configured default; experimental native flag absent from supplied DA40 allowlist; no provider call observed",
+  "provider_model": "not executed; no claim about actual provider selection",
+  "evidence_scope": "Live GET health/provenance; request selection exercised by existing fetch fixtures; backend execution traced statically; isolated Core tests. No live prompt, model or end-to-end tool execution.",
+  "source_parity": true,
+  "sources": "evidence/source-sha256.json"
+}

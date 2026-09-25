@@ -1,0 +1,126 @@
+{
+  "packages/app/src/components/prompt-input/submit.ts": {
+    "worktree30": "b8faf885065f5f9a8aaa1a9df6ee0a91bb75b4a1423bb62edabe1403ff28ef3b",
+    "served_worktree40": "b8faf885065f5f9a8aaa1a9df6ee0a91bb75b4a1423bb62edabe1403ff28ef3b"
+  },
+  "packages/app/src/context/server-sdk.tsx": {
+    "worktree30": "0114cb5f67cdea370d9e7d40c7db0bbba876be43f1aceaa62a5aac48b86c2b91",
+    "served_worktree40": "0114cb5f67cdea370d9e7d40c7db0bbba876be43f1aceaa62a5aac48b86c2b91"
+  },
+  "packages/app/src/utils/server-protocol.ts": {
+    "worktree30": "35a1cbc6f31381a47d16491ceece0ea8498e97529b233582f2deec35c20c2493",
+    "served_worktree40": "35a1cbc6f31381a47d16491ceece0ea8498e97529b233582f2deec35c20c2493"
+  },
+  "packages/app/src/utils/server-compat.ts": {
+    "worktree30": "905d18016de73128cd2c143a7486efc15b768f3d3345ffbed4bc13367ef9b80e",
+    "served_worktree40": "905d18016de73128cd2c143a7486efc15b768f3d3345ffbed4bc13367ef9b80e"
+  },
+  "packages/sdk/js/src/v2/gen/sdk.gen.ts": {
+    "worktree30": "704370fa528777c75dd342f96dc02e440629735a370198d7b8dfb2fc2db6b236",
+    "served_worktree40": "704370fa528777c75dd342f96dc02e440629735a370198d7b8dfb2fc2db6b236"
+  },
+  "packages/opencode/src/server/routes/instance/httpapi/handlers/session.ts": {
+    "worktree30": "3ce829f386267181da442d499d841463a9e532db827f75a6f41d501de6f71cf6",
+    "served_worktree40": "3ce829f386267181da442d499d841463a9e532db827f75a6f41d501de6f71cf6"
+  },
+  "packages/opencode/src/server/routes/instance/httpapi/middleware/workspace-routing.ts": {
+    "worktree30": "39c42becc5274c5c66edc09b61101bc9a0592add44cdf597c7472d91eb57100b",
+    "served_worktree40": "39c42becc5274c5c66edc09b61101bc9a0592add44cdf597c7472d91eb57100b"
+  },
+  "packages/opencode/src/server/routes/instance/httpapi/middleware/instance-context.ts": {
+    "worktree30": "001a58d0b31d3ebeebe41f0640dea6b817b0ec592b7de495733f8670eb9a0b8f",
+    "served_worktree40": "001a58d0b31d3ebeebe41f0640dea6b817b0ec592b7de495733f8670eb9a0b8f"
+  },
+  "packages/opencode/src/session/prompt.ts": {
+    "worktree30": "f0c5bc64c0f0e966693d4a57f7ede1e9d6e188b396152f04b55303dc75b9b768",
+    "served_worktree40": "f0c5bc64c0f0e966693d4a57f7ede1e9d6e188b396152f04b55303dc75b9b768"
+  },
+  "packages/opencode/src/session/llm.ts": {
+    "worktree30": "5f1dcfb734853e39760e4dd05470f0c7d8752fc5dcc64e118c065149602e402d",
+    "served_worktree40": "5f1dcfb734853e39760e4dd05470f0c7d8752fc5dcc64e118c065149602e402d"
+  },
+  "packages/opencode/src/effect/runtime-flags.ts": {
+    "worktree30": "5b580cb96f9d5300f8ff995a29ec5e602e0e3e0200661dfff971998562f2a1a9",
+    "served_worktree40": "5b580cb96f9d5300f8ff995a29ec5e602e0e3e0200661dfff971998562f2a1a9"
+  },
+  "packages/core/src/session.ts": {
+    "worktree30": "6a82ac892612207fe3cdce0de556a7e4a06bf701557ebfe09607633641f224be",
+    "served_worktree40": "6a82ac892612207fe3cdce0de556a7e4a06bf701557ebfe09607633641f224be"
+  },
+  "packages/server/src/handlers/session.ts": {
+    "worktree30": "16350299687e565528cabd69b821bc46378dc0ccb947c1845628c27153323b88",
+    "served_worktree40": "16350299687e565528cabd69b821bc46378dc0ccb947c1845628c27153323b88"
+  },
+  "packages/server/src/middleware/session-location.ts": {
+    "worktree30": "75bfc73b73f22d9a2e8193ab8f982568b0bfeac27ec8f67a1b146c71bf40def7",
+    "served_worktree40": "75bfc73b73f22d9a2e8193ab8f982568b0bfeac27ec8f67a1b146c71bf40def7"
+  },
+  "packages/protocol/src/groups/session.ts": {
+    "worktree30": "43fcd8f64714d839dc3e2ee9d32e9f22a228e558b06716deb6a6485bf3c0825a",
+    "served_worktree40": "43fcd8f64714d839dc3e2ee9d32e9f22a228e558b06716deb6a6485bf3c0825a"
+  },
+  "packages/core/src/session/execution/local.ts": {
+    "worktree30": "445e1380ec207118a6d8f03128dc842019e35f47627e09533bb6e49a9934b229",
+    "served_worktree40": "445e1380ec207118a6d8f03128dc842019e35f47627e09533bb6e49a9934b229"
+  },
+  "packages/core/src/session/runner/llm.ts": {
+    "worktree30": "625134472e3c810fcf5b39f116950a5532bd24ae7ec0caa8b1c3198389fa5681",
+    "served_worktree40": "625134472e3c810fcf5b39f116950a5532bd24ae7ec0caa8b1c3198389fa5681"
+  },
+  "packages/core/src/location-mutation.ts": {
+    "worktree30": "25ed98b21d27f3b0a7cd021901cf6adc1d4f9e6988ea8ecf4ad07cb777960fce",
+    "served_worktree40": "25ed98b21d27f3b0a7cd021901cf6adc1d4f9e6988ea8ecf4ad07cb777960fce"
+  },
+  "packages/core/src/file-mutation.ts": {
+    "worktree30": "8e47abe63908e0f11064c70e9142c51c615273d319c53d084456092257ab4d43",
+    "served_worktree40": "8e47abe63908e0f11064c70e9142c51c615273d319c53d084456092257ab4d43"
+  },
+  "packages/core/src/tool/registry.ts": {
+    "worktree30": "cf2f73a4c6ed6ede7ba1cac30dac9bdf004142461d5bbcc8d55421cb2def7254",
+    "served_worktree40": "cf2f73a4c6ed6ede7ba1cac30dac9bdf004142461d5bbcc8d55421cb2def7254"
+  },
+  "packages/core/src/tool/bash.ts": {
+    "worktree30": "a79fabfe48f831bdff6b3140beccecdc44796d43071ee68356b1052f394c4303",
+    "served_worktree40": "a79fabfe48f831bdff6b3140beccecdc44796d43071ee68356b1052f394c4303"
+  },
+  "packages/core/src/tool/write.ts": {
+    "worktree30": "75d9914ff8d765e93e5add9e339b75719857f21d0e0d418bd6f0734e3a51b8cc",
+    "served_worktree40": "75d9914ff8d765e93e5add9e339b75719857f21d0e0d418bd6f0734e3a51b8cc"
+  },
+  "packages/core/src/tool/edit.ts": {
+    "worktree30": "527fe2d1fa70481c8aed6d6930866d136a1fd4aaea881e4ae8df33a9d7e7d8af",
+    "served_worktree40": "527fe2d1fa70481c8aed6d6930866d136a1fd4aaea881e4ae8df33a9d7e7d8af"
+  },
+  "packages/core/src/tool/apply-patch.ts": {
+    "worktree30": "4ae3d5e0707b7acf6095529a598c00b65cd1d9a9bceddb04d7f92526f59c6ffc",
+    "served_worktree40": "4ae3d5e0707b7acf6095529a598c00b65cd1d9a9bceddb04d7f92526f59c6ffc"
+  },
+  "packages/core/src/pty.ts": {
+    "worktree30": "aabd2577b86cfd0e620bf2693e8ca2620d33e457ade597e4135357a6fd8707f5",
+    "served_worktree40": "aabd2577b86cfd0e620bf2693e8ca2620d33e457ade597e4135357a6fd8707f5"
+  },
+  "packages/core/src/cross-spawn-spawner.ts": {
+    "worktree30": "83276c7b6389edb5881fb257754ffa89bfda7ee31fb952a7028e3c8da8fa3e2b",
+    "served_worktree40": "83276c7b6389edb5881fb257754ffa89bfda7ee31fb952a7028e3c8da8fa3e2b"
+  },
+  "packages/opencode/src/tool/shell.ts": {
+    "worktree30": "342d742ae324782d222465c202dcdfcb7cc35a4cecf04e87f9881f1794d921ac",
+    "served_worktree40": "342d742ae324782d222465c202dcdfcb7cc35a4cecf04e87f9881f1794d921ac"
+  },
+  "packages/opencode/src/tool/write.ts": {
+    "worktree30": "861de91cc67849e138c32a697c8eb1abab8e4912bfd97811ea1866b8e9af4096",
+    "served_worktree40": "861de91cc67849e138c32a697c8eb1abab8e4912bfd97811ea1866b8e9af4096"
+  },
+  "packages/opencode/src/tool/edit.ts": {
+    "worktree30": "f84d9d242137e1f18ce912188efb7a97b71bf4f255e0a69f16a1fe9d1ff236d4",
+    "served_worktree40": "f84d9d242137e1f18ce912188efb7a97b71bf4f255e0a69f16a1fe9d1ff236d4"
+  },
+  "packages/opencode/src/tool/apply_patch.ts": {
+    "worktree30": "9bc5a1384a5e1b1cdd21943cb529dcde6e5e596706dee2111ccdb999d6b0ba22",
+    "served_worktree40": "9bc5a1384a5e1b1cdd21943cb529dcde6e5e596706dee2111ccdb999d6b0ba22"
+  },
+  "packages/opencode/src/server/routes/instance/httpapi/handlers/pty.ts": {
+    "worktree30": "530b18ff5f01bf3df145e1f3ca30fb4f883801dde5dfa3d54b13b5a02aa7d5a5",
+    "served_worktree40": "530b18ff5f01bf3df145e1f3ca30fb4f883801dde5dfa3d54b13b5a02aa7d5a5"
+  }
+}

@@ -1,0 +1,21 @@
+bun test v1.3.14 (0d9b296a)
+
+src/utils/server-compat.test.ts:
+(pass) createCompatibleApi > converts current prompts to the V1 prompt contract [4.95ms]
+(pass) createCompatibleApi > preserves original parts for V1 optimistic reconciliation [0.65ms]
+(pass) createCompatibleApi > resolves protocol detection once across implementation methods [0.53ms]
+(pass) createCompatibleApi > uses the global V1 session search endpoint [0.52ms]
+(pass) createCompatibleApi > translates current file searches to the V1 dirs parameter [0.37ms]
+(pass) createCompatibleApi > routes V1 permission replies through the requested directory [0.39ms]
+(pass) createCompatibleApi > disposes the V1 instance after connecting a provider [0.96ms]
+(pass) createCompatibleApi > disposes the V1 instance after completing provider OAuth [0.56ms]
+
+src/utils/server-protocol.test.ts:
+(pass) detectServerProtocol > prefers the legacy health endpoint when both API generations exist [0.59ms]
+(pass) detectServerProtocol > recognizes V2 health by its process identifier [0.09ms]
+(pass) detectServerProtocol > recognizes the transitional V1 API health response [0.11ms]
+
+ 11 pass
+ 0 fail
+ 20 expect() calls
+Ran 11 tests across 2 files. [294.00ms]

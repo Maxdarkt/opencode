@@ -1,0 +1,78 @@
+bun test v1.3.14 (0d9b296a)
+
+test/tool-apply-patch.test.ts:
+(pass) ApplyPatchTool > registers and sequentially applies add, update, and delete hunks [35.94ms]
+(pass) ApplyPatchTool > rejects moves before applying any hunk [3.96ms]
+(pass) ApplyPatchTool > approves an external directory and the batch before reading external update content [5.33ms]
+(pass) ApplyPatchTool > approves one external directory scope for multiple files under the same parent [10.26ms]
+(pass) ApplyPatchTool > rejects invalid later update before applying an earlier add [3.22ms]
+(pass) ApplyPatchTool > rejects add hunks targeting an existing file without replacing it [4.30ms]
+(pass) ApplyPatchTool > rejects an add target that appears during permission approval [8.31ms]
+(pass) ApplyPatchTool > preserves a later commit defect after earlier sequential applications [3.73ms]
+(pass) ApplyPatchTool > finishes the sequential commit phase when interrupted after the first mutation [5.25ms]
+
+test/location-mutation.test.ts:
+(pass) LocationMutation > resolves an active relative existing file target [4.54ms]
+(pass) LocationMutation > resolves an active relative prospective file target [1.36ms]
+(pass) LocationMutation > rejects a relative lexical escape instead of promoting it to external authority [1.15ms]
+(pass) LocationMutation > rejects a prospective target below an escaping symlink ancestor [2.06ms]
+(pass) LocationMutation > follows an in-location symlink using ordinary filesystem semantics [1.36ms]
+(pass) LocationMutation > accepts an explicit absolute in-location target without external approval [1.10ms]
+(pass) LocationMutation > requires external-directory authorization for an explicit external absolute target [1.06ms]
+(pass) LocationMutation > resolves an existing external file target [1.17ms]
+(pass) LocationMutation > anchors prospective external descendants at their stable existing directory [1.27ms]
+(pass) LocationMutation > ignores unknown mutation input fields [0.09ms]
+
+test/tool-bash.test.ts:
+(pass) BashTool > registers and returns structured successful output from the active Location [6.75ms]
+(pass) BashTool > resolves a relative workdir from the active Location [3.29ms]
+(pass) BashTool > rejects a workdir that stops being a directory during approval [2.86ms]
+(pass) BashTool > executes a real shell command through AppProcess [18.88ms]
+(pass) BashTool > approves an explicit external workdir before bash execution [3.09ms]
+(pass) BashTool > does not execute after external-directory or bash denial [7.33ms]
+(pass) BashTool > reports external command arguments as advisory warnings without enforcing approval [10.83ms]
+(pass) BashTool > keeps non-zero exits useful [3.79ms]
+(pass) BashTool > surfaces bounded process-capture truncation [2.88ms]
+(pass) BashTool > returns a useful timeout settlement [2.74ms]
+(pass) keeps locked deferred parity TODOs visible [0.40ms]
+
+test/tool-write.test.ts:
+(pass) WriteTool > registers and creates a relative file through FileMutation once [6.07ms]
+(pass) WriteTool > overwrites a relative existing file and reports that it wrote the file [5.18ms]
+(pass) WriteTool > preserves exactly one BOM when overwriting existing files [4.00ms]
+(pass) WriteTool > accepts an absolute file path inside the active Location [1.60ms]
+(pass) WriteTool > approves an explicit external absolute path before edit [2.00ms]
+(pass) WriteTool > does not write when external_directory or edit approval is denied [3.09ms]
+(pass) keeps the locked write schema, semantics docstring, and deferred UX TODOs visible [1.41ms]
+
+test/file-mutation.test.ts:
+(pass) FileMutation > writes an existing internal file and returns a stable result [4.47ms]
+(pass) FileMutation > writes a prospective internal file and creates parent directories [1.97ms]
+(pass) FileMutation > preserves exactly one BOM for text writes and normalizes created text [1.87ms]
+(pass) FileMutation > rejects create when a prospective target appears after resolution [1.33ms]
+(pass) FileMutation > creates when an existing target disappears after resolution [1.08ms]
+(pass) FileMutation > removes an existing internal file [0.99ms]
+(pass) FileMutation > writes an explicitly resolved external target [1.35ms]
+(pass) FileMutation > removes an explicitly resolved external target [2.65ms]
+(pass) FileMutation > reports a missing target as not removed without checking existence first [1.16ms]
+(pass) FileMutation > serializes concurrent writes to the same canonical target [2.30ms]
+(pass) FileMutation > allows only one concurrent conditional write based on the same bytes [1.68ms]
+(pass) FileMutation > rejects a conditional write when target content is already stale [1.15ms]
+(pass) FileMutation > allows distinct canonical targets to proceed independently [4.95ms]
+
+test/tool-edit.test.ts:
+(pass) EditTool > registers and replaces relative exact text through FileMutation once [3.98ms]
+(pass) EditTool > accepts an absolute file path inside the active Location [2.93ms]
+(pass) EditTool > approves an explicit external absolute path before edit [2.86ms]
+(pass) EditTool > does not write when external_directory or edit approval is denied [4.08ms]
+(pass) EditTool > denied edit reads no target content and does not disclose whether oldString matches [6.00ms]
+(pass) EditTool > rejects no-op, empty, missing, and ambiguous exact replacements [3.70ms]
+(pass) EditTool > replaces every exact occurrence when replaceAll is true [2.83ms]
+(pass) EditTool > preserves BOM and CRLF line endings [2.53ms]
+(pass) EditTool > rejects an in-place content change after matching but before conditional commit [2.48ms]
+(pass) keeps the locked edit schema, semantics docstring, and deferred TODOs visible [1.69ms]
+
+ 60 pass
+ 0 fail
+ 196 expect() calls
+Ran 60 tests across 6 files. [739.00ms]

@@ -1,0 +1,32 @@
+ M .project/tasks/DA10-001-audit-ui-opencode/STATE.md
+ M .project/tasks/DA20-001-audit-workspace-git/STATE.md
+ M .project/tasks/DA30-001-audit-runtime-couts/STATE.md
+ M .project/tasks/DA30-002-modele-apex-sprint/STATE.md
+ M .project/tasks/DA40-001-gap-analysis-m0/STATE.md
+ M .project/tasks/DA40-002-orchestration-m0/STATE.md
+ M AGENTS.md
+ M PLAN-GENERAL.md
+?? .project/archives/
+?? .project/tasks/DA30-001-audit-runtime-couts/analyze.md
+?? .project/tasks/DA30-001-audit-runtime-couts/audit-runtime.md
+?? .project/tasks/DA30-001-audit-runtime-couts/blocs/
+?? .project/tasks/DA30-001-audit-runtime-couts/evidence/
+?? .project/tasks/DA30-001-audit-runtime-couts/handoff.md
+?? .project/tasks/DA30-001-audit-runtime-couts/plan.md
+?? .project/tasks/DA30-001-audit-runtime-couts/protocole-economique.md
+?? .project/tasks/DA30-001-audit-runtime-couts/smoke-report.md
+?? .project/tasks/DA30-002-modele-apex-sprint/analyze.md
+?? .project/tasks/DA30-002-modele-apex-sprint/blocs/
+?? .project/tasks/DA30-002-modele-apex-sprint/budgets-reconciliation.md
+?? .project/tasks/DA30-002-modele-apex-sprint/evidence/
+?? .project/tasks/DA30-002-modele-apex-sprint/handoff.md
+?? .project/tasks/DA30-002-modele-apex-sprint/machine-etats.md
+?? .project/tasks/DA30-002-modele-apex-sprint/modele-donnees.md
+?? .project/tasks/DA30-002-modele-apex-sprint/plan.md
+?? .project/tasks/DA30-002-modele-apex-sprint/scenario-papier.md
+?? .project/tasks/DA30-002-modele-apex-sprint/smoke-report.md
+?? .project/tasks/DA30-002-modele-apex-sprint/sources.md
+?? .project/tasks/DA30-003-qualification-parcours-runtime/
+?? sprint.md
+
+HEAD 702bf7dcd7468638c17fd95b110deb38bd253e9a

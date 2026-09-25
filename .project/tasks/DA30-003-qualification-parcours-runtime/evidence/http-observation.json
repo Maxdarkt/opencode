@@ -1,0 +1,19 @@
+[
+  {
+    "url": "http://127.0.0.1:4140/global/health",
+    "status": 200,
+    "content_type": "application/json",
+    "body_sha256": "a6a889558c01bb7e80dbf10729918a70ac865ed08eb2c9e87ae71f24c15dbd0d",
+    "health": {
+      "healthy": true,
+      "version": "local"
+    }
+  },
+  {
+    "url": "http://127.0.0.1:4440/",
+    "status": 200,
+    "content_type": "text/html",
+    "body_sha256": "ff6afaa157aa9684c92686973577dc53f386c91a8e6ddd619cef25ca4bde15f0",
+    "health": null
+  }
+]

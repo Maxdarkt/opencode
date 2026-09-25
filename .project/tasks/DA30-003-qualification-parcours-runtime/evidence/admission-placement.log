@@ -1,0 +1,53 @@
+bun test v1.3.14 (0d9b296a)
+
+test/location.test.ts:
+(pass) Location > resolves the current project and vcs information [2.82ms]
+
+test/session-run-coordinator.test.ts:
+(pass) SessionRunCoordinator > joins concurrent resumes for one key [5.02ms]
+(pass) SessionRunCoordinator > joins a wake-started execution without forcing a successor [5.75ms]
+(pass) SessionRunCoordinator > starts execution when woken while idle [1.61ms]
+(pass) SessionRunCoordinator > snapshots only active executions [0.84ms]
+(pass) SessionRunCoordinator > cleans active executions after failure and defect [0.66ms]
+(pass) SessionRunCoordinator > cleans active executions when its scope closes [22.14ms]
+(pass) SessionRunCoordinator > coalesces wakes received during active execution [7.67ms]
+(pass) SessionRunCoordinator > runs again when woken during the follow-up [1.41ms]
+(pass) SessionRunCoordinator > does nothing when interrupted while idle [1.29ms]
+(pass) SessionRunCoordinator > interrupts active execution and clears its pending wake [3.26ms]
+(pass) SessionRunCoordinator > runs a wake registered during interruption cleanup [9.91ms]
+(pass) SessionRunCoordinator > starts a resume registered during interruption cleanup [1.53ms]
+(pass) SessionRunCoordinator > starts one follow-up when a wake races with failure [2.41ms]
+(pass) SessionRunCoordinator > does not cancel execution when a joined waiter is interrupted [0.61ms]
+(pass) SessionRunCoordinator > runs different keys concurrently [1.93ms]
+(pass) SessionRunCoordinator > trampolines synchronous self-waking execution [215.92ms]
+
+test/session-prompt.test.ts:
+(pass) SessionV2.prompt > exposes the execution registry [70.27ms]
+(pass) SessionV2.prompt > delegates execution continuation through SessionExecution [39.30ms]
+(pass) SessionV2.prompt > delegates process-local interruption through SessionExecution [24.92ms]
+(pass) SessionV2.prompt > delegates interruption without requiring a recorded Session [15.39ms]
+(pass) SessionV2.prompt > durably admits one user message before transcript promotion [30.95ms]
+(pass) SessionV2.prompt > resolves attachment MIME before admission [23.10ms]
+(pass) SessionV2.prompt > streams durable Session events after an aggregate sequence [39.18ms]
+(pass) SessionV2.prompt > resumes through a recorded message without appending another prompt [17.68ms]
+(pass) SessionV2.prompt > records distinct messages when the ID is omitted [16.38ms]
+(pass) SessionV2.prompt > returns the original recorded message when the ID is retried [15.51ms]
+(pass) SessionV2.prompt > wakes execution when an exact prompt retry recovers a committed message [7.80ms]
+(pass) SessionV2.prompt > rejects reuse of one ID with a different prompt [12.70ms]
+(pass) SessionV2.prompt > rejects reuse of one ID with a different delivery mode [8.77ms]
+(pass) SessionV2.prompt > returns one recorded message to concurrent exact retries [11.66ms]
+(pass) SessionV2.prompt > promotes one message once under concurrent promotion attempts [12.38ms]
+(pass) SessionV2.prompt > promotes steers only through the captured inbox cutoff [18.68ms]
+(pass) SessionV2.prompt > reprojects pending inbox input without scheduling execution [18.16ms]
+(pass) SessionV2.prompt > returns an exact retry of a legacy projected prompt [13.68ms]
+(pass) SessionV2.prompt > returns an exact retry of a legacy projected queued prompt [8.89ms]
+(pass) SessionV2.prompt > rejects reuse of one globally unique message ID across sessions [7.69ms]
+(pass) SessionV2.prompt > rejects a prompt ID already used by visible Session history [7.98ms]
+(pass) SessionV2.prompt > starts execution by default after recording the prompt [8.86ms]
+(pass) SessionV2.prompt > starts execution when resume is explicitly true [7.50ms]
+(pass) SessionV2.prompt > only records the prompt when resume is false [6.45ms]
+
+ 41 pass
+ 0 fail
+ 84 expect() calls
+Ran 41 tests across 3 files. [1.75s]

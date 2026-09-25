@@ -1,0 +1,51 @@
+[
+  {
+    "name": "client-route",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime/packages/app",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime/.project/tasks/DA30-003-qualification-parcours-runtime/evidence/runtime/bun",
+      "test",
+      "--conditions=solid",
+      "src/utils/server-compat.test.ts",
+      "src/utils/server-protocol.test.ts"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "admission-placement",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime/packages/core",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime/.project/tasks/DA30-003-qualification-parcours-runtime/evidence/runtime/bun",
+      "test",
+      "test/session-prompt.test.ts",
+      "test/session-run-coordinator.test.ts",
+      "test/location.test.ts"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "mutation-controls",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime/packages/core",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime/.project/tasks/DA30-003-qualification-parcours-runtime/evidence/runtime/bun",
+      "test",
+      "test/location-mutation.test.ts",
+      "test/file-mutation.test.ts",
+      "test/tool-write.test.ts",
+      "test/tool-edit.test.ts",
+      "test/tool-apply-patch.test.ts",
+      "test/tool-bash.test.ts"
+    ],
+    "exit": 0
+  },
+  {
+    "name": "core-typecheck",
+    "cwd": "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime/packages/core",
+    "command": [
+      "/Users/leanbot/Documents/40_Daidalon/features/30-agent-runtime/.project/tasks/DA30-003-qualification-parcours-runtime/evidence/runtime/bun",
+      "run",
+      "typecheck"
+    ],
+    "exit": 0
+  }
+]

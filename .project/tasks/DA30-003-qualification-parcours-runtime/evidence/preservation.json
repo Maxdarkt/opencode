@@ -1,0 +1,12 @@
+{
+  "initial_files": 43,
+  "changed_inherited": [
+    ".project/tasks/DA30-003-qualification-parcours-runtime/STATE.md",
+    "PLAN-GENERAL.md"
+  ],
+  "unexpected_changes": [],
+  "head": "702bf7dcd7468638c17fd95b110deb38bd253e9a",
+  "index": [],
+  "product_diff": [],
+  "lockfile_matches_HEAD": true
+}
