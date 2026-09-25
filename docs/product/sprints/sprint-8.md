@@ -23,7 +23,7 @@ DA30-015 : Smoke cockpit FAIL puis scope recadré (session + catalogue affiché)
 
 ## Dettes et suite
 
-- Worktree `DA40-020-process-cpu-ram` **non retiré** : untracked `.apex/` + `fixtures/code-91`.
+- Worktree `DA40-020-process-cpu-ram` **non retiré** : untracked `.apex/` + `fixtures/code-91`. 014, 015, 007 retirés ; branches conservées.
 - Preview/prod (`develop`/`master`) facultatives, non faites.
 - Worktrees métier `features/10-*`…`40-*` encore présents (legacy).
 - Backlog cockpit V2 : DA10-012 … DA10-018, hors ce sprint.

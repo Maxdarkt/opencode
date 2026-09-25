@@ -30,4 +30,5 @@ merge-base `staging`/`cbdf61e67` = `8db56f535`.
 
 ## Conclusion
 
-- en cours
+- **reconciled** : docs `0e66cd58f` puis merge `6d6de081f` puis docs `334bec18d` ; `origin/staging` `334bec18d` (SSH) ; DA20-007 archived ; sprint `completed` ; worktrees 014, 015, 007 retirés ; 020 conservé (sale). `?? .cursor/permissions.json` hors clôture.
+
