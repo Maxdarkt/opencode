@@ -233,6 +233,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "เข้าสู่ระบบด้วย Claude Pro/Max",
   "provider.connect.selectMethod": "เลือกวิธีการเข้าสู่ระบบสำหรับ {{provider}}",
   "provider.connect.method.apiKey": "คีย์ API",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "เบราว์เซอร์",
   "provider.connect.method.headless": "ไม่ใช้เบราว์เซอร์",
   "provider.connect.status.inProgress": "กำลังอนุญาต...",

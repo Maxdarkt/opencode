@@ -215,6 +215,8 @@ export const dict: Record<string, string> = {
   "provider.connect.title.anthropicProMax": "Claude Pro/Max सँग लगइन गर्नुहोस्",
   "provider.connect.selectMethod": "{{provider}} का लागि लगइन विधि चयन गर्नुहोस्।",
   "provider.connect.method.apiKey": "API कुञ्जी",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "ब्राउजर",
   "provider.connect.method.headless": "टाउकोविहीन",
   "provider.connect.status.inProgress": "प्राधिकरण जारी छ...",

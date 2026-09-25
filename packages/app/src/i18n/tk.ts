@@ -215,6 +215,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Claude Pro / Maks bilen giriň",
   "provider.connect.selectMethod": "{{provider}} üçin giriş usulyny saýlaň.",
   "provider.connect.method.apiKey": "API açary",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Brauzer",
   "provider.connect.method.headless": "Kellesiz",
   "provider.connect.status.inProgress": "Ygtyýarnama dowam edýär ...",

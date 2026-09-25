@@ -239,6 +239,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Claude Pro/Max ile giriş yap",
   "provider.connect.selectMethod": "{{provider}} için giriş yöntemini seçin.",
   "provider.connect.method.apiKey": "API anahtarı",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Tarayıcı",
   "provider.connect.method.headless": "Tarayıcısız",
   "provider.connect.status.inProgress": "Yetkilendirme devam ediyor...",

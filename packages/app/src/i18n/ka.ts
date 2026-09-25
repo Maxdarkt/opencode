@@ -214,6 +214,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "შესვლა Claude Pro/Max-ით",
   "provider.connect.selectMethod": "აირჩიეთ შესვლის მეთოდი {{provider}}-ისთვის.",
   "provider.connect.method.apiKey": "API გასაღები",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "ბრაუზერი",
   "provider.connect.method.headless": "გრაფიკული ინტერფეისის გარეშე",
   "provider.connect.status.inProgress": "ავტორიზაცია მიმდინარეობს...",

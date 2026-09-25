@@ -214,6 +214,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Logi sisse Claude Pro/Max",
   "provider.connect.selectMethod": "Valige {{provider}} jaoks sisselogimisviis.",
   "provider.connect.method.apiKey": "API klahv",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Brauser",
   "provider.connect.method.headless": "Peata",
   "provider.connect.status.inProgress": "Autoriseerimine on pooleli...",

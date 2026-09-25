@@ -214,6 +214,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "ចូលដោយប្រើ Claude Pro/Max",
   "provider.connect.selectMethod": "ជ្រើសរើសវិធីសាស្ត្រចូលសម្រាប់ {{provider}} ។",
   "provider.connect.method.apiKey": "សោ API",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "កម្មវិធីរុករក",
   "provider.connect.method.headless": "គ្មានក្បាល",
   "provider.connect.status.inProgress": "ការអនុញ្ញាតកំពុងដំណើរការ...",

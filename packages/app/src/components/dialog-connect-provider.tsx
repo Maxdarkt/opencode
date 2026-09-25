@@ -36,6 +36,7 @@ import { useLanguage } from "@/context/language"
 import { usePlatform } from "@/context/platform"
 import { useSettings } from "@/context/settings"
 import { popularProviders, useProviders } from "@/hooks/use-providers"
+import { billingChannel, billingChannelKey } from "@/pages/session/billing-channel"
 import { CustomProviderForm } from "./dialog-custom-provider"
 import { decode64 } from "@/utils/base64"
 
@@ -759,6 +760,9 @@ function ProviderConnection(props: {
                       <span class="hidden h-0.5 w-2.5 bg-v2-icon-icon-base group-hover:block group-focus-visible:block" />
                     </span>
                     <span class="font-[530] text-v2-text-text-base">{details().label}</span>
+                    <span class="font-[440] text-v2-text-text-muted">
+                      {language.t(billingChannelKey(billingChannel(item.type)))}
+                    </span>
                     <Show when={details().hint}>
                       {(hint) => <span class="font-[440] text-v2-text-text-muted">{hint()}</span>}
                     </Show>
@@ -794,6 +798,7 @@ function ProviderConnection(props: {
                   <div class="w-2.5 h-0.5 ml-0 bg-icon-strong-base hidden" data-slot="list-item-extra-icon" />
                 </div>
                 <span>{methodLabel(i)}</span>
+                <span class="text-text-weak">{language.t(billingChannelKey(billingChannel(i.type)))}</span>
               </div>
             )}
           </List>

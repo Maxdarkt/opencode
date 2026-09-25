@@ -214,6 +214,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "በClaude Pro/Max ይግቡ",
   "provider.connect.selectMethod": "የመግቢያ ዘዴን ለ{{provider}} ምረጥ።",
   "provider.connect.method.apiKey": "API ቁልፍ",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "አሳሽ",
   "provider.connect.method.headless": "ያለ ግራፊክ በይነገጽ",
   "provider.connect.status.inProgress": "ፍቃድ በሂደት ላይ...",

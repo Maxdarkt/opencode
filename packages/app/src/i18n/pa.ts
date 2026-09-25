@@ -221,6 +221,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Claude پرو/میکس دے نال لاگ ان کرو",
   "provider.connect.selectMethod": "{{provider}} لئی لاگ ان دا طریقہ منتخب کرو۔",
   "provider.connect.method.apiKey": "API کلید",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "براؤزر",
   "provider.connect.method.headless": "ہیڈلیس",
   "provider.connect.status.inProgress": "اختیار دیندے پئے آں...",

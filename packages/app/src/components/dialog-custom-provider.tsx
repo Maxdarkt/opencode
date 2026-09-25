@@ -12,6 +12,7 @@ import { ExternalLink } from "@/components/external-link"
 import { useServerSDK } from "@/context/server-sdk"
 import { useServerSync } from "@/context/server-sync"
 import { useLanguage } from "@/context/language"
+import { billingChannel, billingChannelKey } from "@/pages/session/billing-channel"
 import { type FormState, headerRow, modelRow, validateCustomProvider } from "./dialog-custom-provider-form"
 
 type Props = {
@@ -180,6 +181,9 @@ export function CustomProviderForm(props: { autofocus?: boolean } = {}) {
       <div class="px-2.5 flex gap-4 items-center">
         <ProviderIcon id="synthetic" class="size-5 shrink-0 icon-strong-base" />
         <div class="text-16-medium text-text-strong">{language.t("provider.custom.title")}</div>
+        <span class="text-14-regular text-text-weak">
+          {language.t(billingChannelKey(billingChannel("key")))}
+        </span>
       </div>
 
       <form onSubmit={save} class="px-2.5 pb-6 flex flex-col gap-6">

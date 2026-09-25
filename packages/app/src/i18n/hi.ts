@@ -222,6 +222,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Claude प्रो/मैक्स के साथ लॉगिन करें",
   "provider.connect.selectMethod": "{{provider}} के लिए लॉगिन विधि चुनें।",
   "provider.connect.method.apiKey": "API कुंजी",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "ब्राउज़र",
   "provider.connect.method.headless": "हेडलेस मोड",
   "provider.connect.status.inProgress": "प्राधिकरण प्रगति पर है...",

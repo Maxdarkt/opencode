@@ -235,6 +235,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Masuk dengan Claude Pro/Max",
   "provider.connect.selectMethod": "Pilih metode masuk untuk {{provider}}.",
   "provider.connect.method.apiKey": "Kunci API",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Peramban",
   "provider.connect.method.headless": "Headless",
   "provider.connect.status.inProgress": "Otorisasi sedang berlangsung...",

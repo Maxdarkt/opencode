@@ -216,6 +216,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Claude Pro/Max ဖြင့် ဝင်ရောက်ပါ။",
   "provider.connect.selectMethod": "{{provider}} အတွက် အကောင့်ဝင်နည်းလမ်းကို ရွေးပါ။",
   "provider.connect.method.apiKey": "API သော့",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "ဘရောက်ဆာ",
   "provider.connect.method.headless": "ဦးခေါင်းမဲ့",
   "provider.connect.status.inProgress": "ခွင့်ပြုချက် လုပ်ဆောင်နေသည်...",

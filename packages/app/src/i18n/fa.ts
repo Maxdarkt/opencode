@@ -215,6 +215,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "با Claude Pro/Max وارد شوید",
   "provider.connect.selectMethod": "روش ورود برای {{provider}} را انتخاب کنید.",
   "provider.connect.method.apiKey": "کلید API",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "مرورگر",
   "provider.connect.method.headless": "بدون رابط گرافیکی",
   "provider.connect.status.inProgress": "مجوز در حال انجام است...",

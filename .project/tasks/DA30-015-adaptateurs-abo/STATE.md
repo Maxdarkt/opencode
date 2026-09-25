@@ -1,9 +1,21 @@
 # STATE — DA30-015 — Adaptateurs d’abonnement LLM sans capter le produit
 
-- generation: 1
-- phase: scoped
-- next_action: hors Sprint 5 (backlog 0.5)
+- generation: 11
+- phase: verify
+- next_action: remise sprint
+- read_set: verify.md
 - display_id: DA30-015
-- mt: todo
+- mt: in_progress
 - external_ref: .project/tasks/DA30-015-adaptateurs-abo
+- worktree: /Users/leanbot/Documents/40_Daidalon/features/tasks/DA30-015-adaptateurs-abo
+- branch: task/DA30-015-adaptateurs-abo
+- HEAD: 232bfaedb
 - blockers: aucun
+- completed_blocks: [B1, B2]
+- checks: typecheck / tests / smoke — PASS
+- evidence: smoke-report.md, verify.md
+- runtime_profile: none
+- runtime_wake_at: null
+- runtime_ports: { ui: 6400, backend: 6402 }
+- runtime_pids: []
+- runtime_note: serveurs arrêtés
