@@ -1,4 +1,5 @@
 import { cockpitPromptText } from "@/pages/sprint-cockpit-prompt"
+import { budgetAlerts, type BudgetAlertInput } from "./budget-alert"
 
 export type MetricState = {
   state: string
@@ -22,6 +23,7 @@ export type PackInspectorView = {
   tokensBefore: string
   tokensAfter: string
   cost: string
+  budgetAlert: string
 }
 
 // Absent or unpublished metrics stay "unknown". Never render a false zero.
@@ -43,10 +45,15 @@ export function formatTokens(metric: MetricState | undefined): string {
 export function formatCost(metric: MetricState | undefined): string {
   if (!metric || metric.state === "unknown" || typeof metric.value !== "number") return "unknown"
   if (metric.value === 0) return "unknown"
-  return String(metric.value)
+  return `${metric.state} ${String(metric.value)}`
 }
 
-export function packInspectorView(input: { pack?: PackSnapshot; cost?: MetricState }): PackInspectorView {
+export function formatBudgetAlert(input: BudgetAlertInput = {}): string {
+  const alerts = budgetAlerts(input)
+  return `sprint ${alerts.sprint.text} · context ${alerts.context.text} · retries ${alerts.retries.text} · empty ${alerts.emptyRun.text}`
+}
+
+export function packInspectorView(input: { pack?: PackSnapshot; cost?: MetricState; alert?: BudgetAlertInput }): PackInspectorView {
   return {
     worktree: input.pack?.worktree || "unknown",
     pathset: input.pack?.pathset ?? [],
@@ -55,6 +62,7 @@ export function packInspectorView(input: { pack?: PackSnapshot; cost?: MetricSta
     tokensBefore: formatTokens(input.pack?.tokensBefore),
     tokensAfter: formatTokens(input.pack?.tokensAfter),
     cost: formatCost(input.cost),
+    budgetAlert: formatBudgetAlert(input.alert),
   }
 }
 

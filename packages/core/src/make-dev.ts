@@ -13,6 +13,36 @@ import path from "path"
 export const Status = MakeDev.Status
 export type Status = MakeDev.Status
 
+export type ProcessSampleRow = {
+  readonly pid: number
+  readonly ppid: number
+  readonly cpuPercent: number
+  readonly rssKilobytes: number
+}
+
+// `ps` reports RSS in kilobytes. Only the owned pid and its descendants count.
+export function sumProcessTree(rows: ReadonlyArray<ProcessSampleRow>, rootPid: number) {
+  const included = new Set<number>()
+  const visit = (pid: number) => {
+    if (included.has(pid)) return
+    if (!rows.some((row) => row.pid === pid)) return
+    included.add(pid)
+    for (const row of rows) {
+      if (row.ppid === pid) visit(row.pid)
+    }
+  }
+  visit(rootPid)
+  if (!included.has(rootPid)) return undefined
+  const selected = [...included].flatMap((pid) => {
+    const row = rows.find((item) => item.pid === pid)
+    return row ? [row] : []
+  })
+  return {
+    cpuPercent: selected.reduce((sum, row) => sum + row.cpuPercent, 0),
+    rssBytes: selected.reduce((sum, row) => sum + row.rssKilobytes, 0) * 1024,
+  }
+}
+
 export type ParsedMakeEnv =
   | {
       readonly ok: true
@@ -109,7 +139,10 @@ const layer = Layer.effect(
     const status = Effect.fn("MakeDev.status")(function* () {
       if (owned && !(yield* alive())) owned = undefined
       const env = yield* readEnv()
-      if (owned) return fromEnv(env, env.ok ? "on" : "unknown")
+      if (owned) {
+        const base = fromEnv(env, env.ok ? "on" : "unknown")
+        return yield* attachLoad(base, owned.pid)
+      }
       if (!env.ok) return fromEnv(env, "unknown")
       return fromEnv(env, "off")
     })
@@ -143,7 +176,7 @@ const layer = Layer.effect(
         return fromEnv(env, "off", detail)
       }
       owned = handle
-      return fromEnv(env, "on")
+      return yield* status()
     })
 
     const stop = Effect.fn("MakeDev.stop")(function* () {
@@ -164,3 +197,113 @@ export const node = makeLocationNode({
   layer,
   deps: [FSUtil.node, Location.node, AppProcess.node],
 })
+
+const sampleDepth = 8
+const samplePidCap = 64
+
+const attachLoad = (status: Status, pid: number) =>
+  Effect.gen(function* () {
+    if (status.state !== "on") return status
+    const sample = yield* Effect.promise(() => readOwnedSample(pid)).pipe(
+      Effect.catch(() => Effect.succeed(undefined)),
+    )
+    if (!sample) return status
+    return { ...status, cpuPercent: sample.cpuPercent, rssBytes: sample.rssBytes }
+  })
+
+function readOwnedSample(rootPid: number) {
+  if (process.platform !== "darwin" && process.platform !== "linux") return Promise.resolve(undefined)
+  return collectPids(rootPid).then((pids) => {
+    if (!pids) return undefined
+    return readPs(pids).then((rows) => {
+      if (!rows || rows.length !== pids.length) return undefined
+      return sumProcessTree(rows, rootPid)
+    })
+  })
+}
+
+function collectPids(rootPid: number) {
+  const all = [rootPid]
+  const walk = (frontier: number[], depth: number): Promise<number[] | undefined> => {
+    if (depth === sampleDepth) {
+      return childrenOf(frontier).then((more) => (more && more.length === 0 ? all : undefined))
+    }
+    return childrenOf(frontier).then((children) => {
+      if (!children) return undefined
+      if (children.length === 0) return all
+      if (all.length + children.length > samplePidCap) return undefined
+      all.push(...children)
+      return walk(children, depth + 1)
+    })
+  }
+  return walk([rootPid], 0)
+}
+
+function childrenOf(parents: number[]) {
+  const found: number[] = []
+  const next = (index: number): Promise<number[] | undefined> => {
+    const parent = parents[index]
+    if (parent === undefined) return Promise.resolve(found)
+    return pgrepChildren(parent).then((children) => {
+      if (!children) return undefined
+      found.push(...children)
+      return next(index + 1)
+    })
+  }
+  return next(0)
+}
+
+function pgrepChildren(parent: number) {
+  return spawnText("pgrep", ["-P", String(parent)]).then((result) => {
+    if (!result) return undefined
+    if (result.code === 1) return []
+    if (result.code !== 0) return undefined
+    const pids = result.stdout
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((line) => line.length > 0)
+      .map((line) => Number(line))
+    if (pids.some((pid) => !Number.isInteger(pid) || pid <= 0)) return undefined
+    return pids
+  })
+}
+
+function readPs(pids: number[]) {
+  return spawnText("ps", ["-p", pids.join(","), "-o", "pid=,ppid=,pcpu=,rss="]).then((result) => {
+    if (!result || result.code !== 0) return undefined
+    return parsePs(result.stdout)
+  })
+}
+
+function parsePs(text: string) {
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+  const rows = lines.flatMap((line) => {
+    const parts = line.split(/\s+/)
+    if (parts.length !== 4) return []
+    const pid = Number(parts[0])
+    const ppid = Number(parts[1])
+    const cpuPercent = Number(parts[2])
+    const rssKilobytes = Number(parts[3])
+    if (!Number.isInteger(pid) || !Number.isInteger(ppid) || !Number.isInteger(rssKilobytes)) return []
+    if (!Number.isFinite(cpuPercent) || cpuPercent < 0 || rssKilobytes < 0) return []
+    return [{ pid, ppid, cpuPercent, rssKilobytes }]
+  })
+  if (rows.length !== lines.length) return undefined
+  return rows
+}
+
+function spawnText(command: string, args: string[]) {
+  // LC_ALL=C keeps ps decimals as dots. Replacing env drops PATH, so the parent env stays.
+  const proc = Bun.spawn([command, ...args], {
+    stdout: "pipe",
+    stderr: "ignore",
+    env: { ...process.env, LC_ALL: "C", LANG: "C" },
+  })
+  return new Response(proc.stdout).text().then(async (stdout) => {
+    const code = await proc.exited
+    return { code, stdout }
+  })
+}

@@ -1,8 +1,8 @@
 # STATE — DA30-015 — Adaptateurs d’abonnement LLM sans capter le produit
 
-- generation: 4
+- generation: 5
 - phase: verify
-- next_action: none (Verify PASS, commit local)
+- next_action: none (Verify PASS, archived)
 - display_id: DA30-015
 - mt: archived
 - sprint_ref: da-release-0.1-sprint-8
@@ -13,6 +13,6 @@
 - HEAD: 584401a7e
 - feat: 232bfaedb
 - blockers: aucun
+- completed_blocks: [B1, B2]
 - checks: typecheck / tests / smoke PASS
-- evidence: worktree verify.md, smoke-report.md
-- note: remise SHA 584401a7e ; Git tip docs verify, feat 232bfaedb. Libellé API sur formulaire custom. Pas de push/merge.
+- evidence: verify.md, smoke-report.md

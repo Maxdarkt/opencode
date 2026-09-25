@@ -166,7 +166,8 @@ export namespace Step {
       ...Base,
       assistantMessageID: SessionMessage.ID,
       finish: Schema.String,
-      cost: Schema.Finite,
+      cost: Schema.Finite.pipe(optional),
+      costState: Schema.Literals(["estimated", "measured"]).pipe(optional),
       tokens: Schema.Struct({
         input: Schema.Finite,
         output: Schema.Finite,

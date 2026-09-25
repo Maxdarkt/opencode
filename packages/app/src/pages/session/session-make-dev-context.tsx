@@ -1,4 +1,4 @@
-import { createResource } from "solid-js"
+import { createEffect, createResource, onCleanup } from "solid-js"
 import { createSimpleContext } from "@opencode-ai/ui/context"
 import { useSDK } from "@/context/sdk"
 import { packInspectorServersView, secondaryBrowserView, type MakeDevStatus } from "./session-make-dev"
@@ -28,6 +28,17 @@ export const { use: useMakeDev, provider: MakeDevProvider } = createSimpleContex
       actions.mutate(next)
       return next
     }
+
+    createEffect(() => {
+      if (status().state !== "on") return
+      const timer = setInterval(() => {
+        const current = sdk()
+        void requestMakeDev({ url: current.url, directory: current.directory }, "/api/make-dev", "GET").then((next) => {
+          actions.mutate(next)
+        })
+      }, 2000)
+      onCleanup(() => clearInterval(timer))
+    })
 
     return {
       status,

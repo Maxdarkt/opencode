@@ -218,6 +218,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Claude ޕްރޯ/މެކްސް އިން ލޮގިން ވާނެއެވެ",
   "provider.connect.selectMethod": "{{provider}} އަށް ލޮގިން މެތޯޑް ހޮވާށެވެ.",
   "provider.connect.method.apiKey": "API ކީ އެވެ",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "ބްރައުޒާ އެވެ",
   "provider.connect.method.headless": "އިންޓަފޭސް ނެތި",
   "provider.connect.status.inProgress": "ހުއްދަ ދިނުމުގެ މަސައްކަތް ކުރިއަށްދާ...",

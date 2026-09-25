@@ -218,6 +218,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Prisijunkite naudodami Claude Pro/Max",
   "provider.connect.selectMethod": "Pasirinkite {{provider}} prisijungimo būdą.",
   "provider.connect.method.apiKey": "API raktas",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Naršyklė",
   "provider.connect.method.headless": "Be galvos",
   "provider.connect.status.inProgress": "Vykdoma prieigos teisė...",

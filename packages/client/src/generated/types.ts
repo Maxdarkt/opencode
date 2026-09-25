@@ -656,6 +656,7 @@ export type SessionsContextOutput = {
         readonly snapshot?: { readonly start?: string; readonly end?: string; readonly files?: ReadonlyArray<string> }
         readonly finish?: string
         readonly cost?: number
+        readonly costState?: "estimated" | "measured"
         readonly tokens?: {
           readonly input: number
           readonly output: number
@@ -856,7 +857,8 @@ export type SessionsHistoryOutput = {
           readonly sessionID: string
           readonly assistantMessageID: string
           readonly finish: string
-          readonly cost: number
+          readonly cost?: number
+          readonly costState?: "estimated" | "measured"
           readonly tokens: {
             readonly input: number
             readonly output: number
@@ -1314,7 +1316,8 @@ export type SessionsEventsOutput =
         readonly sessionID: string
         readonly assistantMessageID: string
         readonly finish: string
-        readonly cost: number
+        readonly cost?: number
+        readonly costState?: "estimated" | "measured"
         readonly tokens: {
           readonly input: number
           readonly output: number
@@ -1810,6 +1813,7 @@ export type SessionsMessageOutput = {
         readonly snapshot?: { readonly start?: string; readonly end?: string; readonly files?: ReadonlyArray<string> }
         readonly finish?: string
         readonly cost?: number
+        readonly costState?: "estimated" | "measured"
         readonly tokens?: {
           readonly input: number
           readonly output: number
@@ -1982,6 +1986,7 @@ export type MessagesListOutput = {
         readonly snapshot?: { readonly start?: string; readonly end?: string; readonly files?: ReadonlyArray<string> }
         readonly finish?: string
         readonly cost?: number
+        readonly costState?: "estimated" | "measured"
         readonly tokens?: {
           readonly input: number
           readonly output: number
@@ -2590,6 +2595,8 @@ export type MakeDevStatusOutput = {
     readonly uiPort?: number
     readonly worktreeCode?: number
     readonly error?: string
+    readonly cpuPercent?: number
+    readonly rssBytes?: number
   }
 }
 
@@ -2612,6 +2619,8 @@ export type MakeDevStartOutput = {
     readonly uiPort?: number
     readonly worktreeCode?: number
     readonly error?: string
+    readonly cpuPercent?: number
+    readonly rssBytes?: number
   }
 }
 
@@ -2634,6 +2643,8 @@ export type MakeDevStopOutput = {
     readonly uiPort?: number
     readonly worktreeCode?: number
     readonly error?: string
+    readonly cpuPercent?: number
+    readonly rssBytes?: number
   }
 }
 

@@ -214,6 +214,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Přihlaste se pomocí Claude Pro/Max",
   "provider.connect.selectMethod": "Vyberte způsob přihlášení pro {{provider}}.",
   "provider.connect.method.apiKey": "API klíč",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Prohlížeč",
   "provider.connect.method.headless": "Bezhlavě",
   "provider.connect.status.inProgress": "Probíhá autorizace...",

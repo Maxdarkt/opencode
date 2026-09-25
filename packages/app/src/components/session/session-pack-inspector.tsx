@@ -247,6 +247,10 @@ export function PackInspector(props: { sessionID: string }) {
                   <dt class="text-text-weak">{language.t("session.inspector.cost")}</dt>
                   <dd data-slot="cost-value">{view().cost}</dd>
                 </div>
+                <div>
+                  <dt class="text-text-weak">{language.t("sprint.cockpit.budget")}</dt>
+                  <dd data-slot="budget-alert">{view().budgetAlert}</dd>
+                </div>
               </dl>
             </Show>
             <Show when={tab() === "servers"}>

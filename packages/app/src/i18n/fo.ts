@@ -214,6 +214,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Rita inn við Claude Pro/Max",
   "provider.connect.selectMethod": "Vel innritanarhátt til {{provider}}.",
   "provider.connect.method.apiKey": "API lykil",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Kagari",
   "provider.connect.method.headless": "Høvdleysur",
   "provider.connect.status.inProgress": "Heimild í gongd...",

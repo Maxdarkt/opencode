@@ -14,4 +14,6 @@ export const Status = Schema.Struct({
   uiPort: PositiveInt.pipe(optional),
   worktreeCode: NonNegativeInt.pipe(optional),
   error: Schema.String.pipe(optional),
+  cpuPercent: Schema.Finite.check(Schema.isGreaterThanOrEqualTo(0)).pipe(optional),
+  rssBytes: NonNegativeInt.pipe(optional),
 }).annotate({ identifier: "MakeDev.Status" })

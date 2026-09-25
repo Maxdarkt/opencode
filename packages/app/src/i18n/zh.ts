@@ -259,6 +259,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "使用 Claude Pro/Max 登录",
   "provider.connect.selectMethod": "选择 {{provider}} 的登录方式。",
   "provider.connect.method.apiKey": "API 密钥",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "浏览器",
   "provider.connect.method.headless": "无头模式",
   "provider.connect.status.inProgress": "正在授权...",

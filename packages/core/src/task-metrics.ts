@@ -144,6 +144,14 @@ const bindingSources = (taskID: string) => [
 const unknownCost = (provenance: string[]) =>
   unknownNumeric([...provenance, "no durable billing or tariff provenance"])
 
+const stepCost = (assistant: SessionMessage.Assistant, provenance: string[]) => {
+  if (assistant.costState === "estimated" && typeof assistant.cost === "number")
+    return TaskMetrics.Numeric.make({ state: "estimated", value: assistant.cost, provenance })
+  if (assistant.costState === "measured" && typeof assistant.cost === "number")
+    return TaskMetrics.Numeric.make({ state: "measured", value: assistant.cost, provenance })
+  return unknownCost(provenance)
+}
+
 export interface Interface {
   readonly task: (input: { taskID: string }) => Effect.Effect<TaskMetrics.Task>
   readonly sprint: (input: {
@@ -230,12 +238,16 @@ const layer = Layer.effect(
               ),
             ],
       )
+      const costFacts = assistants.map((assistant) => stepCost(assistant, provenance))
+      const cost = costFacts.some((fact) => fact.state !== "unknown")
+        ? combineNumeric(costFacts, provenance)
+        : unknownCost(provenance)
       return TaskMetrics.Task.make({
         taskID: input.taskID,
         sessionID: session.id,
         models: models(modelValues, decoded.some(Exit.isFailure), provenance),
         tokens: tokens(tokenValues, assistants.length, incomplete, provenance),
-        cost: unknownCost(provenance),
+        cost,
         latency: numeric(latencyValues, assistants.length, incomplete, provenance),
         freshness: unknownFreshness(),
         attention: unknownAttention(input.taskID),

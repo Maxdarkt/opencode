@@ -237,7 +237,7 @@ export function SprintCockpit() {
               <InfoCard label={language.t("sprint.cockpit.statusLabel")} value={selectedTask()?.status.text ?? ""} />
               <InfoCard label={language.t("sprint.cockpit.worktree")} value={selectedTask()?.worktree.text ?? ""} mono />
               <InfoCard label={language.t("sprint.cockpit.branchHead")} value={`${selectedTask()?.branch.text ?? ""} · ${selectedTask()?.head.text ?? ""}`} mono />
-              <InfoCard label={language.t("sprint.cockpit.budget")} value={view()?.metricsCost.text ?? ""} />
+              <InfoCard label={language.t("sprint.cockpit.budget")} value={`${view()?.metricsCost.text ?? ""} · ${view()?.budgetAlert.text ?? "unknown"}`} />
               <div class="mt-3 text-11-regular text-text-weak" data-testid="sprint-cockpit-no-write-tools-panel">
                 {language.t("sprint.cockpit.pilotNoWriteTools")}
               </div>

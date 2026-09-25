@@ -122,6 +122,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Kirjaudu sisään Claude Pro/Maxilla",
   "provider.connect.selectMethod": "Valitse kirjautumistapa palvelulle {{provider}}.",
   "provider.connect.method.apiKey": "API-avain",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Selain",
   "provider.connect.method.headless": "Päätön",
   "provider.connect.status.inProgress": "Valtuutus käynnissä...",

@@ -175,6 +175,7 @@ export const Assistant = Schema.Struct({
   }).pipe(optional),
   finish: Schema.String.pipe(optional),
   cost: Schema.Finite.pipe(optional),
+  costState: Schema.Literals(["estimated", "measured"]).pipe(optional),
   tokens: Schema.Struct({
     input: Schema.Finite,
     output: Schema.Finite,

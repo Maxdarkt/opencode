@@ -218,6 +218,8 @@ export const dict: Record<string, string> = {
   "provider.connect.title.anthropicProMax": "Claude Pro/Max དང་ཅིག་ཁར་ནང་བསྐྱོན།",
   "provider.connect.selectMethod": "{{provider}}གི་དོན་ལུ་ ནང་བསྐྱོད་ཐབས་ལམ་སེལ་འཐུ་འབད།",
   "provider.connect.method.apiKey": "APIལྡེ་མིག།",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "བརའུ་ཟར།",
   "provider.connect.method.headless": "མགོ་མེད་པ།",
   "provider.connect.status.inProgress": "དབང་སྤྲོད་འབད་བའི་བསྒང་ཡོད།",

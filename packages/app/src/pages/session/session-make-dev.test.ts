@@ -23,7 +23,7 @@ describe("packInspectorServersView", () => {
     })
   })
 
-  test("on shows observed ports and unknown CPU", () => {
+  test("on without a sample stays unknown", () => {
     expect(
       packInspectorServersView({
         state: "on",
@@ -38,6 +38,26 @@ describe("packInspectorServersView", () => {
       startEnabled: false,
       stopEnabled: true,
     })
+  })
+
+  test("on formats an observed sample in mebibytes", () => {
+    expect(
+      packInspectorServersView({
+        state: "on",
+        host: "127.0.0.1",
+        backendPort: 4191,
+        uiPort: 4491,
+        cpuPercent: 3,
+        rssBytes: 104857600,
+      }).cpuRam,
+    ).toBe("3% · 100 Mo")
+    expect(
+      packInspectorServersView({
+        state: "on",
+        cpuPercent: 150.2,
+        rssBytes: 1048576,
+      }).cpuRam,
+    ).toBe("150% · 1 Mo")
   })
 })
 

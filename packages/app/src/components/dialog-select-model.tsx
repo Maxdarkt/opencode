@@ -1,5 +1,5 @@
 import { Popover as Kobalte } from "@kobalte/core/popover"
-import { Component, ComponentProps, createEffect, createMemo, For, JSX, Show } from "solid-js"
+import { Component, ComponentProps, createEffect, createMemo, createResource, For, JSX, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLocal } from "@/context/local"
 import { useDialog } from "@opencode-ai/ui/context/dialog"
@@ -22,6 +22,8 @@ import { handleDocumentSearchKeydown } from "@/utils/search-keydown"
 import { createMenuDismissController } from "@/utils/menu-dismiss-controller"
 import { createEventListener } from "@solid-primitives/event-listener"
 import { matchesModelSearch } from "./dialog-select-model-search"
+import { useServerSDK } from "@/context/server-sdk"
+import { billingChannelKey, channelsByProvider } from "@/pages/session/billing-channel"
 
 const isFree = (provider: string, cost: { input: number } | undefined) =>
   provider === "opencode" && (!cost || cost.input === 0)
@@ -53,6 +55,11 @@ const ModelList: Component<{
 }> = (props) => {
   const model = props.model ?? useLocal().model
   const language = useLanguage()
+  const server = useServerSDK()
+  const [channels] = createResource(async () => {
+    const result = await server().client.provider.auth()
+    return channelsByProvider(result.data ?? {})
+  })
 
   const models = createMemo(() =>
     model
@@ -71,7 +78,11 @@ const ModelList: Component<{
       current={model.current()}
       filterKeys={["provider.name", "name", "id"]}
       sortBy={(a, b) => a.name.localeCompare(b.name)}
-      groupBy={(x) => x.provider.name}
+      groupBy={(x) => {
+        const channel = channels()?.get(x.provider.id)
+        if (!channel) return x.provider.name
+        return `${x.provider.name} · ${language.t(billingChannelKey(channel))}`
+      }}
       sortGroupsBy={(a, b) => {
         const aProvider = a.items[0].provider.id
         const bProvider = b.items[0].provider.id
@@ -301,7 +312,15 @@ function ModelSelectorPopoverV2View(props: {
   onClose: () => void
 }) {
   const language = useLanguage()
+  const server = useServerSDK()
   const [store, setStore] = createStore({ open: false, search: "", active: "" })
+  const [channels] = createResource(
+    () => (store.open ? true : undefined),
+    async () => {
+      const result = await server().client.provider.auth()
+      return channelsByProvider(result.data ?? {})
+    },
+  )
   let searchRef: HTMLInputElement | undefined
   let contentRef: HTMLDivElement | undefined
   const dismiss = createMenuDismissController(() => contentRef)
@@ -452,6 +471,13 @@ function ModelSelectorPopoverV2View(props: {
                     <MenuV2.Group>
                       <MenuV2.GroupLabel class="sticky top-0 z-10 gap-2 bg-v2-background-bg-layer-01 px-3">
                         <span class="min-w-0 truncate">{group.items[0].provider.name}</span>
+                        <Show when={channels()?.get(group.items[0].provider.id)}>
+                          {(channel) => (
+                            <span class="shrink-0 font-[440] text-v2-text-text-muted">
+                              {language.t(billingChannelKey(channel()))}
+                            </span>
+                          )}
+                        </Show>
                       </MenuV2.GroupLabel>
                       <MenuV2.RadioGroup value={props.current()}>
                         <For each={group.items}>

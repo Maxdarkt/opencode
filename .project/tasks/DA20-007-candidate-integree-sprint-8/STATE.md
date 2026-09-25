@@ -1,8 +1,8 @@
 # STATE — DA20-007 — Candidate intégrée Sprint 8
 
-- generation: 2
+- generation: 3
 - phase: verify
-- next_action: none (Verify PASS, commit local) — promotion staging sur mandat
+- next_action: none (Verify PASS, promotion staging)
 - display_id: DA20-007
 - mt: done
 - sprint_ref: da-release-0.1-sprint-8
@@ -16,4 +16,4 @@
 - blockers: aucun
 - checks: typecheck / tests / smoke Git PASS
 - ancestors: 7da410789, 584401a7e, 27146219b
-- note: remise SHA cbdf61e67 ; Git gagne sur verify.md (58433ae85). Pas de push/merge staging.
+- evidence: verify.md, smoke-report.md, procedure-promotion.md

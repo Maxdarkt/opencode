@@ -235,6 +235,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Iniciar sesión con Claude Pro/Max",
   "provider.connect.selectMethod": "Seleccionar método de inicio de sesión para {{provider}}.",
   "provider.connect.method.apiKey": "Clave API",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Navegador",
   "provider.connect.method.headless": "Sin navegador",
   "provider.connect.status.inProgress": "Autorización en progreso...",

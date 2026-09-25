@@ -5,6 +5,8 @@ export type MakeDevStatus = {
   uiPort?: number
   worktreeCode?: number
   error?: string
+  cpuPercent?: number
+  rssBytes?: number
 }
 
 export type PackInspectorServersView = {
@@ -21,7 +23,7 @@ export function packInspectorServersView(status?: MakeDevStatus): PackInspectorS
     return {
       state: "unknown",
       label: "unknown",
-      cpuRam: "unknown",
+      cpuRam: cpuRam(status),
       startEnabled: false,
       stopEnabled: false,
       error: status?.error,
@@ -31,7 +33,7 @@ export function packInspectorServersView(status?: MakeDevStatus): PackInspectorS
     return {
       state: "off",
       label: "OFF",
-      cpuRam: "—",
+      cpuRam: cpuRam(status),
       startEnabled: true,
       stopEnabled: false,
       error: status.error,
@@ -42,11 +44,18 @@ export function packInspectorServersView(status?: MakeDevStatus): PackInspectorS
   return {
     state: "on",
     label: `ON${ports}`,
-    cpuRam: "unknown",
+    cpuRam: cpuRam(status),
     startEnabled: false,
     stopEnabled: true,
     error: status.error,
   }
+}
+
+function cpuRam(status?: MakeDevStatus) {
+  if (!status || status.state === "unknown") return "unknown"
+  if (status.state === "off") return "—"
+  if (status.cpuPercent === undefined || status.rssBytes === undefined) return "unknown"
+  return `${Math.round(status.cpuPercent)}% · ${Math.round(status.rssBytes / 1048576)} Mo`
 }
 
 export function secondaryBrowserView(status?: MakeDevStatus) {

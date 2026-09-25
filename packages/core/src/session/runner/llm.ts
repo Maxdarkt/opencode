@@ -39,6 +39,7 @@ import { createLLMEventPublisher } from "./publish-llm-event"
 import { toLLMMessages } from "./to-llm-message"
 import { MAX_STEPS_PROMPT } from "./max-steps"
 import { SessionRunnerBounds } from "./bounds"
+import { SessionRunnerCost } from "./cost"
 import { Snapshot } from "../../snapshot"
 import { makeLocationNode } from "../../effect/app-node"
 import { llmClient } from "../../effect/app-node-platform"
@@ -365,13 +366,18 @@ const layer = Layer.effect(
                     .files({ from: startSnapshot, to: endSnapshot })
                     .pipe(Effect.catch(() => Effect.succeed(undefined)))
                 : undefined
+            const providers = Config.latest(yield* config.entries(), "providers")
+            const estimated = SessionRunnerCost.estimate(
+              providers?.[model.provider]?.models?.[model.id]?.cost,
+              stepSettlement.tokens,
+            )
             yield* withPublication(
               events.publish(SessionEvent.Step.Ended, {
                 sessionID: session.id,
                 timestamp: yield* DateTime.now,
                 assistantMessageID: yield* publisher.startAssistant(),
                 finish: stepSettlement.finish,
-                cost: 0,
+                ...(estimated === undefined ? {} : estimated),
                 tokens: stepSettlement.tokens,
                 snapshot: endSnapshot,
                 files,

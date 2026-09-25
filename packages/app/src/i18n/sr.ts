@@ -215,6 +215,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Пријавите се са Claude Про/Мак",
   "provider.connect.selectMethod": "Изаберите метод пријаве за {{provider}}.",
   "provider.connect.method.apiKey": "API кључ",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Прегледач",
   "provider.connect.method.headless": "Без главе",
   "provider.connect.status.inProgress": "Ауторизација је у току...",

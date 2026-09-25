@@ -3582,7 +3582,7 @@ describe("SessionRunnerLLM", () => {
       const session = yield* SessionV2.Service
       const events = yield* EventV2.Service
       const reasons = yield* captureDrainReasons
-      const costs: number[] = []
+      const costs: Array<number | undefined> = []
       yield* events.listen((event) =>
         event.type === SessionEvent.Step.Ended.type
           ? Effect.sync(() => {
@@ -3620,7 +3620,7 @@ describe("SessionRunnerLLM", () => {
       yield* session.resume(sessionID)
 
       expect(requests).toHaveLength(1)
-      expect(costs).toEqual([0])
+      expect(costs).toEqual([undefined])
       expect(reasons).toEqual(["budget"])
     }),
   )

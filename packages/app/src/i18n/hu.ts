@@ -218,6 +218,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Jelentkezzen be a Claude Pro/Max",
   "provider.connect.selectMethod": "Válassza ki a {{provider}} bejelentkezési módját.",
   "provider.connect.method.apiKey": "API kulcs",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Böngésző",
   "provider.connect.method.headless": "Fejetlen",
   "provider.connect.status.inProgress": "Az engedélyezés folyamatban...",
