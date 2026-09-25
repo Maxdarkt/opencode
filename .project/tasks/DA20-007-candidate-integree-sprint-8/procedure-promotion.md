@@ -5,7 +5,7 @@ Checklist. Non exécutée dans cette carte. Mandat séparé, après Verify.
 - Branche : `task/DA20-007-candidate-integree-sprint-8`
 - Worktree : `/Users/leanbot/Documents/40_Daidalon/features/tasks/DA20-007-candidate-integree-sprint-8`
 - Assemblage : `efb74290b` (ancêtres `7da410789`, `584401a7e`, `27146219b`)
-- SHA Verify : `VERIFY_SHA`
+- SHA Verify : `58433ae85` (preuves APEX). Promouvoir le HEAD de cette branche, qui contient cette valeur.
 
 ## Ordre
 

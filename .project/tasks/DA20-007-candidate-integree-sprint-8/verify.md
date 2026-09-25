@@ -16,4 +16,4 @@ Les `node_modules` du worktree résolvent `@opencode-ai/*` vers ce worktree (le 
 | smoke Git | PASS |
 | push / merge staging | non faits |
 
-SHA Verify : `VERIFY_SHA`
+SHA Verify : `58433ae85`
