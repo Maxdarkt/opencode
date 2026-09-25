@@ -40,7 +40,7 @@ Pas de push, merge, rebase, promotion, suppression de worktree ou nettoyage de f
 Après clôture MT et archivage des cartes `done`, le sprint n’est Git-clos que lorsque `staging` redevient la source saine :
 
 1. Committer sur `staging` les docs de clôture (propres, `git diff --check`). Si le checkout `staging` est sale, le ranger **avant** tout merge candidate.
-2. Merger **uniquement la candidate** du sprint (Sprint 7 : branche `candidate-merge` / SHA Verify `VERIFY_SHA` / DA20-006), pas chaque worktree de carte. Arrêt au premier conflit non trivial. Jamais de force-push. Jamais merger vers `master` / `develop` / `main` / `dev` par cette porte.
+2. Merger **uniquement la candidate** du sprint (Sprint 7 : branche `candidate-merge` / SHA Verify `1292aafe9` / DA20-006), pas chaque worktree de carte. Arrêt au premier conflit non trivial. Jamais de force-push. Jamais merger vers `master` / `develop` / `main` / `dev` par cette porte.
 3. `git push origin staging` (créer la branche distante si absente). Ne pas pousser vers `dev` / `develop` / `main` / `master`. Jamais `--force`.
 4. `git worktree remove` seulement les worktrees `features/tasks/` du sprint clos, **propres** : Sprint 7 = `DA10-011`, `DA40-019`, puis `DA20-006`. Branches locales conservées. Conserver les worktrees métier / `s2` / `s3` jusqu’à un mandat séparé.
 5. Déploiement `develop` (preview) ou `master` (prod) : **facultatif**, sprint par sprint. Non fait par la promotion staging.

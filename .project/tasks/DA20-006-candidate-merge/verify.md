@@ -3,7 +3,7 @@
 - Status: PASS
 - Branche: `candidate-merge`
 - HEAD assemblage: `20c60ffea` (ancêtres `d2fb5ea0f` DA40-019 + `da8c68597` DA10-011)
-- Commit: (rempli après git commit)
+- Commit: `1292aafe9`
 
 ## Checks
 

@@ -14,7 +14,7 @@ features/tasks/<CARTE>/            # un worktree par carte MT, créé au lanceme
 - DA10 / DA20 / DA30 / DA40 = **thème** informatif, pas un checkout.
 - `staging` n’exécute pas le produit. Les nouveaux arbres partent du HEAD `staging` après promotion.
 - Fin de sprint : merger **uniquement la candidate** (dernier worktree qui contient les commits), `git push origin staging` seulement, retirer les worktrees de cartes **propres**. Jamais de force-push. Preview (`develop`) et prod (`master`) restent facultatives et **séparées**.
-- Sprint 7 : candidate = worktree `features/tasks/DA20-006`, branche `candidate-merge`, SHA Verify `VERIFY_SHA`. Après promotion `staging` : retirer seulement `features/tasks/DA10-011`, `DA40-019`, `DA20-006` s’ils sont propres. Les arbres métier (`features/10-*` … `40-*`) et `s2`/`s3` restent.
+- Sprint 7 : candidate = worktree `features/tasks/DA20-006`, branche `candidate-merge`, SHA Verify `1292aafe9`. Après promotion `staging` : retirer seulement `features/tasks/DA10-011`, `DA40-019`, `DA20-006` s’ils sont propres. Les arbres métier (`features/10-*` … `40-*`) et `s2`/`s3` restent.
 
 ## Legacy — worktrees métier permanents
 
