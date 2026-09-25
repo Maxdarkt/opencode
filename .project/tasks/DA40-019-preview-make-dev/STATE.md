@@ -1,14 +1,14 @@
 # STATE — DA40-019 — Start/stop make dev et preview du worktree
 
-- generation: 8
+- generation: 9
 - phase: verify
-- next_action: remise sprint
+- next_action: aucune
 - read_set: verify.md
 - display_id: DA40-019
-- mt: in_progress
+- mt: archived (done Sprint 7, 2026-09-25, SHA 390de4e2c)
 - external_ref: .project/tasks/DA40-019-preview-make-dev
-- worktree: /Users/leanbot/Documents/40_Daidalon/features/tasks/DA40-019
+- worktree: retiré
 - branch: preview-make-dev
-- head: 390de4e2c
+- HEAD: d2fb5ea0f
 - blockers: aucun
 - evidence: verify.md

@@ -1,19 +1,15 @@
 # STATE — DA40-021 — Ports 6400 et bind réseau
 
-- generation: 7
+- generation: 8
 - phase: verify
-- next_action: remise sprint
+- next_action: aucune
 - read_set: verify.md
 - display_id: DA40-021
 - branch: task/DA40-021-ports-6400-bind
-- head: 801e783ac
-- mt: in_progress
+- HEAD: f13b0ecff
+- mt: archived (done Sprint 7, 2026-09-25, SHA 801e783ac)
 - external_ref: .project/tasks/DA40-021-ports-6400-bind
-- runtime_profile: none
-- runtime_wake_at: null
-- runtime_ports: 6400,6402
-- runtime_pids: []
-- runtime_note: smoke slept; ports 6400 and 6402 free
+- worktree: retiré
 - blockers: aucun
-- evidence: smoke-report.md
+- evidence: smoke-report.md, verify.md
 - registry_sha: e8f573c8c

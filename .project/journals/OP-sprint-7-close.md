@@ -27,7 +27,7 @@ observed_at: 2026-09-25T10:12:00+02:00
 | DA20-006 | candidate-merge | `df2885ba1` | propre |
 | DA40-021 | task/DA40-021-ports-6400-bind | `f13b0ecff` | propre |
 
-`staging` @ `03f621743`. Candidate et 021 ont merge-base `03f621743`. `origin/staging` absent localement.
+`staging` @ `e9e2aed10` après merges. Candidate merge-base était `03f621743`. `origin/staging` à créer au push.
 
 ## Étapes
 
@@ -39,4 +39,5 @@ observed_at: 2026-09-25T10:12:00+02:00
 
 ## Conclusion
 
-- à remplir après observation
+- **reconciled** : docs `b4ed778b1`, candidate `4f1764b59`, 021 `e9e2aed10` ; 4 cartes MT archived ; sprint `completed`
+- push / worktree remove : à observer après
