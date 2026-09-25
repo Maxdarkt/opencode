@@ -216,6 +216,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Մուտք գործեք Claude Pro/Max-ով",
   "provider.connect.selectMethod": "Ընտրեք մուտքի եղանակը {{provider}}-ի համար։",
   "provider.connect.method.apiKey": "API բանալի",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Դիտարկիչ",
   "provider.connect.method.headless": "Առանց գրաֆիկական միջերեսի",
   "provider.connect.status.inProgress": "Լիազորումն ընթացքի մեջ է...",

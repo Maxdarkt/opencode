@@ -215,6 +215,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Воридшавӣ бо Claude Pro/Max",
   "provider.connect.selectMethod": "Усули воридшавиро барои {{provider}} интихоб кунед.",
   "provider.connect.method.apiKey": "API калид",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Браузер",
   "provider.connect.method.headless": "Бесар",
   "provider.connect.status.inProgress": "Иҷозатдиҳӣ идома дорад...",

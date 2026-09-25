@@ -214,6 +214,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Pieteikties ar Claude Pro/Max",
   "provider.connect.selectMethod": "Izvēlieties pieteikšanās metodi pakalpojumam {{provider}}.",
   "provider.connect.method.apiKey": "API atslēga",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Pārlūks",
   "provider.connect.method.headless": "Bezgalvas režīms",
   "provider.connect.status.inProgress": "Notiek autorizācija...",

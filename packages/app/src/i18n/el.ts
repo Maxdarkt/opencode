@@ -215,6 +215,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Σύνδεση με Claude Pro/Max",
   "provider.connect.selectMethod": "Επιλογή μεθόδου σύνδεσης για {{provider}}.",
   "provider.connect.method.apiKey": "API κλειδί",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Πρόγραμμα περιήγησης",
   "provider.connect.method.headless": "Χωρίς γραφικό περιβάλλον",
   "provider.connect.status.inProgress": "Εξουσιοδότηση σε εξέλιξη...",

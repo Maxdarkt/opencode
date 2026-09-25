@@ -215,6 +215,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Hyni me Claude Pro/Max",
   "provider.connect.selectMethod": "Zgjidhni metodën e hyrjes për {{provider}}.",
   "provider.connect.method.apiKey": "Tasti API",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Shfletuesi",
   "provider.connect.method.headless": "Pa kokë",
   "provider.connect.status.inProgress": "Autorizimi në proces...",

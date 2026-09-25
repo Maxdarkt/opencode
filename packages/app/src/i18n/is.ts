@@ -218,6 +218,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Skráðu þig inn með Claude Pro/Max",
   "provider.connect.selectMethod": "Veldu innskráningaraðferð fyrir {{provider}}.",
   "provider.connect.method.apiKey": "API lykill",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Vafri",
   "provider.connect.method.headless": "Höfuðlaus",
   "provider.connect.status.inProgress": "Heimild í gangi...",

@@ -137,6 +137,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Login with Claude Pro/Max",
   "provider.connect.selectMethod": "Select login method for {{provider}}.",
   "provider.connect.method.apiKey": "API key",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Browser",
   "provider.connect.method.headless": "Headless",
   "provider.connect.status.inProgress": "Authorization in progress...",

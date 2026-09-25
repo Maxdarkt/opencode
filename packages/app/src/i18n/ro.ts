@@ -214,6 +214,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Autentificare cu Claude Pro/Max",
   "provider.connect.selectMethod": "Selectează metoda de autentificare pentru {{provider}}.",
   "provider.connect.method.apiKey": "Cheie API",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Navigator",
   "provider.connect.method.headless": "Fără interfață",
   "provider.connect.status.inProgress": "Autorizare în curs...",

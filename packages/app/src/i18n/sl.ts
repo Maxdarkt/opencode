@@ -214,6 +214,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Prijavite se z Claude Pro/Max",
   "provider.connect.selectMethod": "Izberite način prijave za {{provider}}.",
   "provider.connect.method.apiKey": "Ključ API",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Brskalnik",
   "provider.connect.method.headless": "Brez glave",
   "provider.connect.status.inProgress": "Avtorizacija v teku...",

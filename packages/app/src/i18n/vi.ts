@@ -222,6 +222,8 @@ export const dict = {
   "provider.connect.title.anthropicProMax": "Đăng nhập bằng Claude Pro/Max",
   "provider.connect.selectMethod": "Chọn phương thức đăng nhập cho {{provider}}.",
   "provider.connect.method.apiKey": "Khóa API",
+  "billing.channel.api": "API",
+  "billing.channel.subscription": "abo",
   "provider.connect.method.browser": "Trình duyệt",
   "provider.connect.method.headless": "Không có giao diện người dùng",
   "provider.connect.status.inProgress": "Đang ủy quyền...",
