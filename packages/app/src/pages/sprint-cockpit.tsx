@@ -1,15 +1,18 @@
 import { Button } from "@opencode-ai/ui/button"
 import { Spinner } from "@opencode-ai/ui/spinner"
-import { useNavigate } from "@solidjs/router"
+import { A, useNavigate } from "@solidjs/router"
 import { createMemo, createResource, For, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { useServerSDK } from "@/context/server-sdk"
+import { showToast } from "@/utils/toast"
 import { type PreviewTab, type SensitiveAction } from "./sprint-cockpit-fixtures"
 import { sprintCockpitInput } from "./sprint-cockpit-input"
-import { confirmCockpitAction } from "./sprint-cockpit-launch"
+import { cockpitLaunchEnabled, confirmCockpitAction } from "./sprint-cockpit-launch"
 import { loadSprintCockpit } from "./sprint-cockpit-load"
-import type { CockpitTaskView, CockpitWorktreeView, DisplayFact } from "./sprint-cockpit-mapper"
+import { cockpitEligibilityBadge, type CockpitTaskView, type CockpitWorktreeView, type DisplayFact } from "./sprint-cockpit-mapper"
+import { cockpitPromptText, copyCockpitPrompt } from "./sprint-cockpit-prompt"
+import { SESSION_SPRINT_COCKPIT_HREF } from "./session/session-sprint-rail"
 import { createCockpitLayoutState, reduceCockpitLayoutState, type RightPanelTab } from "./sprint-cockpit-state"
 
 const previewLabel = (language: ReturnType<typeof useLanguage>, tab: PreviewTab) => {
@@ -41,6 +44,12 @@ export function SprintCockpit() {
   const selectedTask = createMemo<CockpitTaskView | undefined>(() => {
     return view()?.tasks.find((task) => task.id === state.selectedTaskId) ?? view()?.tasks[0]
   })
+  const promptText = createMemo(() => {
+    const task = selectedTask()
+    if (!task) return null
+    return cockpitPromptText(task)
+  })
+  const launchEnabled = createMemo(() => cockpitLaunchEnabled(selectedTask()))
 
   const dispatch = (intent: Parameters<typeof reduceCockpitLayoutState>[1]) => {
     setState(reduceCockpitLayoutState(state, intent))
@@ -60,6 +69,16 @@ export function SprintCockpit() {
       return
     }
     if (result.type === "failed") dispatch({ type: "setLaunchError", message: language.t("sprint.cockpit.launchFailed") })
+  }
+
+  const copyPrompt = () => {
+    const text = promptText()
+    if (!text) return
+    void copyCockpitPrompt(text).then((copied) => {
+      showToast({
+        title: copied ? language.t("sprint.cockpit.copyPromptSuccess") : language.t("sprint.cockpit.copyPromptFailed"),
+      })
+    })
   }
 
   return (
@@ -82,6 +101,17 @@ export function SprintCockpit() {
             <div class="text-12-medium text-text-weak max-[1199px]:sr-only">{language.t("sprint.cockpit.taskStack")}</div>
           </div>
           <div class="min-h-0 flex-1 overflow-y-auto p-2">
+            <A
+              href={SESSION_SPRINT_COCKPIT_HREF}
+              data-component="sprint-cockpit-rail-pilot"
+              aria-current="page"
+              class="mb-1 block w-full rounded px-2 py-2 text-left bg-background-base outline outline-1 outline-border-weak-base"
+            >
+              <div class="truncate text-12-medium">{language.t("session.workbench.rail.pilot")}</div>
+              <div class="mt-1 truncate text-11-regular text-text-weak max-[1199px]:sr-only">
+                {language.t("session.workbench.rail.pilotHint")}
+              </div>
+            </A>
             <For each={view()?.tasks ?? []}>
               {(task) => (
                 <TaskRailItem
@@ -103,6 +133,11 @@ export function SprintCockpit() {
                 <div class="mt-1 text-12-regular text-text-weak">
                   {state.view === "cockpit" ? language.t("sprint.cockpit.pilotChat") : selectedTask()?.worktreeLabel.text}
                 </div>
+                <Show when={state.view === "cockpit"}>
+                  <div class="mt-1 text-11-regular text-text-weak" data-testid="sprint-cockpit-no-write-tools">
+                    {language.t("sprint.cockpit.pilotNoWriteTools")}
+                  </div>
+                </Show>
               </div>
               <Show when={state.view === "task"}>
                 <Button size="small" variant="ghost" onClick={() => dispatch({ type: "showCockpit" })}>
@@ -149,7 +184,16 @@ export function SprintCockpit() {
             <div class="flex flex-wrap gap-2">
               <For each={["launch", "commit", "merge", "production"] as SensitiveAction[]}>
                 {(action) => (
-                  <Button size="small" variant="secondary" onClick={() => dispatch({ type: "openConfirmation", action })}>
+                  <Button
+                    size="small"
+                    variant="secondary"
+                    disabled={action === "launch" && !launchEnabled()}
+                    data-testid={action === "launch" ? "sprint-cockpit-launch" : undefined}
+                    onClick={() => {
+                      if (action === "launch" && !launchEnabled()) return
+                      dispatch({ type: "openConfirmation", action })
+                    }}
+                  >
                     {actionLabel(language, action)}
                   </Button>
                 )}
@@ -194,6 +238,19 @@ export function SprintCockpit() {
               <InfoCard label={language.t("sprint.cockpit.worktree")} value={selectedTask()?.worktree.text ?? ""} mono />
               <InfoCard label={language.t("sprint.cockpit.branchHead")} value={`${selectedTask()?.branch.text ?? ""} · ${selectedTask()?.head.text ?? ""}`} mono />
               <InfoCard label={language.t("sprint.cockpit.budget")} value={view()?.metricsCost.text ?? ""} />
+              <div class="mt-3 text-11-regular text-text-weak" data-testid="sprint-cockpit-no-write-tools-panel">
+                {language.t("sprint.cockpit.pilotNoWriteTools")}
+              </div>
+              <Button
+                size="small"
+                class="mt-3"
+                variant="secondary"
+                disabled={!promptText()}
+                data-testid="sprint-cockpit-copy-prompt"
+                onClick={copyPrompt}
+              >
+                {language.t("sprint.cockpit.copyPrompt")}
+              </Button>
             </section>
           </Show>
           <Show when={state.rightPanelTab === "verifiableContext"}>
@@ -254,10 +311,13 @@ function TaskRailItem(props: { task: CockpitTaskView; language: ReturnType<typeo
     ]
       .filter(Boolean)
       .join(", ")
+  const badge = () => cockpitEligibilityBadge(props.task.eligibility)
 
   return (
     <button
       type="button"
+      data-component="sprint-cockpit-rail-card"
+      data-task-id={props.task.id}
       class="mb-1 w-full rounded px-2 py-2 text-left hover:bg-background-base"
       classList={{ "bg-background-base": props.selected }}
       onClick={props.onSelect}
@@ -270,7 +330,18 @@ function TaskRailItem(props: { task: CockpitTaskView; language: ReturnType<typeo
     >
       <div class="flex items-center justify-between gap-2">
         <span class="truncate text-12-medium">{props.task.id}</span>
-        <span class="shrink-0 text-11-medium text-text-weak">{props.task.status.text}</span>
+        <span class="flex shrink-0 items-center gap-1">
+          <Show when={badge() === "eligible"}>
+            <span data-testid="sprint-rail-eligibility" data-eligibility="eligible" class="text-11-medium text-green-300">
+              {props.language.t("sprint.cockpit.rail.eligible")}
+            </span>
+          </Show>
+          <Show when={badge() === "blocked"}>
+            <span data-testid="sprint-rail-eligibility" data-eligibility="blocked" class="text-11-medium text-yellow-200">
+              {props.language.t("sprint.cockpit.rail.blocked")}
+            </span>
+          </Show>
+        </span>
       </div>
       <div class="mt-1 truncate font-mono text-11-regular text-text-weak max-[1199px]:sr-only">{props.task.worktreeLabel.text}</div>
       <div class="mt-1 flex items-center gap-2 truncate text-11-regular text-text-weak max-[1199px]:sr-only">

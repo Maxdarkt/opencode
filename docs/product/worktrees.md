@@ -1,7 +1,7 @@
 # Daidalon — topologie Git et worktrees
 
 **Statut :** convention active (recadrage 2026-09-12)
-**Dernière mise à jour :** 2026-09-12
+**Dernière mise à jour :** 2026-09-25
 
 ## Méthode actuelle (Cursor)
 
@@ -13,7 +13,8 @@ features/tasks/<CARTE>/            # un worktree par carte MT, créé au lanceme
 - Une **carte** = une branche `task/…` = un worktree = un chat.
 - DA10 / DA20 / DA30 / DA40 = **thème** informatif, pas un checkout.
 - `staging` n’exécute pas le produit. Les nouveaux arbres partent du HEAD `staging` après promotion.
-- Fin de sprint : merger **uniquement la candidate** (dernier worktree qui contient les commits), `git push origin staging`, retirer les worktrees de cartes **propres**. Preview (`develop`) et prod (`master`) restent facultatives.
+- Fin de sprint : merger **uniquement la candidate** (dernier worktree qui contient les commits), `git push origin staging` seulement, retirer les worktrees de cartes **propres**. Jamais de force-push. Preview (`develop`) et prod (`master`) restent facultatives et **séparées**.
+- Sprint 7 : candidate = worktree `features/tasks/DA20-006`, branche `candidate-merge`, SHA Verify `1292aafe9`. Après promotion `staging` : retirer seulement `features/tasks/DA10-011`, `DA40-019`, `DA20-006` s’ils sont propres. Les arbres métier (`features/10-*` … `40-*`) et `s2`/`s3` restent.
 
 ## Legacy — worktrees métier permanents
 

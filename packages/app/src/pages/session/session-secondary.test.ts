@@ -125,7 +125,11 @@ describe("secondary files / diff / browser", () => {
     ).toBe("unknown")
   })
 
-  test("browser stub has about:blank and no iframe", () => {
+  test("browser iframe follows make-dev status", () => {
     expect(secondaryBrowserView()).toEqual({ url: "about:blank", iframe: false })
+    expect(secondaryBrowserView({ state: "on", host: "127.0.0.1", uiPort: 4491 })).toEqual({
+      url: "http://127.0.0.1:4491/sprint/cockpit",
+      iframe: true,
+    })
   })
 })

@@ -10,6 +10,7 @@ import type {
   TaskOwnershipEntry,
   TaskOwnershipExecutionFact,
   TaskOwnershipSnapshot,
+  TaskQueueResult,
 } from "@opencode-ai/sdk/v2/client"
 import { legacySessionHref } from "@/utils/session-route"
 import { sprintCockpitInput } from "./sprint-cockpit-input"
@@ -19,6 +20,8 @@ export type DisplayFact = {
   readonly state: string
   readonly source: string
 }
+
+export type TaskEligibility = "eligible" | "blocked" | "waiting" | "none"
 
 export type CockpitTaskView = {
   readonly id: string
@@ -34,6 +37,8 @@ export type CockpitTaskView = {
   readonly branch: DisplayFact
   readonly head: DisplayFact
   readonly chatPreview: DisplayFact
+  readonly eligibility: TaskEligibility
+  readonly eligibilityReason: DisplayFact
 }
 
 export type CockpitWorktreeView = {
@@ -118,9 +123,10 @@ const statusFrom = (authority: TaskOwnershipAuthorityFact): DisplayFact => {
   return formatFact(authority)
 }
 
-const mapEntry = (entry: TaskOwnershipEntry): CockpitTaskView => {
+const mapEntry = (entry: TaskOwnershipEntry, result: TaskQueueResult): CockpitTaskView => {
   const sessionID = sessionFromBinding(entry.binding) ?? sessionFromExecution(entry.execution)
   const worktreePath = observedWorktree(entry) ?? null
+  const queued = eligibilityFrom(result, entry.identity.mtTaskID)
   return {
     id: entry.identity.mtTaskID,
     title: entry.identity.mtTaskID,
@@ -137,6 +143,8 @@ const mapEntry = (entry: TaskOwnershipEntry): CockpitTaskView => {
     chatPreview: sessionID
       ? { text: sessionID, state: "available", source: "task_binding" }
       : { text: "unknown (session)", state: "unknown", source: "session" },
+    eligibility: queued.eligibility,
+    eligibilityReason: queued.eligibilityReason,
   }
 }
 
@@ -172,10 +180,41 @@ export function mapCockpitView(input: {
 }): CockpitView {
   return {
     source: input.source ?? "live",
-    tasks: input.ownership.entries.map(mapEntry),
+    tasks: input.ownership.entries.map((entry) => mapEntry(entry, input.ownership.result)),
     worktrees: (input.topology?.repositories ?? []).flatMap((repo) => repo.worktrees.map(mapWorktree)),
     sourceRepo: formatFact(input.topology?.repositories[0]?.sourceRepo),
     metricsCost: metricsCost(input.metrics),
+  }
+}
+
+export function cockpitEligibilityBadge(eligibility: TaskEligibility) {
+  if (eligibility === "eligible") return "eligible" as const
+  if (eligibility === "blocked" || eligibility === "waiting") return "blocked" as const
+  return undefined
+}
+
+function eligibilityFrom(result: TaskQueueResult, taskID: string) {
+  if (result.kind === "selected") {
+    if (result.id === taskID) {
+      return {
+        eligibility: "eligible" as const,
+        eligibilityReason: { text: result.id, state: "available", source: "task_queue" },
+      }
+    }
+    return {
+      eligibility: "waiting" as const,
+      eligibilityReason: { text: result.id, state: "available", source: "task_queue" },
+    }
+  }
+  if (result.kind === "blocked") {
+    return {
+      eligibility: "blocked" as const,
+      eligibilityReason: { text: result.reason, state: "available", source: "task_queue" },
+    }
+  }
+  return {
+    eligibility: "none" as const,
+    eligibilityReason: { text: "complete", state: "available", source: "task_queue" },
   }
 }
 
@@ -196,6 +235,8 @@ export function inaccessibleCockpitView(): CockpitView {
       branch: { text: "inaccessible (http)", state: "inaccessible", source: "http" },
       head: { text: "inaccessible (http)", state: "inaccessible", source: "http" },
       chatPreview: { text: "unknown (session)", state: "unknown", source: "session" },
+      eligibility: "none",
+      eligibilityReason: { text: "inaccessible (http)", state: "inaccessible", source: "http" },
     })),
     worktrees: [],
     sourceRepo: { text: "inaccessible (http)", state: "inaccessible", source: "http" },
