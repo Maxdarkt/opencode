@@ -25,6 +25,7 @@ const assistant = (input: {
   taskID: string
   completed?: number
   cost?: number
+  costState?: "estimated" | "measured"
   tokens?: SessionMessage.Assistant["tokens"]
 }) =>
   SessionMessage.Assistant.make({
@@ -34,6 +35,7 @@ const assistant = (input: {
     model: { providerID: ProviderV2.ID.make("provider"), id: ModelV2.ID.make("model") },
     content: [],
     ...(input.cost === undefined ? {} : { cost: input.cost }),
+    ...(input.costState === undefined ? {} : { costState: input.costState }),
     ...(input.tokens === undefined ? {} : { tokens: input.tokens }),
     time: {
       created: DateTime.makeUnsafe(100),
@@ -212,6 +214,48 @@ describe("TaskMetrics", () => {
         })
         .pipe(Effect.flip)
       expect(error).toMatchObject({ _tag: "TaskMetrics.QueueBlocked", reason: "duplicate_task_id" })
+    }),
+  )
+
+  it.effect("reads an estimated cost and keeps a mixed sprint partial", () =>
+    Effect.gen(function* () {
+      yield* seed({
+        taskID: "DA30-014-estimated",
+        message: assistant({
+          taskID: "DA30-014-estimated",
+          completed: 160,
+          cost: 1.5,
+          costState: "estimated",
+          tokens: { input: 10, output: 1, reasoning: 0, cache: { read: 0, write: 0 } },
+        }),
+      })
+      yield* seed({
+        taskID: "DA30-014-unknown",
+        message: assistant({
+          taskID: "DA30-014-unknown",
+          completed: 180,
+          cost: 0,
+          tokens: { input: 4, output: 1, reasoning: 0, cache: { read: 0, write: 0 } },
+        }),
+      })
+
+      const service = yield* TaskMetrics.Service
+      const estimated = yield* service.task({ taskID: "DA30-014-estimated" })
+      expect(estimated.cost).toMatchObject({ state: "estimated", value: 1.5 })
+
+      const mixed = yield* service.sprint({
+        sprintID: "sprint-cost",
+        taskIDs: ["DA30-014-estimated", "DA30-014-unknown"],
+      })
+      expect(mixed.cost.state).toBe("partial")
+      expect(mixed.cost.state === "partial" ? mixed.cost.value : undefined).toBe(1.5)
+
+      const unknownOnly = yield* service.sprint({
+        sprintID: "sprint-cost-unknown",
+        taskIDs: ["DA30-014-unknown", "missing-cost"],
+      })
+      expect(unknownOnly.cost.state).toBe("unknown")
+      expect("value" in unknownOnly.cost).toBe(false)
     }),
   )
 })

@@ -34,9 +34,11 @@ describe("packInspectorView", () => {
 
   test("treats unpublished cost 0 as unknown, not a measured dollar amount", () => {
     expect(formatCost({ state: "measured", value: 0 })).toBe("unknown")
-    expect(formatCost({ state: "measured", value: 1.25 })).toBe("1.25")
+    expect(formatCost({ state: "measured", value: 1.25 })).toBe("measured 1.25")
     expect(formatCost(undefined)).toBe("unknown")
     expect(packInspectorView({ cost: { state: "unknown" } }).cost).toBe("unknown")
+    expect(packInspectorView({}).budgetAlert).toContain("unknown")
+    expect(packInspectorView({}).budgetAlert).not.toContain("$0.00")
   })
 
   test("keeps an empty pathset and omitted paths without inventing files", () => {

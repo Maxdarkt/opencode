@@ -10,6 +10,11 @@ import { Option, Schema } from "effect"
 
 const emptyTokens = { input: 0, output: 0, reasoning: 0, cache: { read: 0, write: 0 } }
 const emptyModel: { id: string; providerID: string; variant?: string } = { id: "", providerID: "" }
+
+function visibleCost(cost: number | undefined) {
+  if (typeof cost !== "number" || cost === 0) return undefined
+  return cost
+}
 const decodeToolInput = Schema.decodeUnknownOption(Schema.UnknownFromJsonString)
 
 export function compareMessages(a: Pick<Message, "id" | "time">, b: Pick<Message, "id" | "time">) {
@@ -257,7 +262,7 @@ function assistantMessage(sessionID: string, parentID: string, message: SessionM
     mode: message.agent,
     agent: message.agent,
     path: { cwd: "", root: "" },
-    cost: message.cost ?? 0,
+    cost: visibleCost(message.cost) ?? 0,
     tokens: message.tokens ?? emptyTokens,
     finish: message.finish,
   }

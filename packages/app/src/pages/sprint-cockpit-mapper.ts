@@ -13,6 +13,7 @@ import type {
   TaskQueueResult,
 } from "@opencode-ai/sdk/v2/client"
 import { legacySessionHref } from "@/utils/session-route"
+import { sprintBudgetAlert } from "@/components/session/budget-alert"
 import { sprintCockpitInput } from "./sprint-cockpit-input"
 
 export type DisplayFact = {
@@ -60,6 +61,7 @@ export type CockpitView = {
   readonly worktrees: readonly CockpitWorktreeView[]
   readonly sourceRepo: DisplayFact
   readonly metricsCost: DisplayFact
+  readonly budgetAlert: DisplayFact
 }
 
 type StringishFact = {
@@ -166,16 +168,29 @@ const mapWorktree = (worktree: RepositoryTopologyWorktree): CockpitWorktreeView 
 const metricsCost = (metrics: TaskMetricsResponse | undefined): DisplayFact => {
   if (!metrics) return { text: "unknown (metrics)", state: "unknown", source: "metrics" }
   const cost = metrics.metrics.cost
-  if (cost.state === "measured" || cost.state === "estimated") {
-    return { text: String(cost.value), state: cost.state, source: cost.provenance[0] ?? "metrics" }
-  }
-  return { text: `${cost.state} (metrics)`, state: cost.state, source: "metrics" }
+  const source = cost.provenance[0] ?? "metrics"
+  if (cost.state !== "unknown" && typeof cost.value === "number" && cost.value !== 0)
+    return { text: `${cost.state} ${String(cost.value)}`, state: cost.state, source }
+  return { text: "unknown (metrics)", state: "unknown", source }
+}
+
+const budgetAlert = (metrics: TaskMetricsResponse | undefined, sprintTokens?: number): DisplayFact => {
+  const tokens = metrics?.metrics.tokens
+  const alert = sprintBudgetAlert({
+    sprintTokens,
+    used:
+      tokens?.state === "measured" && tokens.value
+        ? { state: "measured", value: tokens.value }
+        : { state: tokens?.state ?? "unknown" },
+  })
+  return { text: alert.text, state: alert.text === "unknown" ? "unknown" : "available", source: alert.provenance }
 }
 
 export function mapCockpitView(input: {
   ownership: TaskOwnershipSnapshot
   topology?: RepositoryTopologySnapshot
   metrics?: TaskMetricsResponse
+  sprintTokens?: number
   source?: "live" | "inaccessible"
 }): CockpitView {
   return {
@@ -184,6 +199,7 @@ export function mapCockpitView(input: {
     worktrees: (input.topology?.repositories ?? []).flatMap((repo) => repo.worktrees.map(mapWorktree)),
     sourceRepo: formatFact(input.topology?.repositories[0]?.sourceRepo),
     metricsCost: metricsCost(input.metrics),
+    budgetAlert: budgetAlert(input.metrics, input.sprintTokens),
   }
 }
 
@@ -241,5 +257,6 @@ export function inaccessibleCockpitView(): CockpitView {
     worktrees: [],
     sourceRepo: { text: "inaccessible (http)", state: "inaccessible", source: "http" },
     metricsCost: { text: "unknown (metrics)", state: "unknown", source: "metrics" },
+    budgetAlert: { text: "unknown", state: "unknown", source: "config.bounds.sprint_tokens" },
   }
 }

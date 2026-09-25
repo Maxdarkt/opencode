@@ -10,4 +10,5 @@ export class Info extends Schema.Class<Info>("ConfigV2.Bounds")({
   steps: PositiveInt.pipe(Schema.optional),
   tokens: PositiveInt.pipe(Schema.optional),
   duration_ms: PositiveInt.pipe(Schema.optional),
+  sprint_tokens: PositiveInt.pipe(Schema.optional),
 }) {}
