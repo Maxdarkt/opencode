@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Daidalon — proposition cockpit</title>
+  <style>
+    :root {
+      --bg: #181818; --side: #141414; --elev: #242424; --line: #2e2e2e;
+      --text: #e8e8e8; --mute: #8d8d8d; --green: #3dd68c; --red: #f07178; --amber: #e8b84a;
+      --side-w: 280px; --panel-w: 50%;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font: 13px/1.45 ui-sans-serif, system-ui, sans-serif; }
+    button, input { font: inherit; color: inherit; background: none; border: 0; }
+    button { cursor: pointer; text-align: left; }
+    .app { display: flex; flex-direction: column; height: 100vh; min-height: 640px; }
+    .workspace { display: flex; flex: 1; min-height: 0; }
+    .side {
+      width: var(--side-w); flex-shrink: 0; background: var(--side);
+      display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+    }
+    .side.collapsed { width: 52px; }
+    .side-top { display: flex; align-items: center; gap: 4px; padding: 8px; }
+    .side-top button, .icon {
+      width: 32px; height: 32px; border-radius: 6px; display: grid; place-items: center; color: var(--mute); flex-shrink: 0;
+    }
+    .side-top button:hover, .icon:hover, .icon.on { background: var(--elev); color: var(--text); }
+    .nav { padding: 0 8px 4px; }
+    .nav button { display: block; width: 100%; padding: 6px 8px; border-radius: 6px; }
+    .nav button:hover { background: var(--elev); }
+    .side.collapsed .nav, .side.collapsed .search, .side.collapsed .label,
+    .side.collapsed .tree, .side.collapsed #machines { display: none; }
+    .search { margin: 4px 8px 8px; width: calc(100% - 16px); background: #101010; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+    .label { padding: 8px 12px 4px; font-size: 11px; color: var(--mute); letter-spacing: 0.04em; text-transform: uppercase; display: flex; }
+    .label button { margin-left: auto; color: var(--text); }
+    .machine, .chat { display: block; width: calc(100% - 8px); margin: 0 4px 2px; padding: 6px 8px; border-radius: 6px; }
+    .machine { display: flex; justify-content: space-between; }
+    .machine.on, .chat.on { background: var(--elev); }
+    .sub { color: var(--mute); font-size: 11px; }
+    .tree { overflow: auto; flex: 1; padding-bottom: 8px; }
+    .proj .head { width: calc(100% - 8px); margin: 0 4px; padding: 6px 8px; border-radius: 6px; display: flex; justify-content: space-between; }
+    .sprint { margin: 2px 8px 2px 18px; color: var(--mute); font-size: 11px; }
+    .chats { padding-left: 14px; }
+    .dot { width: 7px; height: 7px; border-radius: 99px; display: inline-block; margin-left: 6px; }
+    .dot.run { background: var(--amber); } .dot.idle { background: var(--green); }
+    .grip, .grip-r { width: 4px; cursor: col-resize; flex-shrink: 0; background: transparent; }
+    .grip:hover, .grip-r:hover { background: #3a3a3a; }
+    .main { flex: 1; min-width: 0; display: flex; flex-direction: column; position: relative; }
+    .codex {
+      position: absolute; top: 48px; right: 16px; width: 248px; z-index: 3;
+      background: #1c1c1c; border: 1px solid var(--line); border-radius: 12px; padding: 12px;
+    }
+    .codex h3 { margin: 0; font-size: 13px; }
+    .codex h4 { margin: 10px 0 4px; font-size: 11px; color: var(--mute); letter-spacing: 0.04em; text-transform: uppercase; }
+    .place { color: var(--mute); font-size: 12px; margin-top: 2px; }
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+    .stat { background: #141414; border-radius: 8px; padding: 6px 8px; }
+    .stat b { display: block; font-size: 13px; }
+    .stat span, .hostline { color: var(--mute); font-size: 11px; }
+    .hostline { margin-top: 8px; }
+    .src { display: block; width: 100%; padding: 4px 0; border-radius: 6px; }
+    .src:hover { background: var(--elev); }
+    .thread.with-codex { padding-right: 280px; }
+    .head { display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 12px; border-bottom: 1px solid var(--line); font-size: 12px; color: var(--mute); }
+    .host { border: 1px solid var(--line); border-radius: 99px; padding: 1px 8px; }
+    .run { color: var(--amber); font-weight: 600; } .idle { color: var(--green); font-weight: 600; }
+    .cwd { font-family: ui-monospace, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .stop { margin-left: auto; color: var(--red); border: 1px solid #5c2a2a; border-radius: 6px; padding: 3px 8px; }
+    .layout { margin-left: 8px; border: 1px solid var(--line); border-radius: 6px; padding: 3px 8px; color: var(--mute); flex-shrink: 0; }
+    .layout.on { color: var(--text); background: var(--elev); }
+    .thread { flex: 1; overflow: auto; padding: 18px 7% 12px; }
+    .user { margin-left: auto; max-width: 560px; background: #2a2a2a; border-radius: 12px; padding: 10px 12px; margin-bottom: 14px; }
+    .agent { max-width: 680px; margin-bottom: 14px; }
+    .reply { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; margin-top: 10px; background: #1c1c1c; }
+    .reply .k { margin-top: 8px; font-size: 11px; color: var(--mute); letter-spacing: 0.04em; text-transform: uppercase; }
+    .reply .k:first-child { margin-top: 0; }
+    .reply p { margin: 2px 0 0; }
+    .filehit { display: flex; width: 100%; justify-content: space-between; padding: 6px 0; border-top: 1px solid var(--line); }
+    .copybox { margin-top: 8px; border: 1px solid var(--line); border-radius: 8px; background: #141414; }
+    .copybox pre { margin: 0; padding: 8px 10px; white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 12px; }
+    .copybox button { border-top: 1px solid var(--line); padding: 6px 10px; color: var(--mute); }
+    .meta, .tool { color: var(--mute); font-size: 12px; }
+    .tool { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; margin: 8px 0; font-family: ui-monospace, monospace; }
+    .changes, .preview {
+      border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin-top: 8px;
+      display: flex; justify-content: space-between; gap: 8px; width: 100%;
+    }
+    .plus { color: var(--green); } .delc { color: var(--red); } .addc { color: var(--green); }
+    .composer { border-top: 1px solid var(--line); padding: 10px 7% 14px; }
+    .box { border: 1px solid var(--line); border-radius: 12px; background: #202020; padding: 10px 12px; color: var(--mute); }
+    .panel { width: var(--panel-w); flex-shrink: 0; border-left: 1px solid var(--line); display: flex; flex-direction: column; min-height: 0; min-width: 0; background: #161616; }
+    .tabbar { height: 36px; border-bottom: 1px solid var(--line); background: #141414; min-width: 0; }
+    .tabscroll { display: flex; align-items: stretch; height: 100%; overflow-x: auto; overflow-y: hidden; }
+    .tabscroll::-webkit-scrollbar { height: 6px; }
+    .htab, .tab-plus { flex: 0 0 auto; display: flex; align-items: center; gap: 8px; padding: 0 12px; border-right: 1px solid var(--line); color: var(--mute); white-space: nowrap; }
+    .htab.on { background: var(--bg); color: var(--text); }
+    .tab-plus { width: 36px; justify-content: center; padding: 0; }
+    #panel-body { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+    .panel[hidden], .tray[hidden], .codex[hidden], .menu[hidden], .ctx[hidden], .insp[hidden], .sheet[hidden] { display: none; }
+    .crumb { padding: 8px 12px; color: var(--mute); font-size: 12px; border-bottom: 1px solid var(--line); }
+    .sec-body { display: flex; min-height: 0; flex: 1; }
+    .view { flex: 1; overflow: auto; padding: 10px 12px; }
+    .tree-side { width: 150px; border-left: 1px solid var(--line); }
+    .tree-side button, .diff-list button { display: block; width: 100%; padding: 6px 8px; }
+    .tree-side button.on, .diff-list button.on { background: var(--elev); }
+    .diff-list { width: 190px; border-right: 1px solid var(--line); }
+    .code, .diff, .term { font-family: ui-monospace, monospace; font-size: 12px; white-space: pre-wrap; }
+    .urlbar { border: 1px solid var(--line); border-radius: 8px; padding: 6px 8px; margin-bottom: 8px; }
+    #browser-page { min-height: 180px; }
+    .tray { border-top: 1px solid var(--line); background: #141414; }
+    .tray-bar { display: flex; gap: 6px; align-items: center; padding: 4px 8px; color: var(--mute); font-size: 12px; }
+    .tray-bar button.on { color: var(--text); }
+    .terms { display: flex; min-height: 88px; }
+    .term { flex: 1; padding: 8px 12px; color: var(--mute); border-right: 1px solid var(--line); }
+    .devbar {
+      height: 32px; flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+      padding: 0 8px; background: #101010; border-top: 1px solid var(--line); font-size: 12px;
+    }
+    .devbar button { color: var(--mute); border-radius: 6px; padding: 3px 8px; flex-shrink: 0; }
+    .devbar button.on, .devbar button:hover { color: var(--text); background: var(--elev); }
+    .meters { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; overflow-x: auto; overflow-y: hidden; }
+    .meters::-webkit-scrollbar { height: 4px; }
+    .chip { flex: 0 0 auto; white-space: nowrap; color: var(--mute); padding: 2px 8px; border-radius: 6px; }
+    .chip.on { background: var(--elev); color: var(--text); }
+    .chip b { color: var(--text); font-weight: 600; margin-right: 6px; }
+    .meter { color: var(--text); font-variant-numeric: tabular-nums; }
+    .menu, .ctx {
+      position: fixed; z-index: 6; background: #1c1c1c; border: 1px solid var(--line);
+      border-radius: 8px; padding: 4px; min-width: 160px;
+    }
+    .menu button, .ctx button { display: block; width: 100%; padding: 6px 8px; border-radius: 6px; }
+    .menu button:hover, .ctx button:hover { background: var(--elev); }
+    .insp { position: fixed; top: 48px; right: 16px; width: 320px; background: #1c1c1c; border: 1px solid var(--line); border-radius: 12px; z-index: 4; }
+    .insp-tabs { display: flex; gap: 4px; padding: 8px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+    .insp-tabs button.on { color: var(--text); }
+    .insp .body { padding: 10px 12px 14px; }
+    .kv { display: grid; grid-template-columns: 92px 1fr; gap: 4px 8px; margin: 0 0 8px; }
+    .kv dt { color: var(--mute); }
+    .sheet { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: grid; place-items: center; z-index: 7; }
+    .card { width: 380px; background: #1c1c1c; border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+    .card h2 { margin: 0 0 8px; font-size: 14px; }
+    .card label { display: block; color: var(--mute); font-size: 12px; margin: 8px 0 4px; }
+    .card input { width: 100%; background: #111; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+    #attach-fields button { display: block; width: 100%; padding: 8px; border: 1px solid var(--line); border-radius: 8px; margin-top: 8px; }
+    .row { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+    .row button { border: 1px solid var(--line); border-radius: 6px; padding: 6px 10px; }
+    .toast { position: fixed; bottom: 44px; left: 50%; transform: translateX(-50%); background: #111; border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px; font-size: 12px; z-index: 8; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="workspace">
+      <aside class="side" id="side">
+        <div class="side-top">
+          <button type="button" id="collapse" title="Replier le menu">☰</button>
+        </div>
+        <div class="nav">
+          <button type="button" id="new-chat">Nouvelle conversation</button>
+          <button type="button" id="focus-search">Recherche</button>
+        </div>
+        <input class="search" id="q" type="search" placeholder="Projet sur cette machine" />
+        <div class="label">Machines <button type="button" id="open-connect">+</button></div>
+        <div id="machines"></div>
+        <div class="label">Projets</div>
+        <div class="tree" id="tree"></div>
+      </aside>
+      <div class="grip" id="side-grip" title="Largeur du menu"></div>
+      <section class="main">
+        <div class="head" id="head"></div>
+        <aside class="codex" id="codex" hidden></aside>
+        <div class="thread" id="thread"></div>
+        <div class="composer"><div class="box" id="hint">Message</div></div>
+      </section>
+      <div class="grip-r" id="panel-grip" hidden></div>
+      <aside class="panel" id="panel" hidden>
+        <div class="tabbar"><div class="tabscroll" id="otabs"></div></div>
+        <div id="panel-body"></div>
+      </aside>
+    </div>
+    <div class="tray" id="tray" hidden>
+      <div class="tray-bar">
+        <button type="button" class="on" id="shell-a">Cette machine</button>
+        <button type="button" id="shell-b" hidden>Mac mini</button>
+        <button type="button" id="split-term">+</button>
+        <button type="button" id="close-term" style="margin-left:auto">×</button>
+      </div>
+      <div class="terms" id="terms"></div>
+    </div>
+    <footer class="devbar">
+      <div class="meters" id="meters"></div>
+      <button type="button" id="toggle-term">Terminal</button>
+    </footer>
+  </div>
+  <div class="menu" id="kind-menu" hidden>
+    <button type="button" data-kind="browser">Navigateur</button>
+    <button type="button" data-kind="files">Fichiers</button>
+    <button type="button" data-kind="diff">Diff</button>
+  </div>
+  <div class="ctx" id="ctx" hidden><button type="button" id="ctx-insp">Ouvrir l’inspecteur</button></div>
+  <aside class="insp" id="insp" hidden>
+    <div class="insp-tabs">
+      <button type="button" data-insp="task" class="on">Tâche</button>
+      <button type="button" data-insp="git">Git</button>
+      <button type="button" data-insp="cost">Coût</button>
+      <button type="button" data-insp="srv">Serveurs</button>
+      <button type="button" data-insp="perm">Permissions</button>
+    </div>
+    <div class="body" id="insp-body"></div>
+  </aside>
+  <div class="sheet" id="sheet" hidden>
+    <form class="card" id="form">
+      <h2 id="sheet-title">Connecter une machine</h2>
+      <div id="connect-fields">
+        <label for="host-name">Nom</label>
+        <input id="host-name" placeholder="Mac mini" />
+        <label for="host-addr">SSH</label>
+        <input id="host-addr" placeholder="leanbot@mac-mini.lan" />
+      </div>
+      <div id="attach-fields" hidden></div>
+      <div class="row">
+        <button type="button" id="cancel">Annuler</button>
+        <button type="submit" id="ok">Connecter</button>
+      </div>
+    </form>
+  </div>
+  <div class="toast" id="toast" hidden>Simulation</div>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const state = {
+      machine: "local", chat: "sprint", q: "", screenOpen: false,
+      menu: false, insp: null, tray: false, splitTerm: false, serverOn: false,
+      sideW: 280, sideCollapsed: false, panelW: null, panelUserSized: false, n: 3,
+      fileSel: "packages/app/src/pages/sprint-cockpit.tsx", diffSel: 0, sheet: null, attachFor: null,
+      machines: [
+        { id: "local", name: "Cette machine", detail: "locale", cpu: "12%", ram: "4,1 Go" },
+        { id: "mini", name: "Mac mini", detail: "ssh", cpu: "41%", ram: "11 Go" }
+      ],
+      projects: [
+        { id: "da", name: "Daidalon", machine: "local", sprint: "Sprint 8", chats: [
+          chat("sprint", "Fil du sprint", "conducteur", "idle", "conducteur", "staging", "Cette machine"),
+          chat("014", "DA30-014", "features/tasks/DA30-014", "run", "Write · coûts", "task/DA30-014", "Cette machine"),
+          chat("020", "DA40-020", "features/tasks/DA40-020", "idle", "—", "task/DA40-020", "Cette machine")
+        ]},
+        { id: "lc", name: "Lean Construct", machine: "local", sprint: "Reporting", chats: [
+          chat("lc-sprint", "Fil du sprint", "conducteur", "idle", "—", "staging", "Cette machine")
+        ]},
+        { id: "co", name: "gmao-co05", machine: "mini", sprint: "SQL lab", chats: [
+          chat("co-sprint", "Fil du sprint", "conducteur", "idle", "—", "staging", "Mac mini")
+        ]}
+      ]
+    };
+    function chat(id, title, sub, st, tool, branch, host) {
+      return { id, title, sub, st, tool, branch, host, head: "9ab5e15fa", vs: "staging", next: "Suite", prompt: "Prompt de " + title, perm: "pathset du worktree", tabs: [{ id: id + "-diff", kind: "diff" }], tab: id + "-diff" };
+    }
+    const briefs = {
+      sprint: { tokens: "128 k", cost: "$0,42", sources: ["docs/product/vision.md", "packages/app/src/pages/sprint-cockpit.tsx"] },
+      "014": { tokens: "86 k", cost: "$1,10", sources: ["packages/app/src/pages/sprint-cockpit.tsx"] },
+      "020": { tokens: "22 k", cost: "$0,08", sources: ["docs/product/vision.md"] },
+      "lc-sprint": { tokens: "40 k", cost: "$0,15", sources: ["docs/product/vision.md"] },
+      "co-sprint": { tokens: "64 k", cost: "$0,31", sources: ["docs/product/vision.md"] }
+    };
+    const threads = {
+      sprint: { text: "Éligible : DA30-014. Le prompt part dans un chat du projet, pas dans un nouveau dossier.", tool: null, preview: false },
+      "014": { text: "Coûts du worktree local. Pas de faux zéro.", tool: "Write · cost.ts", preview: true },
+      "020": { text: "CPU et RAM des process de cette machine.", tool: null, preview: false },
+      "lc-sprint": { text: "Sprint Lean Construct, sur cette machine.", tool: null, preview: false },
+      "co-sprint": { text: "Ce dépôt est sur le Mac mini. L’aperçu s’ouvre ici, en 127.0.0.1.", tool: null, preview: true }
+    };
+    const files = {
+      "packages/app/src/pages/sprint-cockpit.tsx": "export function SprintCockpit() {\n  return <Identity worktree={session.cwd} />\n}",
+      "docs/product/vision.md": "# Daidalon\nUn chat reste dans son projet."
+    };
+    const diffs = [
+      { path: "sprint-cockpit.tsx", plus: 18, minus: 4, patch: "@@ sprint-cockpit.tsx\n- onglets mélangés\n+ Diff par défaut, écran fermé" },
+      { path: "cockpit.html", plus: 12, minus: 2, patch: "@@ cockpit.html\n+ menu gauche repliable" }
+    ];
+
+    function toast(text) { $("toast").textContent = text; $("toast").hidden = false; setTimeout(() => { $("toast").hidden = true; }, 1400); }
+    function currentMachine() { return state.machines.find((m) => m.id === state.machine); }
+    function projectOf(id) { return state.projects.find((p) => p.chats.some((c) => c.id === id)); }
+    function activeChat() {
+      const found = state.projects.flatMap((p) => p.chats).find((c) => c.id === state.chat);
+      if (!found) return null;
+      if (!found.tabs) found.tabs = [];
+      if (!found.tabs.some((t) => t.kind === "diff") && !found.diffClosed) {
+        const id = "d" + state.n++;
+        found.tabs.unshift({ id, kind: "diff" });
+        found.tab = id;
+      }
+      if (!found.tab && found.tabs[0]) found.tab = found.tabs[0].id;
+      return found;
+    }
+    function activeTab() {
+      const c = activeChat();
+      return c && c.tabs.find((t) => t.id === c.tab);
+    }
+    function titleOf(kind) { return kind === "browser" ? "Navigateur" : kind === "files" ? "Fichiers" : "Diff"; }
+
+    function applyChrome() {
+      const side = $("side");
+      side.classList.toggle("collapsed", state.sideCollapsed);
+      document.documentElement.style.setProperty("--side-w", state.sideW + "px");
+      document.documentElement.style.setProperty("--panel-w", (state.panelW || 0) + "px");
+      $("side-grip").hidden = state.sideCollapsed;
+      $("panel").hidden = !state.screenOpen;
+      $("panel-grip").hidden = !state.screenOpen;
+    }
+
+    function renderMachines() {
+      $("machines").innerHTML = state.machines.map((m) =>
+        `<button class="machine ${m.id === state.machine ? "on" : ""}" data-machine="${m.id}" type="button"><span>${m.name}</span><span class="sub">${m.detail}</span></button>`
+      ).join("");
+      $("q").placeholder = "Projet sur " + currentMachine().name;
+    }
+    function visibleProjects() {
+      const q = state.q.trim().toLowerCase();
+      return state.projects.filter((p) => p.machine === state.machine && (!q || (p.name + p.chats.map((c) => c.title).join(" ")).toLowerCase().includes(q)));
+    }
+    function renderTree() {
+      const rows = visibleProjects();
+      $("tree").innerHTML = rows.length ? rows.map((p) => `
+        <div class="proj"><div class="head"><span>${p.name}</span><button type="button" data-attach="${p.id}">Rattacher</button></div>
+        <div class="sprint">${p.sprint}</div><div class="chats">
+        ${p.chats.map((c) => `<button class="chat ${c.id === state.chat ? "on" : ""}" data-chat="${c.id}" type="button">${c.title}<span class="dot ${c.st}"></span><div class="sub">${c.sub}</div></button>`).join("")}
+        </div></div>`).join("") : `<div class="sprint">Aucun projet</div>`;
+    }
+    function renderThread() {
+      const c = activeChat();
+      const project = c && projectOf(c.id);
+      const text = (c && threads[c.id]) || { text: "Nouveau fil.", tool: null, preview: false };
+      $("head").innerHTML = c
+        ? `<span class="${c.st}">${c.st === "run" ? "En cours" : "Au repos"}</span><span class="host">${c.host}</span><span class="cwd">${c.sub}</span><button class="stop" id="interrupt" type="button">Interrupt</button><button class="layout ${state.screenOpen ? "on" : ""}" id="toggle-screen" type="button" title="Écran de droite">Écran</button>`
+        : "";
+      $("thread").innerHTML = `
+        <div class="user">Reste dans ce projet. Le worktree ne devient pas un autre projet.</div>
+        ${text.tool ? `<div class="tool">outil ${text.tool}</div>` : ""}
+        <div class="agent">${text.text}<div class="meta">${project ? project.name : ""} · ${c ? c.host : ""}</div>
+        <button class="changes" type="button" data-focus="diff"><span>Diff de ce chat</span><span class="plus">+18 −4</span></button>
+        ${c && c.id === "sprint" ? `<div class="reply">
+          <div class="k">Objectif</div><p>Terminer la carte sur ce worktree.</p>
+          <div class="k">Réalisé</div><p>Coûts du fil, sans faux zéro.</p>
+          <div class="k">Problèmes</div><p>Aucun.</p>
+          <div class="k">Dettes</div><p>Aucune.</p>
+          <div class="k">Points</div><p>La remise part dans le prompt du sprint.</p>
+          <div class="k">Fichiers</div>
+          <button class="filehit" type="button" data-source="packages/app/src/pages/sprint-cockpit.tsx"><span>sprint-cockpit.tsx</span><span class="plus">+18 −4</span></button>
+          <div class="copybox"><pre>Remise DA30-014 Verify+commit
+Worktree : features/tasks/DA30-014
+SHA : 7da410789
+MT : passer done</pre><button type="button" id="copy-reply">Copier</button></div>
+        </div>` : ""}
+        ${text.preview ? `<button class="preview" type="button" data-focus="browser"><span>Aperçu</span><span class="sub">http://127.0.0.1:6400</span></button>` : ""}
+        </div>`;
+      $("hint").textContent = c ? c.prompt : "Choisis un chat";
+    }
+    function fitPanel() {
+      if (state.panelUserSized && state.panelW) return;
+      const w = document.querySelector(".workspace").getBoundingClientRect().width;
+      state.panelW = Math.max(320, Math.round(w * 0.5));
+    }
+    function renderTabs() {
+      const c = activeChat();
+      const tabs = c ? c.tabs.map((t) =>
+        `<button class="htab ${t.id === c.tab ? "on" : ""}" type="button" data-tab="${t.id}">${titleOf(t.kind)}<span class="x" data-close="${t.id}">×</span></button>`
+      ).join("") : "";
+      $("otabs").innerHTML = tabs + `<button type="button" class="tab-plus" id="btn-plus" title="Nouvel onglet">+</button>`;
+    }
+    function renderPanel() {
+      applyChrome();
+      const tab = activeTab();
+      if (!state.screenOpen || !tab) return;
+      const body = $("panel-body");
+      if (tab.kind === "files") {
+        const parts = state.fileSel.split("/");
+        body.innerHTML = `<div class="crumb">${parts.slice(0, -1).join(" / ")} / ${parts.at(-1)}</div><div class="sec-body"><div class="view"><div class="code">${files[state.fileSel] || ""}</div></div><aside class="tree-side">${Object.keys(files).map((p) => `<button type="button" class="${p === state.fileSel ? "on" : ""}" data-file="${p}">${p.split("/").pop()}</button>`).join("")}</aside></div>`;
+      } else if (tab.kind === "diff") {
+        const d = diffs[state.diffSel];
+        const patch = d.patch.split("\n").map((line) => line.startsWith("+") ? `<span class="addc">${line}</span>` : line.startsWith("-") ? `<span class="delc">${line}</span>` : line).join("\n");
+        body.innerHTML = `<div class="crumb">Diff de ce chat</div><div class="sec-body"><div class="diff-list">${diffs.map((x, i) => `<button type="button" class="${i === state.diffSel ? "on" : ""}" data-diff="${i}">${x.path} <span class="addc">+${x.plus}</span> <span class="delc">−${x.minus}</span></button>`).join("")}</div><div class="view"><div class="diff">${patch}</div></div></div>`;
+      } else {
+        const url = state.serverOn ? "http://127.0.0.1:6400/sprint/cockpit" : "about:blank";
+        body.innerHTML = `<div class="crumb">Navigateur · ${activeChat().host}</div><div class="view" id="browser-page"><div class="urlbar">${url}</div>${state.serverOn ? "Aperçu. Clic droit : inspecteur." : "Clic droit pour lancer, puis l’inspecteur."}</div>`;
+      }
+    }
+    function renderInsp() {
+      const tab = activeTab();
+      if (!state.screenOpen || !tab || tab.kind !== "browser") state.insp = null;
+      $("insp").hidden = !state.insp;
+      const c = activeChat();
+      if (!state.insp || !c) return;
+      document.querySelectorAll("[data-insp]").forEach((b) => b.classList.toggle("on", b.dataset.insp === state.insp));
+      const kv = (k, v) => `<dl class="kv"><dt>${k}</dt><dd>${v}</dd></dl>`;
+      const map = {
+        task: kv("Carte", c.title) + kv("Worktree", c.sub) + kv("Hôte", c.host) + `<button type="button" id="copy">Copier le prompt</button>`,
+        git: kv("Branche", c.branch) + kv("HEAD", c.head) + kv("vs staging", c.vs),
+        cost: kv("Sprint", "$12.40 / $40") + `<p class="sub">Absent → unknown</p>`,
+        srv: kv("make dev", state.serverOn ? "ON · 6400" : "OFF") + kv("CPU / RAM", c.host) + `<button type="button" id="srv">${state.serverOn ? "Arrêter" : "Démarrer"}</button>`,
+        perm: kv("Pathset", c.perm)
+      };
+      $("insp-body").innerHTML = map[state.insp] || "";
+    }
+    function renderTray() {
+      $("tray").hidden = !state.tray;
+      $("toggle-term").classList.toggle("on", state.tray);
+      $("shell-b").hidden = !state.splitTerm;
+      const c = activeChat();
+      $("terms").innerHTML = `<div class="term">$ pwd\n${c ? c.sub : ""}\n# ${c ? c.host : ""}</div>` +
+        (state.splitTerm ? `<div class="term">$ ssh mac-mini\n# Mac mini</div>` : "");
+    }
+    function renderCodex() {
+      const c = activeChat();
+      const show = !!(c && !state.screenOpen);
+      $("codex").hidden = !show;
+      $("thread").classList.toggle("with-codex", show);
+      if (!show) return;
+      const project = projectOf(c.id);
+      const brief = briefs[c.id] || { tokens: "0", cost: "$0", sources: [] };
+      const host = state.machines.find((m) => m.name === c.host) || currentMachine();
+      const sources = brief.sources.map((p) => `<button class="src" type="button" data-source="${p}">${p.split("/").pop()}</button>`).join("") || `<div class="sub">Aucune source</div>`;
+      $("codex").innerHTML = `<h3>${project ? project.name : c.title}</h3>
+        <div class="place">${c.host} · ${c.sub}</div>
+        <div class="place">${c.branch} · ${c.head}</div>
+        <div class="stats"><div class="stat"><b>${brief.tokens}</b><span>tokens</span></div><div class="stat"><b>${brief.cost}</b><span>coût</span></div></div>
+        <div class="hostline">${host.cpu} CPU · ${host.ram}<br>${host.name}</div>
+        <h4>Sources</h4>${sources}`;
+    }
+    function renderMeters() {
+      const c = activeChat();
+      const ordered = state.machines.filter((m) => m.id === "local").concat(state.machines.filter((m) => m.id !== "local"));
+      $("meters").innerHTML = ordered.map((m) =>
+        `<span class="chip ${c && c.host === m.name ? "on" : ""}"><b>${m.name}</b><span class="meter">${m.cpu} CPU · ${m.ram}</span></span>`
+      ).join("");
+    }
+    function render() {
+      renderMachines(); renderTree(); renderThread(); renderCodex(); renderTabs(); renderPanel(); renderInsp(); renderTray(); renderMeters(); applyChrome();
+    }
+    function focusKind(kind) {
+      const c = activeChat();
+      if (!c) return;
+      let tab = c.tabs.find((t) => t.kind === kind);
+      if (!tab) { tab = { id: "t" + state.n++, kind }; c.tabs.push(tab); if (kind === "diff") c.diffClosed = false; }
+      c.tab = tab.id;
+      fitPanel();
+      state.screenOpen = true;
+      state.menu = false;
+      render();
+    }
+    function drag(grip, read, write) {
+      grip.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        const start = event.clientX;
+        const base = read();
+        const move = (ev) => write(base, ev.clientX - start);
+        const up = () => { window.removeEventListener("pointermove", move); window.removeEventListener("pointerup", up); };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", up);
+      });
+    }
+    drag($("side-grip"), () => state.sideW, (base, dx) => { state.sideW = Math.min(480, Math.max(200, base + dx)); applyChrome(); });
+    drag($("panel-grip"), () => state.panelW, (base, dx) => {
+      const max = Math.round(document.querySelector(".workspace").getBoundingClientRect().width * 0.8);
+      state.panelUserSized = true;
+      state.panelW = Math.min(max, Math.max(320, base - dx));
+      applyChrome();
+    });
+
+    document.body.addEventListener("click", (event) => {
+      const close = event.target.closest("[data-close]");
+      if (close) {
+        const c = activeChat();
+        const gone = c.tabs.find((t) => t.id === close.dataset.close);
+        if (gone && gone.kind === "diff") c.diffClosed = true;
+        c.tabs = c.tabs.filter((t) => t.id !== close.dataset.close);
+        c.tab = c.tabs[0] ? c.tabs[0].id : null;
+        if (!c.tabs.some((t) => t.kind === "browser")) state.insp = null;
+        if (!c.tab) state.screenOpen = false;
+        render();
+        return;
+      }
+      const t = event.target.closest("button");
+      if (!t) { $("ctx").hidden = true; state.menu = false; $("kind-menu").hidden = true; return; }
+      if (t.dataset.machine) {
+        state.machine = t.dataset.machine;
+        const first = visibleProjects()[0];
+        state.chat = first ? first.chats[0].id : null;
+        state.screenOpen = false;
+        render();
+      }
+      if (t.dataset.chat) { state.chat = t.dataset.chat; state.screenOpen = false; render(); }
+      if (t.dataset.attach) openAttach(t.dataset.attach);
+      if (t.id === "btn-plus") {
+        state.menu = !state.menu;
+        const box = t.getBoundingClientRect();
+        $("kind-menu").hidden = !state.menu;
+        $("kind-menu").style.left = (box.left - 120) + "px";
+        $("kind-menu").style.top = (box.bottom + 4) + "px";
+        return;
+      }
+      if (t.dataset.kind) { focusKind(t.dataset.kind); return; }
+      if (t.dataset.focus) { focusKind(t.dataset.focus); return; }
+      if (t.dataset.tab) {
+        activeChat().tab = t.dataset.tab;
+        if (!activeTab() || activeTab().kind !== "browser") state.insp = null;
+        render();
+        return;
+      }
+      if (t.id === "toggle-screen") {
+        state.screenOpen = !state.screenOpen;
+        if (state.screenOpen) fitPanel();
+        if (!state.screenOpen) state.insp = null;
+        render();
+        return;
+      }
+      if (t.dataset.file) { state.fileSel = t.dataset.file; renderPanel(); }
+      if (t.dataset.diff) { state.diffSel = Number(t.dataset.diff); renderPanel(); }
+      if (t.dataset.insp) { state.insp = t.dataset.insp; renderInsp(); }
+      if (t.id === "ctx-insp") { state.insp = state.insp ? null : "task"; $("ctx").hidden = true; renderInsp(); }
+      if (t.id === "collapse") { state.sideCollapsed = !state.sideCollapsed; applyChrome(); }
+      if (t.id === "toggle-term") { state.tray = !state.tray; renderTray(); }
+      if (t.id === "close-term") { state.tray = false; renderTray(); }
+      if (t.id === "split-term") { state.splitTerm = !state.splitTerm; state.tray = true; renderTray(); }
+      if (t.dataset.source) { state.fileSel = t.dataset.source; focusKind("files"); return; }
+      if (t.id === "interrupt") toast("Simulation — Interrupt");
+      if (t.id === "copy" || t.id === "copy-reply") toast("Simulation — copié");
+      if (t.id === "srv") { state.serverOn = !state.serverOn; render(); }
+      if (t.id === "focus-search") $("q").focus();
+      if (t.id === "open-connect") openConnect();
+      if (t.id === "cancel") { $("sheet").hidden = true; state.sheet = null; }
+      if (t.id === "new-chat") {
+        const project = projectOf(state.chat) || visibleProjects()[0];
+        if (!project) return;
+        const id = "c" + state.n++;
+        project.chats.unshift(chat(id, "Nouvelle conversation", project.name, "idle", "—", "task/" + id, currentMachine().name));
+        state.chat = id;
+        state.screenOpen = false;
+        render();
+      }
+      if (t.dataset.target) {
+        const project = state.projects.find((p) => p.id === state.attachFor);
+        project.machine = t.dataset.target;
+        project.chats.forEach((c) => { c.host = state.machines.find((m) => m.id === t.dataset.target).name; });
+        state.chat = null;
+        state.screenOpen = false;
+        $("sheet").hidden = true;
+        toast("Simulation — projet rattaché");
+        render();
+      }
+    });
+    document.addEventListener("contextmenu", (event) => {
+      if (!event.target.closest("#browser-page")) return;
+      event.preventDefault();
+      $("ctx-insp").textContent = state.insp ? "Fermer l’inspecteur" : "Ouvrir l’inspecteur";
+      $("ctx").style.left = event.clientX + "px";
+      $("ctx").style.top = event.clientY + "px";
+      $("ctx").hidden = false;
+    });
+    $("q").addEventListener("input", () => { state.q = $("q").value; renderTree(); });
+    function openConnect() {
+      state.sheet = "connect";
+      $("sheet-title").textContent = "Connecter une machine";
+      $("ok").hidden = false;
+      $("connect-fields").hidden = false;
+      $("attach-fields").hidden = true;
+      $("host-name").value = "";
+      $("host-addr").value = "";
+      $("sheet").hidden = false;
+    }
+    function openAttach(id) {
+      state.sheet = "attach";
+      state.attachFor = id;
+      const others = state.machines.filter((m) => m.id !== state.machine);
+      $("sheet-title").textContent = "Rattacher le projet";
+      $("connect-fields").hidden = true;
+      $("attach-fields").hidden = false;
+      $("ok").hidden = true;
+      $("attach-fields").innerHTML = others.map((m) => `<button type="button" data-target="${m.id}">${m.name}<div class="sub">${m.detail} · ${m.cpu} CPU</div></button>`).join("") || `<p class="sub">Aucune autre machine</p>`;
+      $("sheet").hidden = false;
+    }
+    $("form").addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (state.sheet === "connect") {
+        const name = $("host-name").value.trim();
+        const addr = $("host-addr").value.trim();
+        if (!name || !addr) return;
+        state.machines.push({ id: "m" + state.n++, name, detail: addr, cpu: "—", ram: "—" });
+        toast("Simulation — machine ajoutée");
+      }
+      $("sheet").hidden = true;
+      render();
+    });
+    render();
+  </script>
+</body>
+</html>

@@ -24,6 +24,6 @@ Remises Verify+commit dans le chat sprint. Preuves APEX stables sous `.project/t
 - Candidate 0.4 n’incluait pas 021 : promotion = merge candidate **puis** branche 021.
 - Preview/prod (`develop`/`master`) facultatives, non faites.
 - Worktrees métier `features/10-*`…`40-*` encore présents (legacy).
-- Backlog 0.5 hors tableau : DA30-014, DA30-015, DA40-020. Aucun Sprint 8 créé par cette clôture.
+- Backlog 0.5 livré : Sprint 8 clos 2026-09-25.
 
 Preuves : [plan sortant](../../../.project/archives/sprint-7/plan-sortant.md).

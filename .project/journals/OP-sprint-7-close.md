@@ -39,5 +39,5 @@ observed_at: 2026-09-25T10:12:00+02:00
 
 ## Conclusion
 
-- **reconciled** (2026-09-25T11:01+02) : docs `9ab5e15fa`, candidate `4f1764b59`, 021 `e9e2aed10` ; 4 cartes MT archived ; sprint `completed` ; `origin/staging` `9ab5e15fa` (SSH, pas HTTPS) ; 4 worktrees `features/tasks/` retirés, branches conservées.
+- **reconciled** (2026-09-25T11:02+02) : docs `8db56f535`, candidate `4f1764b59`, 021 `e9e2aed10` ; 4 cartes MT archived ; sprint `completed` ; `origin/staging` `8db56f535` (SSH) ; 4 worktrees `features/tasks/` retirés, branches conservées.
 - `?? .cursor/permissions.json` hors clôture (non commité).

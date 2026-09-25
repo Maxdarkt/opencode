@@ -37,3 +37,11 @@ Vraies sessions, vrais tokens, `make dev` réel, merge réel. Voir [`livrable.md
 3. ☰ inspecteur flottant. Terminal bas.
 4. 1024×768 : rail compact, secondaire encore adressable.
 5. Isolation : zéro requête hors origine.
+
+## Proposition suivante — cockpit Cursor
+
+Le fichier [maquette/cockpit.html](./maquette/cockpit.html) reste le chrome du premier essai. On ne le remplace pas pour ce livrable.
+
+[maquette/cockpit-cursor.html](./maquette/cockpit-cursor.html) est une proposition à valider, pour les sprints d’après. Même format isolé. Ouvrir `http://127.0.0.1:8766/cockpit-cursor.html`.
+
+Écran unique, entre Cursor et Codex. Menu gauche repliable et réglable à la souris. Fil au centre, hôte du worktree visible. L’écran de droite est caché ; le bouton Écran l’ouvre à 50 %, puis la largeur se règle à la souris. Barre d’onglets horizontale, + juste après le dernier, défilement en X. Tant que cet écran est fermé, un carton fixe en haut à droite du chat montre l’emplacement, les tokens, le coût, la perf de l’hôte du fil et les sources. Bandeau bas : toutes les machines, locale d’abord, défilement en X, Terminal à droite. Tout est simulé.
