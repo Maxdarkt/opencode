@@ -6,7 +6,7 @@ ENV_FILE := $(ROOT)/.make.env
 
 -include $(ENV_FILE)
 
-HOST ?= 127.0.0.1
+HOST ?= 0.0.0.0
 
 .PHONY: help context ports config-check preflight-ports install typecheck lint format dev dev-app dev-server
 
@@ -37,7 +37,7 @@ config-check:
 	@test -n "$(WORKTREE_CODE)" -a -n "$(BACKEND_PORT)" -a -n "$(UI_PORT)" || { echo "Error: .make.env must define WORKTREE_CODE, BACKEND_PORT and UI_PORT" >&2; exit 1; }
 	@case "$(WORKTREE_CODE)" in *[!0-9]*|'') echo "Error: WORKTREE_CODE must be numeric" >&2; exit 1;; esac
 	@case "$(BACKEND_PORT):$(UI_PORT)" in *[!0-9:]*|:*) echo "Error: BACKEND_PORT and UI_PORT must be numeric" >&2; exit 1;; esac
-	@expected_backend=$$((4100 + 10#$(WORKTREE_CODE))); expected_ui=$$((4400 + 10#$(WORKTREE_CODE))); test "$(BACKEND_PORT)" = "$$expected_backend" -a "$(UI_PORT)" = "$$expected_ui" || { echo "Error: code $(WORKTREE_CODE) requires backend=$$expected_backend ui=$$expected_ui" >&2; exit 1; }
+	@expected_ui=$$((6400 + 10#$(WORKTREE_CODE))); expected_backend=$$((6400 + 10#$(WORKTREE_CODE) + 2)); test "$(BACKEND_PORT)" = "$$expected_backend" -a "$(UI_PORT)" = "$$expected_ui" || { echo "Error: code $(WORKTREE_CODE) requires backend=$$expected_backend ui=$$expected_ui" >&2; exit 1; }
 
 context: config-check
 	@echo "root=$(ROOT)"
